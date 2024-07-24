@@ -53,6 +53,10 @@
         <body name="goal" mocap="true" pos=".3 0 0.26">
             <geom size="0.12" contype="0" conaffinity="0" rgba="0 1 0 .5" group="2" />
         </body>
+        <body name="eff_tar" mocap="true" pos="0.4 0.0 0.4">
+            <geom name="eff_tar_geom" type="box" size="0.1 0.1 0.1" contype="0" conaffinity="0"
+                rgba=".5 .5 .5 .3" />
+        </body>
 
         <body name="box" mocap="true" pos="-2.5 0 0">
             <geom name="box" class="prop" size="1 1 0.3" />
@@ -96,13 +100,13 @@
         <general class="torque" name="RL_thigh" joint="RL_thigh_joint" />
         <general class="torque" name="RL_calf" joint="RL_calf_joint" />
 
-        <position class="waist" name="waist" joint="waist"/>
-        <position class="shoulder" name="shoulder" joint="shoulder"/>
-        <position class="elbow" name="elbow" joint="elbow"/>
-        <position class="forearm_roll" name="forearm_roll" joint="forearm_roll"/>
-        <position class="wrist_angle" name="wrist_angle" joint="wrist_angle"/>
-        <position class="wrist_rotate" name="wrist_rotate" joint="wrist_rotate"/>
-        <position class="finger" name="gripper" joint="left_finger"/>
+        <position class="waist" name="waist" joint="waist" />
+        <position class="shoulder" name="shoulder" joint="shoulder" />
+        <position class="elbow" name="elbow" joint="elbow" />
+        <position class="forearm_roll" name="forearm_roll" joint="forearm_roll" />
+        <position class="wrist_angle" name="wrist_angle" joint="wrist_angle" />
+        <position class="wrist_rotate" name="wrist_rotate" joint="wrist_rotate" />
+        <position class="finger" name="gripper" joint="left_finger" />
     </actuator>
 
     <sensor>
@@ -116,6 +120,8 @@
         <user name="Posture" dim="19" user="0 0.02 0.0 0.1" />
         <user name="Orientation" dim="2" user="0 0 0 .03" />
         <user name="Angmom" dim="3" user="0 0 0 .03" />
+        <user name="res_eff_pos" dim="3" user="3 0.2 0 0.5 0.1"/>
+        <user name="res_eff_ori" dim="3" user="3 0.1 0 0.5 0.1"/>
 
         <!-- estimator measurements -->
         <framepos name="torso_pos" objtype="site" objname="torso" />
@@ -137,6 +143,11 @@
         <jointpos name="pos_RL_thigh_joint" joint="RL_thigh_joint" />
         <jointpos name="pos_RL_calf_joint" joint="RL_calf_joint" />
 
+        <framepos name="eff_pos" objtype="site" objname="eff" />
+        <framequat name="eff_quat" objtype="site" objname="eff" />
+        <framepos name="eff_pos_tar" objtype="body" objname="eff_tar" />
+        <framequat name="eff_quat_tar" objtype="body" objname="eff_tar" />
+
         <touch name="FR_touch" site="FR" />
         <touch name="FL_touch" site="FL" />
         <touch name="RR_touch" site="RR" />
@@ -144,6 +155,7 @@
 
         <!-- trace -->
         <framepos name="trace0" objtype="site" objname="head" />
+        <framepos name="trace1" objtype="site" objname="eff" />
 
         <!-- residual -->
         <subtreecom name="torso_subtreecom" body="trunk" />
@@ -152,25 +164,13 @@
     </sensor>
 
     <keyframe>
-        <key name="home" qpos="0 0 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 -0.96 1.16 0 -0.3 0 0.024 -0.024"
+        <key name="home"
+            qpos="0 0 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 -0.96 1.16 0 -0.3 0 0.024 -0.024"
             ctrl="0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 -0.96 1.16 0 -0.3 0 0.024" />
     </keyframe>
-
     <!-- <keyframe>
-    <key name="home"
-         qpos="0 0 0.26
-               1 0 0 0
-               -0.000341931 0.0181576 -0.0268335
-               0.00160968 0.0247957 -0.0270045
-               0.00191398 -0.033048 -0.0675298
-               -0.00199489 -0.0374747 -0.0681862"/>
-    <key name="crouch"
-         qpos="-0.0501827 0.00107117 0.143925
-               1 0 0 0
-               0 0 -0.5
-               0 0 -0.5
-               0 0 -0.5
-               0 0 -0.5"/>
-
-  </keyframe> -->
+        <key name="home"
+            qpos="0 0 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 -0.96 1.16 0 -0.3 0 0.024 -0.024"
+            ctrl="0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 -0.96 1.16 0 -0.3 0 0.024" />
+    </keyframe> -->
 </mujoco>

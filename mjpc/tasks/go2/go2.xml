@@ -323,6 +323,8 @@
                                         mesh="vx300s_9_gripper_bar" />
                                     <site name="pinch" pos="0.1 0 0" size="0.005"
                                         rgba="0.6 0.3 0.3 1" group="5" />
+                                    <site name="eff" size="0.01" pos="0 0.0 0.0" quat="1 0 0 0"
+                                        rgba="1 0 0 1" group="1" />
                                     <body name="gripper_prop_link" pos="0.0485 0 0">
                                         <inertial pos="0.002378 2.85e-08 0"
                                             quat="0 0 0.897698 0.440611" mass="0.008009"
@@ -417,6 +419,14 @@
     <equality>
         <joint joint1="left_finger" joint2="right_finger" polycoef="0 -1 0 0 0" />
     </equality>
+
+    <contact>
+        <exclude body1="trunk" body2="shoulder_link" />
+        <exclude body1="trunk" body2="FL_thigh" />
+        <exclude body1="trunk" body2="FR_thigh" />
+        <exclude body1="trunk" body2="RL_thigh" />
+        <exclude body1="trunk" body2="RR_thigh" />
+    </contact>
 
     <!-- <actuator>
     <motor class="abduction" name="FR_hip" joint="FR_hip_joint"/>
