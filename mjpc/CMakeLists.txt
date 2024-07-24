@@ -29,6 +29,10 @@ add_library(
     # Chaoyi
     tasks/spot/spot.cc
     tasks/spot/spot.h
+    tasks/spot2/spot2.cc
+    tasks/spot2/spot2.h
+    tasks/go2/go2.cc
+    tasks/go2/go2.h
 
     states/state.cc
     states/state.h

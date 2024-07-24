@@ -269,7 +269,7 @@
     </worldbody>
 
     <contact>
-        <exclude body1="body" body2="arm_link_sh0"/>
+        <exclude body1="body" body2="arm_link_sh0" />
         <exclude body1="body" body2="fl_uleg" />
         <exclude body1="body" body2="fr_uleg" />
         <exclude body1="body" body2="hl_uleg" />

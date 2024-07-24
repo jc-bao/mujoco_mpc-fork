@@ -34,9 +34,14 @@
         directional="true" castshadow="true"/>
     <geom name="floor" pos="0 0 0" size="0 0 0.05" type="plane" material="blue_grid"/>
 
-    <body name="target" mocap="true" pos="0.8 0.0 0.6">
-      <geom name="target"  type="box" size="0.1 0.1 0.1" contype="0" conaffinity="0" rgba=".5 .5 .5 .3"/>
+    <body name="eff_tar" mocap="true" pos="0.8 0.0 0.6">
+      <geom name="eff_tar_geom"  type="box" size="0.1 0.1 0.1" contype="0" conaffinity="0" rgba=".5 .5 .5 .3"/>
     </body>
+
+    <body name="body_tar" mocap="true" pos="0.0 0.0 0.4">
+      <geom name="body_tar_geom"  type="box" size="0.3 0.1 0.1" contype="0" conaffinity="0" rgba=".5 .5 .5 .3"/>
+    </body>
+
   </worldbody>
 
   <sensor>
@@ -52,13 +57,22 @@
             [norm_parameters...]"
     />
     -->
-    <user name="pos" dim="3" user="2 1 0 5 0.01"/>
-    <user name="ori" dim="3" user="2 0.3 0 1 0.01"/>
-    <framepos name="hand_pos" objtype="site" objname="eff"/>
-    <framequat name="hand_quat" objtype="site" objname="eff"/>
-    <framepos name="target_pos" objtype="geom" objname="target"/>
-    <framequat name="target_quat" objtype="geom" objname="target"/>
+    <user name="res_eff_pos" dim="3" user="2 1 0 5 0.01"/>
+    <user name="res_eff_ori" dim="3" user="2 0.3 0 1 0.01"/>
+    <user name="res_body_pos" dim="3" user="2 1 0 5 0.01"/>
+    <user name="res_body_ori" dim="3" user="2 0.3 0 1 0.01"/>
+    <framepos name="eff_pos" objtype="site" objname="eff"/>
+    <framequat name="eff_quat" objtype="site" objname="eff"/>
+    <framepos name="eff_pos_tar" objtype="body" objname="eff_tar"/>
+    <framequat name="eff_quat_tar" objtype="body" objname="eff_tar"/>
+
+    <framepos name="body_pos" objtype="body" objname="body"/>
+    <framequat name="body_quat" objtype="body" objname="body"/>
+    <framepos name="body_pos_tar" objtype="body" objname="body_tar"/>
+    <framequat name="body_quat_tar" objtype="body" objname="body_tar"/>
+
     <framepos name="trace0" objtype="site" objname="eff"/>
+    <framepos name="trace1" objtype="body" objname="body"/>
   </sensor>
 
   <include file="spot_arm.xml"/>

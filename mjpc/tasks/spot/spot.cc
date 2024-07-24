@@ -38,16 +38,28 @@ namespace mjpc
     {
         int counter = 0;
 
-        // pos
-        double *hand_pos = SensorByName(model, data, "hand_pos");
-        double *box_pos = SensorByName(model, data, "target_pos");
+        // eff pos
+        double *hand_pos = SensorByName(model, data, "eff_pos");
+        double *box_pos = SensorByName(model, data, "eff_pos_tar");
         mju_sub3(residual + counter, hand_pos, box_pos);
         counter += 3;
 
-        // orientation
-        double *hand_quat = SensorByName(model, data, "hand_quat");
-        double *box_quat = SensorByName(model, data, "target_quat");
+        // eff orientation
+        double *hand_quat = SensorByName(model, data, "eff_quat");
+        double *box_quat = SensorByName(model, data, "eff_quat_tar");
         mju_subQuat(residual + counter, hand_quat, box_quat);
+        counter += 3;
+
+        // body pos
+        double *body_pos = SensorByName(model, data, "body_pos");
+        double *box_pos2 = SensorByName(model, data, "body_pos_tar");
+        mju_sub3(residual + counter, body_pos, box_pos2);
+        counter += 3;
+
+        // body orientation
+        double *body_quat = SensorByName(model, data, "body_quat");
+        double *box_quat2 = SensorByName(model, data, "body_quat_tar");
+        mju_subQuat(residual + counter, body_quat, box_quat2);
         counter += 3;
 
         // sensor dim sanity check
