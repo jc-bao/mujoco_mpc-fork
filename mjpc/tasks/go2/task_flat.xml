@@ -95,6 +95,14 @@
         <general class="torque" name="RL_hip" joint="RL_hip_joint" />
         <general class="torque" name="RL_thigh" joint="RL_thigh_joint" />
         <general class="torque" name="RL_calf" joint="RL_calf_joint" />
+
+        <position class="waist" name="waist" joint="waist"/>
+        <position class="shoulder" name="shoulder" joint="shoulder"/>
+        <position class="elbow" name="elbow" joint="elbow"/>
+        <position class="forearm_roll" name="forearm_roll" joint="forearm_roll"/>
+        <position class="wrist_angle" name="wrist_angle" joint="wrist_angle"/>
+        <position class="wrist_rotate" name="wrist_rotate" joint="wrist_rotate"/>
+        <position class="finger" name="gripper" joint="left_finger"/>
     </actuator>
 
     <sensor>
@@ -104,8 +112,8 @@
         <user name="Position" dim="3" user="2 0.2 0 0.5 0.1" />
         <user name="Gait" dim="4" user="6 2 0 10 0.03" />
         <user name="Balance" dim="2" user="2 0.2 0 0.3 0.1" />
-        <user name="Effort" dim="12" user="0 0.03 0.0 0.1" />
-        <user name="Posture" dim="12" user="0 0.02 0.0 0.1" />
+        <user name="Effort" dim="19" user="0 0.03 0.0 0.1" />
+        <user name="Posture" dim="19" user="0 0.02 0.0 0.1" />
         <user name="Orientation" dim="2" user="0 0 0 .03" />
         <user name="Angmom" dim="3" user="0 0 0 .03" />
 
@@ -144,8 +152,8 @@
     </sensor>
 
     <keyframe>
-        <key name="home" qpos="0 0 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8"
-            ctrl="0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8" />
+        <key name="home" qpos="0 0 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 -0.96 1.16 0 -0.3 0 0.024 -0.024"
+            ctrl="0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 -0.96 1.16 0 -0.3 0 0.024" />
     </keyframe>
 
     <!-- <keyframe>
