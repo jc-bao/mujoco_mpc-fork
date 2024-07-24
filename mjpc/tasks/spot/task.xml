@@ -1,0 +1,65 @@
+<mujoco model="Spot">
+  <include file="../common.xml"/>
+
+  <size memory="1M"/>
+
+  <custom>
+    <numeric name="agent_planner" data="0" />
+    <numeric name="agent_horizon" data="0.5" />
+    <numeric name="agent_timestep" data="0.009" />
+    <numeric name="agent_policy_width" data="0.0035" />
+    <numeric name="sampling_trajectories" data="60"/>
+    <numeric name="sampling_spline_points" data="7" />
+    <numeric name="sampling_exploration" data="0.1" />
+    <numeric name="gradient_spline_points" data="6" />
+  </custom>
+
+  <statistic extent="1.5" center="0.1 0.2 0.3"/>
+
+  <visual>
+    <quality shadowsize="8192"/>
+    <global azimuth="180" elevation="-30"/>
+    <scale framelength=".3" framewidth=".03"/>
+  </visual>
+
+  <default>
+    <geom solref=".001 1"/>
+  </default>
+
+  <compiler texturedir="./textures"/>
+
+  <worldbody>
+    <site name="world"/>
+    <light pos="0 -0.1 0.5" dir="0 0.2 -1" diffuse="0.7 0.7 0.7" specular="0.3 0.3 0.3"
+        directional="true" castshadow="true"/>
+    <geom name="floor" pos="0 0 0" size="0 0 0.05" type="plane" material="blue_grid"/>
+
+    <body name="target" mocap="true" pos="0.8 0.0 0.6">
+      <geom name="target"  type="box" size="0.1 0.1 0.1" contype="0" conaffinity="0" rgba=".5 .5 .5 .3"/>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <!-- 
+    <user
+        name="[term_name]"
+        dim="[residual_dimension]"
+        user="
+            [norm_type]
+            [weight]
+            [weight_lower_bound]
+            [weight_upper_bound]
+            [norm_parameters...]"
+    />
+    -->
+    <user name="pos" dim="3" user="2 1 0 5 0.01"/>
+    <user name="ori" dim="3" user="2 0.3 0 1 0.01"/>
+    <framepos name="hand_pos" objtype="site" objname="eff"/>
+    <framequat name="hand_quat" objtype="site" objname="eff"/>
+    <framepos name="target_pos" objtype="geom" objname="target"/>
+    <framequat name="target_quat" objtype="geom" objname="target"/>
+    <framepos name="trace0" objtype="site" objname="eff"/>
+  </sensor>
+
+  <include file="spot_arm.xml"/>
+</mujoco>
