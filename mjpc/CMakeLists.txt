@@ -33,6 +33,8 @@ add_library(
     tasks/spot2/spot2.h
     tasks/go2/go2.cc
     tasks/go2/go2.h
+    tasks/gr1/gr1.cc
+    tasks/gr1/gr1.h
 
     states/state.cc
     states/state.h

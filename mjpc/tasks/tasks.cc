@@ -44,6 +44,7 @@
 #include "mjpc/tasks/spot/spot.h"
 #include "mjpc/tasks/spot2/spot2.h"
 #include "mjpc/tasks/go2/go2.h"
+#include "mjpc/tasks/gr1/gr1.h"
 
 namespace mjpc
 {
@@ -80,6 +81,8 @@ namespace mjpc
             std::make_shared<Spot2Flat>(),
             std::make_shared<Go2Flat>(),
             std::make_shared<Go2Hill>(),
+            std::make_shared<GR1Flat>(),
+            std::make_shared<GR1Hill>(),
         };
     }
 } // namespace mjpc
