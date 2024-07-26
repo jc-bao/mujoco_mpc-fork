@@ -33,3 +33,6 @@ MJDATA.TXT
 MJMODEL.TXT
 # Python
 python/dist/
+
+.vscode/
+.history/
