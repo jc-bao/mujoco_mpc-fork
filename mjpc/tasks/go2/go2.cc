@@ -174,25 +174,25 @@ namespace mjpc
         residual[counter++] = capture_point[1] - avg_foot_pos[1];
 
         // ---------- Effort ----------
-        mju_scl(residual + counter, data->actuator_force, 2e-2, 19);
-        counter += 19;
+        mju_scl(residual + counter, data->actuator_force, 2e-2, model->nu);
+        counter += model->nu;
 
         // ---------- Posture ----------
         double *home = KeyQPosByName(model, data, "home");
-        mju_sub(residual + counter, data->qpos + 7, home + 7, 19);
+        mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
         if (current_mode_ == kModeFlip)
         {
             double flip_time = data->time - mode_start_time_;
             if (flip_time < crouch_time_)
             {
                 double *crouch = KeyQPosByName(model, data, "crouch");
-                mju_sub(residual + counter, data->qpos + 7, crouch + 7, 19);
+                mju_sub(residual + counter, data->qpos + 7, crouch + 7, model->nu);
             }
             else if (flip_time >= crouch_time_ &&
                      flip_time < jump_time_ + flight_time_)
             {
                 // free legs during flight phase
-                mju_zero(residual + counter, 19);
+                mju_zero(residual + counter, model->nu);
             }
         }
         for (A1Foot foot : kFootAll)
@@ -221,7 +221,7 @@ namespace mjpc
                 residual[counter + 8] *= 0.03;
             }
         }
-        counter += 19;
+        counter += model->nu;
 
         // ---------- Yaw ----------
         double torso_heading[2] = {torso_xmat[0], torso_xmat[3]};
@@ -239,19 +239,6 @@ namespace mjpc
 
         // ---------- Angular momentum ----------
         mju_copy3(residual + counter, SensorByName(model, data, "torso_angmom"));
-        counter += 3;
-
-        // ---------- arm control ----------
-        // eff pos
-        double *hand_pos = SensorByName(model, data, "eff_pos");
-        double *box_pos = SensorByName(model, data, "eff_pos_tar");
-        mju_sub3(residual + counter, hand_pos, box_pos);
-        counter += 3;
-
-        // eff orientation
-        double *hand_quat = SensorByName(model, data, "eff_quat");
-        double *box_quat = SensorByName(model, data, "eff_quat_tar");
-        mju_subQuat(residual + counter, hand_quat, box_quat);
         counter += 3;
 
         // sensor dim sanity check

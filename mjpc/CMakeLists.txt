@@ -35,6 +35,8 @@ add_library(
     tasks/go2/go2.h
     tasks/gr1/gr1.cc
     tasks/gr1/gr1.h
+    tasks/go2_arm/go2_arm.cc
+    tasks/go2_arm/go2_arm.h
 
     states/state.cc
     states/state.h
