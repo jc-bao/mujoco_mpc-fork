@@ -7,10 +7,10 @@
         <!-- agent -->
         <text name="task_transition" data="Quadruped|Biped|Walk|Scramble|Flip" />
         <numeric name="agent_planner" data="2 " />
-        <numeric name="agent_horizon" data="0.35" />
+        <numeric name="agent_horizon" data="0.40" />
         <numeric name="agent_timestep" data="0.01" />
-        <numeric name="sampling_spline_points" data="3" />
-        <numeric name="sampling_trajectories" data="60" />
+        <numeric name="sampling_spline_points" data="5" />
+        <numeric name="sampling_trajectories" data="24" />
         <numeric name="sampling_exploration" data="0.04" />
         <numeric name="gradient_spline_points" data="5" />
 
@@ -107,14 +107,11 @@
         <!-- cost -->
         <user name="Upright" dim="3" user="6 1 0 3 0.05" />
         <user name="Height" dim="1" user="6 1 0 3 0.04" />
-        <user name="Position" dim="3" user="2 0.02 0 0.5 0.1" />
+        <user name="Position" dim="3" user="2 0.2 0 0.5 0.1" />
         <user name="Gait" dim="4" user="6 2 0 10 0.03" />
         <user name="Balance" dim="2" user="2 0.2 0 0.3 0.1" />
-        <!-- <user name="Effort" dim="12" user="0 0.03 0.0 0.1" /> -->
-        <user name="Effort" dim="12" user="0 0.0 0.0 0.1" />
-        <!-- <user name="Posture" dim="12" user="0 0.02 0.0 0.1" /> -->
-        <!-- <user name="Posture" dim="12" user="0 1.0 0.0 0.1" /> -->
-        <user name="Posture" dim="12" user="0 0.1 0.0 0.1" />
+        <user name="Effort" dim="12" user="0 0.03 0.0 0.1" />
+        <user name="Posture" dim="12" user="0 0.02 0.0 0.1" />
         <user name="Orientation" dim="2" user="0 0 0 .03" />
         <user name="Angmom" dim="3" user="0 0 0 .03" />
 

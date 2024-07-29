@@ -5,7 +5,7 @@
     <flag eulerdamp="disable"/>
   </option> -->
 
-    <option iterations="1" ls_iterations="5" integrator="RK4" solver="Newton" timestep="0.02">
+    <option iterations="1" ls_iterations="5" integrator="Euler" solver="Newton" timestep="0.01">
         <flag eulerdamp="disable" />
     </option>
 
