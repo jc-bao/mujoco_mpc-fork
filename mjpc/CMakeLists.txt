@@ -26,6 +26,7 @@ target_include_directories(threadpool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 add_library(
     libmjpc STATIC
+
     # Chaoyi
     tasks/spot/spot.cc
     tasks/spot/spot.h
@@ -37,6 +38,8 @@ add_library(
     tasks/gr1/gr1.h
     tasks/go2_arm/go2_arm.cc
     tasks/go2_arm/go2_arm.h
+    tasks/gr1_stand/stand.cc
+    tasks/gr1_stand/stand.h
 
     states/state.cc
     states/state.h
