@@ -247,6 +247,11 @@ class Go2Flat : public Task {
   ResidualFn residual_;
 };
 
+class Go2FlatMocap : public Go2Flat {
+ public:
+  std::string Name() const override;
+  std::string XmlPath() const override;
+};
 
 class Go2Hill : public Task {
  public:

@@ -82,6 +82,7 @@ namespace mjpc
             std::make_shared<Spot>(),
             std::make_shared<Spot2Flat>(),
             std::make_shared<Go2Flat>(),
+            std::make_shared<Go2FlatMocap>(),
             std::make_shared<Go2Hill>(),
             std::make_shared<GR1Flat>(),
             std::make_shared<GR1Hill>(),

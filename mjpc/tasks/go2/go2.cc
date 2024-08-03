@@ -30,8 +30,13 @@ namespace mjpc
     {
         return GetModelPath("go2/task_flat.xml");
     }
+    std::string Go2FlatMocap::XmlPath() const
+    {
+        return GetModelPath("go2/task_flat_mocap.xml");
+    }
     std::string Go2Hill::Name() const { return "Go2 Hill"; }
     std::string Go2Flat::Name() const { return "Go2 Flat"; }
+    std::string Go2FlatMocap::Name() const { return "Go2 Flat Mocap"; }
 
     void Go2Flat::ResidualFn::Residual(const mjModel *model,
                                        const mjData *data,
