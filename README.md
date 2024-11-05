@@ -1,66 +1,45 @@
+# Notes on adding new tasks to mjpc
 
-Env setup: for Ubuntu 20.04
+## Add new task
 
-Build
+Step1: add new task folder under `mjpc/tasks`, including the following files: 
 
-```bash
-sudo apt-get update && sudo apt-get install cmake libgl1-mesa-dev libxinerama-dev libxcursor-dev libxrandr-dev libxi-dev ninja-build zlib1g-dev clang-12
 ```
-```bash
-mkdir build
-cd build
-```
-
-For Ubuntu 22.04, according to [this issue](sudo apt-get install libstdc++-12-dev), should fix for clang 12:
-
-```bash
-sudo apt-get install libstdc++-12-dev
+  assets
+  gr1.cc (Define your reward function here)
+  gr1.h (Define your reward function here)
+󰗀  gr1.xml (Put your robot model here, remember to design sensor to get states)
+󰗀  task_flat.xml (Define your task here)
+󰗀  task_hill.xml
 ```
 
-```bash
-cmake .. -DCMAKE_BUILD_TYPE:STRING=Release -G Ninja -DCMAKE_C_COMPILER:STRING=clang-12 -DCMAKE_CXX_COMPILER:STRING=clang++-12 -DMJPC_BUILD_GRPC_SERVICE:BOOL=ON
-```
-**Note: gRPC is a large dependency and can take 10-20 minutes to initially download.**
+Step2: in `mjpc/CMakeLists.txt` can add `add_library` for your new task.
 
-```bash
-cmake --build . --config=Release
 ```
-Run GUI application
+add_library(
+    libmjpc STATIC
 
-```bash
-cd bin
-./mjpc
-```
+    # TODO: add your new task here
+    tasks/gr1/gr1.cc
+    tasks/gr1/gr1.h
 
-**Python API**
-
-1. Build MJPC (see instructions above).
-2. Python 3.10
-3. (Optionally) Create a conda environment with **Python 3.10**:
-```sh
-conda create -n mjpc python=3.10
-conda activate mjpc
-```
-4. Install MuJoCo
-```sh
-pip install mujoco
-```
-### Install API
-Next, change to the python directory:
-```sh
-cd python
-```
-Install the Python module:
-```sh
-python setup.py install
-```
-Test that installation was successful:
-```sh
-python "mujoco_mpc/agent_test.py"
+    states/state.cc
+    states/state.h
+    agent.cc
+...
+)
 ```
 
-Example scripts are found in `python/mujoco_mpc/demos`. For example from `python/`:
-```sh
-python mujoco_mpc/demos/agent/cartpole_gui.py
+Step3: in `mjpc/tasks/tasks.cc`, `include`, `make_shared` for your new task.
+
 ```
-will run the MJPC GUI application using MuJoCo's passive viewer via Python.
+#include "gr1/gr1.h"
+    std::vector<std::shared_ptr<Task>> GetTasks()
+    {
+        return {
+            ...
+            std::make_shared<GR1Flat>(),
+        };
+    }
+...
+```
