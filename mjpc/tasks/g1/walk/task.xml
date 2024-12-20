@@ -2,15 +2,16 @@
   <include file="../../common.xml" />
   <include file="../g1.xml" />
   <size memory="400K" />
+  <option timestep="0.005" />
   <custom>
     <!-- agent -->
     <numeric name="agent_planner" data="2" />
-    <numeric name="agent_horizon" data="0.35" />
-    <numeric name="agent_timestep" data="0.015" />
-    <numeric name="sampling_spline_points" data="3" />
+    <numeric name="agent_horizon" data="0.5" />
+    <numeric name="agent_timestep" data="0.02" />
+    <numeric name="sampling_spline_points" data="5" />
     <numeric name="sampling_exploration" data="0.05" />
     <numeric name="gradient_spline_points" data="5" />
-    <numeric name="residual_Torso" data="0.95 0.9 1.0" />
+    <numeric name="residual_Torso" data="0.9 0.5 1.0" />
     <numeric name="residual_Speed" data="0.0 -1.5 1.5" />
     <numeric name="residual_Gait" data="0.0 0.0 1.0" />
     <!-- estimator -->
@@ -23,20 +24,24 @@
   </custom>
 
   <sensor>
-    <!-- cost -->
-    <user name="Upright" dim="4" user="6 1 0 3 0.05" />
+    <!-- user="[norm_type] [weight] [weight_lower_bound] [weight_upper_bound] [norm_parameters...]" -->
+    <user name="Upright" dim="1" user="6 3.0 0 20.0 0.05" />
     <user name="Height" dim="1" user="6 1 0 3 0.04" />
-    <user name="Position" dim="3" user="2 0.2 0 0.5 0.1" />
-    <user name="Gait" dim="2" user="6 2 0 10 0.03" />
-    <user name="Balance" dim="2" user="2 0.2 0 0.3 0.1" />
-    <user name="Effort" dim="21" user="0 0.03 0.0 0.1" />
-    <user name="Posture" dim="21" user="0 0.02 0.0 0.1" />
-    <user name="Orientation" dim="2" user="0 0 0 .03" />
+    <user name="Position" dim="3" user="2 0.6 0 20.0 0.1" />
+    <user name="Orientation" dim="2" user="0 0.1 0 0.2" />
+    <user name="Gait" dim="12" user="6 4 0 10 0.03" />
+    <user name="Balance" dim="2" user="2 0.5 0 1.0 0.1" />
+    <user name="Effort" dim="21" user="0 0.06 0.0 0.2" />
+    <user name="Posture" dim="21" user="0 0.1 0.0 0.2" />
 
     <!-- estimator measurements -->
     <framepos name="pelvis" objtype="site" objname="tracking[pelvis]" />
     <framepos name="right_foot_position" objtype="site" objname="foot_right" />
     <framepos name="left_foot_position" objtype="site" objname="foot_left" />
+    <framepos name="tracking_pos[ltoe]" objtype="site" objname="tracking[ltoe]" />
+    <framepos name="tracking_pos[rtoe]" objtype="site" objname="tracking[rtoe]" />
+    <framepos name="tracking_pos[lheel]" objtype="site" objname="tracking[lheel]" />
+    <framepos name="tracking_pos[rheel]" objtype="site" objname="tracking[rheel]" />
     <framepos name="right_hand" objtype="site" objname="tracking[rhand]" />
     <framepos name="left_hand" objtype="site" objname="tracking[lhand]" />
     <jointpos name="abdomen_z" joint="waist_yaw_joint" />
@@ -85,6 +90,12 @@
     <framelinvel name="foot_left_velocity" objtype="body" objname="left_ankle_roll_link" />
   </sensor>
 
+  <worldbody>
+    <body name="goal" mocap="true" pos=".3 0 0.26">
+      <geom size="0.12" contype="0" conaffinity="0" rgba="0 1 0 .5" group="2" />
+    </body>
+  </worldbody>
+
   <actuator>
     <!-- <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
         <motor name="left_hip_roll_joint" joint="left_hip_roll_joint" gear="80" />
@@ -115,7 +126,8 @@
     <position class="hip_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
     <position class="hip_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
     <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
-    <position class="ankle_pitch_motor" name="left_ankle_pitch_joint" joint="left_ankle_pitch_joint" />
+    <position class="ankle_pitch_motor" name="left_ankle_pitch_joint"
+    joint="left_ankle_pitch_joint" />
     <position class="ankle_roll_motor" name="left_ankle_roll_joint" joint="left_ankle_roll_joint" />
 
     <position class="hip_motor" name="right_hip_pitch_joint" joint="right_hip_pitch_joint" />

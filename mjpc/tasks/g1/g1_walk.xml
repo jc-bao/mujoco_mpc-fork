@@ -7,43 +7,43 @@
         <motor ctrlrange="-1 1" ctrllimited="true"/>
         <joint armature="0.01"/>
         <default class="hip_motor">
-            <joint damping="10.0" />
+            <joint damping="2.5" />
             <position kp="100" kv="0.0" />
         </default>
         <default class="knee_motor">
-            <joint damping="20.0" />
+            <joint damping="5.0" />
             <position kp="200" kv="0.0" />
         </default>
         <default class="ankle_pitch_motor">
-            <joint damping="2.0" armature="0.1"/>
+            <joint damping="1.0" armature="0.1"/>
             <position kp="20" kv="0.0" />
         </default>
         <default class="ankle_roll_motor">
-            <joint damping="2.0" armature="0.1"/>
+            <joint damping="1.0" armature="0.1"/>
             <position kp="20" kv="0.0" />
         </default>
         <default class="waist_motor">
-            <joint damping="40.0" />
+            <joint damping="5.0" />
             <position kp="400" kv="0.0" />
         </default>
         <default class="shoulder_pitch_motor">
-            <joint damping="10.0" />
-            <position kp="100" kv="0.0" />
+            <joint damping="2.0" />
+            <position kp="90" kv="0.0" />
         </default>
         <default class="shoulder_roll_motor">
-            <joint damping="6.0" />
+            <joint damping="1.0" />
             <position kp="60" kv="0.0" />
         </default>
         <default class="shoulder_yaw_motor">
-            <joint damping="2.0" />
+            <joint damping="0.4" />
             <position kp="20" kv="0.0" />
         </default>
         <default class="elbow_motor">
-            <joint damping="6.0" />
+            <joint damping="1.0" />
             <position kp="60" kv="0.0" />
         </default>
         <default class="wrist_motor">
-            <joint damping="0.4" />
+            <joint damping="0.2" />
             <position kp="4" kv="0.0" />
         </default>
         <default class="visual">
@@ -150,8 +150,8 @@
                                 <inertial pos="-0.007269 0 0.011137"
                                     quat="0.603053 0.369225 0.369225 0.603053" mass="0.074"
                                     diaginertia="1.89e-05 1.40805e-05 6.9195e-06" />
-                                <joint name="left_ankle_pitch_joint" class="ankle_pitch_motor" pos="0 0 0" axis="0 1 0"
-                                    range="-0.87267 0.5236" actuatorfrcrange="-50 50" />
+                                <!-- <joint name="left_ankle_pitch_joint" class="ankle_pitch_motor" pos="0 0 0" axis="0 1 0"
+                                    range="-0.87267 0.5236" actuatorfrcrange="-50 50" /> -->
                                 <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0"
                                     rgba="0.7 0.7 0.7 1" mesh="left_ankle_pitch_link" />
                                 <geom class="visual" type="mesh" rgba="0.7 0.7 0.7 1" mesh="left_ankle_pitch_link" />
@@ -159,8 +159,8 @@
                                     <inertial pos="0.026505 0 -0.016425"
                                         quat="-0.000481092 0.728482 -0.000618967 0.685065"
                                         mass="0.608" diaginertia="0.00167218 0.0016161 0.000217621" />
-                                    <joint name="left_ankle_roll_joint" class="ankle_roll_motor" pos="0 0 0" axis="1 0 0"
-                                        range="-0.2618 0.2618" actuatorfrcrange="-50 50" />
+                                    <!-- <joint name="left_ankle_roll_joint" class="ankle_roll_motor" pos="0 0 0" axis="1 0 0"
+                                        range="-0.2618 0.2618" actuatorfrcrange="-50 50" /> -->
                                     <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1"
                                         density="0" rgba="0.2 0.2 0.2 1" mesh="left_ankle_roll_link" />
                                     <!-- <geom size="0.005" pos="-0.05 0.025 -0.03" rgba="0.2 0.2 0.2 1" />
@@ -169,9 +169,7 @@
                                     <geom size="0.005" pos="0.12 -0.03 -0.03" rgba="0.2 0.2 0.2 1" /> -->
                                     <!-- <geom type="capsule" size="0.01" fromto="-0.05 0.025 -0.025 0.12 0.03 -0.025" />
                                     <geom type="capsule" size="0.01" fromto="-0.05 -0.025 -0.025 0.12 -0.03 -0.025" /> -->
-
-                                    <geom type="capsule" size="0.005" fromto="-0.05 0.0 -0.025 0.12 0.0 -0.025" />
-
+                                    <geom size="0.02" pos="0.03 0 0" rgba="0.2 0.2 0.2 1" />
                                     <site name="foot_left" pos="0.03 0 0" group="4" />
                                     <site name="sp0" pos="-0.05 0 0" type="sphere" size="0.027" />
                                     <site name="sp1" pos="0.12 0 0" type="sphere" size="0.027" />
@@ -231,8 +229,8 @@
                                 <inertial pos="-0.007269 0 0.011137"
                                     quat="0.603053 0.369225 0.369225 0.603053" mass="0.074"
                                     diaginertia="1.89e-05 1.40805e-05 6.9195e-06" />
-                                <joint name="right_ankle_pitch_joint" class="ankle_pitch_motor" pos="0 0 0" axis="0 1 0"
-                                    range="-0.87267 0.5236" actuatorfrcrange="-50 50" />
+                                <!-- <joint name="right_ankle_pitch_joint" class="ankle_pitch_motor" pos="0 0 0" axis="0 1 0"
+                                    range="-0.87267 0.5236" actuatorfrcrange="-50 50" /> -->
                                 <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0"
                                     rgba="0.7 0.7 0.7 1" mesh="right_ankle_pitch_link" />
                                 <geom class="visual" type="mesh" rgba="0.7 0.7 0.7 1" mesh="right_ankle_pitch_link" />
@@ -240,8 +238,8 @@
                                     <inertial pos="0.026505 0 -0.016425"
                                         quat="0.000481092 0.728482 0.000618967 0.685065"
                                         mass="0.608" diaginertia="0.00167218 0.0016161 0.000217621" />
-                                    <joint name="right_ankle_roll_joint" class="ankle_roll_motor" pos="0 0 0" axis="1 0 0"
-                                        range="-0.2618 0.2618" actuatorfrcrange="-50 50" />
+                                    <!-- <joint name="right_ankle_roll_joint" class="ankle_roll_motor" pos="0 0 0" axis="1 0 0"
+                                        range="-0.2618 0.2618" actuatorfrcrange="-50 50" /> -->
                                     <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1"
                                         density="0" rgba="0.2 0.2 0.2 1"
                                         mesh="right_ankle_roll_link" />
@@ -252,8 +250,7 @@
                                     <!-- <geom type="capsule" size="0.01" fromto="-0.05 0.025 -0.025 0.12 0.03 -0.025" />
                                     <geom type="capsule" size="0.01" fromto="-0.05 -0.025 -0.025 0.12 -0.03 -0.025" /> -->
 
-                                    <!-- <geom type="sphere" size="0.027" pos="0.03 0 0" group="4" /> -->
-                                    <geom type="capsule" size="0.005" fromto="-0.05 0.0 -0.025 0.12 0.0 -0.025" />
+                                    <geom size="0.02" pos="0.03 0 0" rgba="0.2 0.2 0.2 1" />
 
                                     <site name="foot_right" pos="0.03 0 0" group="4" />
                                     <site name="sp2" pos="-0.05 0 0" type="sphere" size="0.027" />
@@ -273,23 +270,23 @@
             <body name="waist_yaw_link">
                 <inertial pos="0.003964 0 0.018769" quat="-0.0178291 0.628464 0.0282471 0.777121"
                     mass="0.244" diaginertia="0.000158561 0.000124229 9.67669e-05" />
-                <joint name="waist_yaw_joint" class="waist_motor" pos="0 0 0" axis="0 0 1" range="-2.618 2.618"
-                    actuatorfrcrange="-88 88" />
+                <!-- <joint name="waist_yaw_joint" class="waist_motor" pos="0 0 0" axis="0 0 1" range="-2.618 2.618"
+                    actuatorfrcrange="-88 88" /> -->
                 <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0"
                     rgba="0.7 0.7 0.7 1" mesh="waist_yaw_link" />
                 <body name="waist_roll_link" pos="-0.0039635 0 0.035">
                     <inertial pos="0 -0.000236 0.010111" quat="0.99979 0.020492 0 0" mass="0.047"
                         diaginertia="7.515e-06 6.40206e-06 3.98394e-06" />
-                    <joint name="waist_roll_joint" class="waist_motor" pos="0 0 0" axis="1 0 0" range="-0.52 0.52"
-                        actuatorfrcrange="-50 50" />
+                    <!-- <joint name="waist_roll_joint" class="waist_motor" pos="0 0 0" axis="1 0 0" range="-0.52 0.52"
+                        actuatorfrcrange="-50 50" /> -->
                     <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0"
                         rgba="0.7 0.7 0.7 1" mesh="waist_roll_link" />
                     <body name="torso" pos="0 0 0.019">
                         <inertial pos="0.00331658 0.000261533 0.179856"
                             quat="0.999831 0.000376204 0.0179895 -0.00377704" mass="9.598"
                             diaginertia="0.12407 0.111951 0.0325382" />
-                        <joint name="waist_pitch_joint" class="waist_motor" pos="0 0 0" axis="0 1 0" range="-0.52 0.52"
-                            actuatorfrcrange="-50 50" />
+                        <!-- <joint name="waist_pitch_joint" class="waist_motor" pos="0 0 0" axis="0 1 0" range="-0.52 0.52"
+                            actuatorfrcrange="-50 50" /> -->
                         <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0"
                             rgba="0.7 0.7 0.7 1" mesh="torso_link" />
                         <geom class="visual" type="mesh" rgba="0.7 0.7 0.7 1" mesh="torso_link" />
@@ -537,20 +534,18 @@
     <keyframe>
         <key name="stand"
             qpos="
-      0 0 0.8
+      0 0 0.75
       1 0 0 0
-      -0.5 0 0 1.4 -0.6 0
-      -0.5 0 0 1.4 -0.6 0
-      0 0 0
+      -0.5 0 1.2 
+      -0.5 0 1.2 
       0.3 0.6 0
       0.3 -0.6 0" />
         <key name="stand_on_left_leg"
             qpos="
       0 0 0.80
       1.0 0 0 0
-      0 0 0 0 0 0
-      -0.524 0.0 0 1.0 0 0
-       0.0 -0.262 0.0
+      0 0 0 
+      -0.524 0.0 0 
         0 0 0
         0 0 0" />
     </keyframe>
