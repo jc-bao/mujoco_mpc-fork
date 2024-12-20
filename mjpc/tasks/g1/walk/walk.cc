@@ -31,123 +31,92 @@ void Walk::ResidualFn::Residual(const mjModel* model, const mjData* data,
                                 double* residual) const {
   int counter = 0;
 
-  // ----- torso height ----- //
-  double torso_height = SensorByName(model, data, "torso_position")[2];
-  residual[counter++] = torso_height - parameters_[0];
-
-  // ----- pelvis / feet ----- //
-  double* foot_right = SensorByName(model, data, "foot_right");
-  double* foot_left = SensorByName(model, data, "foot_left");
-  double pelvis_height = SensorByName(model, data, "pelvis_position")[2];
-  residual[counter++] =
-      0.5 * (foot_left[2] + foot_right[2]) - pelvis_height - 0.2;
-
-  // ----- balance ----- //
-  // capture point
-  double* subcom = SensorByName(model, data, "torso_subcom");
-  double* subcomvel = SensorByName(model, data, "torso_subcomvel");
-
-  double capture_point[3];
-  mju_addScl(capture_point, subcom, subcomvel, 0.3, 3);
-  capture_point[2] = 1.0e-3;
-
-  // project onto line segment
-
-  double axis[3];
-  double center[3];
-  double vec[3];
-  double pcp[3];
-  mju_sub3(axis, foot_right, foot_left);
-  axis[2] = 1.0e-3;
-  double length = 0.5 * mju_normalize3(axis) - 0.05;
-  mju_add3(center, foot_right, foot_left);
-  mju_scl3(center, center, 0.5);
-  mju_sub3(vec, capture_point, center);
-
-  // project onto axis
-  double t = mju_dot3(vec, axis);
-
-  // clamp
-  t = mju_max(-length, mju_min(length, t));
-  mju_scl3(vec, axis, t);
-  mju_add3(pcp, vec, center);
-  pcp[2] = 1.0e-3;
-
-  // is standing
-  double standing =
-      torso_height / mju_sqrt(torso_height * torso_height + 0.45 * 0.45) - 0.4;
-
-  mju_sub(&residual[counter], capture_point, pcp, 2);
-  mju_scl(&residual[counter], &residual[counter], standing, 2);
-
-  counter += 2;
-
   // ----- upright ----- //
   double* torso_up = SensorByName(model, data, "torso_up");
   double* pelvis_up = SensorByName(model, data, "pelvis_up");
   double* foot_right_up = SensorByName(model, data, "foot_right_up");
   double* foot_left_up = SensorByName(model, data, "foot_left_up");
-  double z_ref[3] = {0.0, 0.0, 1.0};
-
   // torso
   residual[counter++] = torso_up[2] - 1.0;
-
   // pelvis
   residual[counter++] = 0.3 * (pelvis_up[2] - 1.0);
-
   // right foot
-  mju_sub3(&residual[counter], foot_right_up, z_ref);
-  mju_scl3(&residual[counter], &residual[counter], 0.1 * standing);
-  counter += 3;
+  residual[counter++] = 1.0 * (foot_right_up[2] - 1.0);
+  // left foot
+  residual[counter++] = 1.0 * (foot_left_up[2] - 1.0);
 
-  mju_sub3(&residual[counter], foot_left_up, z_ref);
-  mju_scl3(&residual[counter], &residual[counter], 0.1 * standing);
-  counter += 3;
+  // ----- torso height ----- //
+  double height_goal = parameters_[0];
+  double torso_height = SensorByName(model, data, "torso_position")[2];
+  residual[counter++] = torso_height - height_goal;
 
-  // ----- posture ----- //
-  mju_copy(&residual[counter], data->qpos + 7, model->nq - 7);
-  counter += model->nq - 7;
+  // ----- position ----- //
+  double* torso_pos = SensorByName(model, data, "torso_position");
+  // get target position to {0, 0, 0}
+  double target[3] = {0, 0, 0};
+  residual[counter++] = torso_pos[0] - target[0];
+  residual[counter++] = torso_pos[1] - target[1];
+  residual[counter++] = 0.0;
 
-  // ----- walk ----- //
-  double* torso_forward = SensorByName(model, data, "torso_forward");
-  double* pelvis_forward = SensorByName(model, data, "pelvis_forward");
-  double* foot_right_forward = SensorByName(model, data, "foot_right_forward");
-  double* foot_left_forward = SensorByName(model, data, "foot_left_forward");
+  // ----- gait ----- //
+  double* foot_right_pos = SensorByName(model, data, "right_foot_position");
+  double* foot_left_pos = SensorByName(model, data, "left_foot_position");
+  double avg_foot_pos[3];
+  mju_add3(avg_foot_pos, foot_right_pos, foot_left_pos);
+  mju_scl3(avg_foot_pos, avg_foot_pos, 0.5);
+  for (int i = 0; i < 2; i++) {
+    // TODO: make this a parameter
+    double amplitude = 0.05; 
+    double duty_ratio = 0.5;
+    double footphase = 0.0;
+    if (i == 0) {
+      footphase = 0.0;
+    } else if (i == 1) {
+      footphase = mjPI; 
+    }
+    double currentphase = data->time * 1.0 * mjPI; // 2.0 is the gait frequency
+    double angle = fmod(currentphase + mjPI - footphase, 2 * mjPI) - mjPI;
+    double target_foot_height = 0;
+    if (duty_ratio < 1) {
+      angle *= 0.5 / (1 - duty_ratio);
+      target_foot_height = amplitude * mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2));
+    }
+    double foot_height = 0;
+    if (i == 0) {
+      foot_height = foot_right_pos[2];
+    } else {
+      foot_height = foot_left_pos[2];
+    }
+    residual[counter++] = target_foot_height - foot_height;
+  }
 
-  double forward[2];
-  mju_copy(forward, torso_forward, 2);
-  mju_addTo(forward, pelvis_forward, 2);
-  mju_addTo(forward, foot_right_forward, 2);
-  mju_addTo(forward, foot_left_forward, 2);
-  mju_normalize(forward, 2);
+  // ----- balance ----- //
+  double* compos = SensorByName(model, data, "pelvis_subcom");
+  double* comvel = SensorByName(model, data, "pelvis_subcomvel");
+  double capture_point[3];
+  double fall_time = mju_sqrt(2*height_goal / 9.81);
+  mju_addScl3(capture_point, compos, comvel, fall_time);
+  residual[counter++] = capture_point[0] - avg_foot_pos[0];
+  residual[counter++] = capture_point[1] - avg_foot_pos[1];
 
-  // com vel
-  double* waist_lower_subcomvel =
-      SensorByName(model, data, "waist_lower_subcomvel");
-  double* torso_velocity = SensorByName(model, data, "torso_velocity");
-  double com_vel[2];
-  mju_add(com_vel, waist_lower_subcomvel, torso_velocity, 2);
-  mju_scl(com_vel, com_vel, 0.5, 2);
-
-  // walk forward
-  residual[counter++] =
-      standing * (mju_dot(com_vel, forward, 2) - parameters_[1]);
-
-  // ----- move feet ----- //
-  double* foot_right_vel = SensorByName(model, data, "foot_right_velocity");
-  double* foot_left_vel = SensorByName(model, data, "foot_left_velocity");
-  double move_feet[2];
-  mju_copy(move_feet, com_vel, 2);
-  mju_addToScl(move_feet, foot_right_vel, -0.5, 2);
-  mju_addToScl(move_feet, foot_left_vel, -0.5, 2);
-
-  mju_copy(&residual[counter], move_feet, 2);
-  mju_scl(&residual[counter], &residual[counter], standing, 2);
-  counter += 2;
-
-  // ----- control ----- //
+  // ----- effort ----- //
   mju_copy(&residual[counter], data->ctrl, model->nu);
   counter += model->nu;
+
+  // ----- posture ----- //
+  double* home = KeyQPosByName(model, data, "stand");
+  mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
+  counter += model->nu;
+
+  // ----- yaw ----- //
+  int torso_body_id = mj_name2id(model, mjOBJ_BODY, "torso");
+  double* torso_xmat = data->xmat + 9 * torso_body_id;
+  double torso_heading[2] = {torso_xmat[0], torso_xmat[3]};
+  mju_normalize(torso_heading, 2);
+  // TODO: make this a parameter
+  double heading_goal = 0.0;
+  residual[counter++] = torso_heading[0] - mju_cos(heading_goal);
+  residual[counter++] = torso_heading[1] - mju_sin(heading_goal);
 
   // sensor dim sanity check
   // TODO: use this pattern everywhere and make this a utility function
