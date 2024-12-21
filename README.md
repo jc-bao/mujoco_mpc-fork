@@ -1,5 +1,13 @@
 # Feedback Sampling with Mujoco MPC
 
+## How to run
+
+Evaluation
+
+```
+cd python/mujoco_mpc/exp
+python eval_gui.py
+```
 
 ## Notes
 
