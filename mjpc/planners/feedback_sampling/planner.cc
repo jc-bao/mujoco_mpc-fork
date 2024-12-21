@@ -61,6 +61,9 @@ namespace mjpc
     // feedback scale gain
     k_feedback_scale_gain = GetNumberOrDefault(1.0, model, "sampling_feedback_scale_gain");
 
+    // improvement value gamma
+    improvement_value_gamma = GetNumberOrDefault(0.95, model, "sampling_improvement_value_gamma");
+
     winner = 0;
 
     // Initialize ilqg_solver
@@ -113,6 +116,7 @@ namespace mjpc
     }
 
     sampling_improvement = 0.0;
+    improvement_value = 0.0;
     ilqr_improvement = 0.0;
     winner = 0;
 
@@ -153,13 +157,12 @@ namespace mjpc
     {
       policy.feedback_scaling = 0.0;
     }
-
   }
 
   // optimize nominal policy using feedback-based sampling
   void FeedbackSamplingPlanner::OptimizePolicy(int horizon, ThreadPool &pool)
   {
-    // Update nominal policy from iLQG, update ilgr in a lower frequency since it is 
+    // Update nominal policy from iLQG, update ilgr in a lower frequency since it is
     if (update_cnt % num_sampling_update_before_feedback == 0)
     {
       UpdateNominalPolicy(horizon, pool);
@@ -175,10 +178,20 @@ namespace mjpc
     double best_return = trajectory[0].total_return;
     sampling_improvement = mju_max(best_return - trajectory[winner].total_return, 0.0);
 
+    // update improvement value
+    improvement_value = sampling_improvement + improvement_value_gamma * improvement_value;
+    // clip the improvement value between 0 and 3
+    improvement_value = mju_min(improvement_value, 3.0);
+
     policy_update_compute_time = GetDuration(policy_update_start);
 
     // update feedback scaling which is exp(-sampling_improvement * k_feedback_scale_gain)
-    feedback_scale = exp(-sampling_improvement * k_feedback_scale_gain);
+    feedback_scale = exp(-improvement_value * k_feedback_scale_gain);
+    // make sure feedback scaling is upper bounded by 0.9
+    feedback_scale = mju_min(feedback_scale, 0.9);
+    // update num_sampling_update_before_feedback
+    float feedback_scale_inv = mju_min(1.0 / feedback_scale, 100.0);
+    num_sampling_update_before_feedback = static_cast<int>(feedback_scale_inv);
 
     // increment update count
     update_cnt++;
@@ -337,6 +350,13 @@ namespace mjpc
         candidate_policy[i].CopyFrom(this->policy, this->policy.trajectory.horizon);
         // Set feedback scaling for candidate policies (only for sampling)
         candidate_policy[i].feedback_scaling = this->feedback_scale;
+        // sampling token
+        absl::BitGen gen_;
+        // randomly select .0.25 * num_trajectory to disable feedback
+        if (absl::Bernoulli(gen_, 0.25))
+        {
+          candidate_policy[i].feedback_scaling = 0.0;
+        }
       }
 
       if (i != 0) {
@@ -421,6 +441,7 @@ namespace mjpc
         {mjITEM_SLIDERINT, "Sampling Update Before Feedback", 10, &num_sampling_update_before_feedback, "1 50"},
         {mjITEM_SLIDERNUM, "Cost Variance Threshold", 2, &cost_variance_threshold_, "0 100"},
         {mjITEM_SLIDERNUM, "Feedback Scale Gain", 1, &k_feedback_scale_gain, "0.1 10"},
+        {mjITEM_SLIDERNUM, "Improvement Value Gamma", 1, &improvement_value_gamma, "0.1 1.0"},
         {mjITEM_END}};
 
     mjui_add(&ui, defFeedbackSampling);
