@@ -5,7 +5,7 @@
 
   <custom>
     <text name="task_transition"
-      data="Jump|Kick Spin|Spin Kick|Cartwheel (1)|Crouch Flip|Cartwheel (2)|Monkey Flip|Dance|Run|Walk" />
+      data="Jump|Kick Spin|Spin Kick|Cartwheel (1)|Crouch Flip|Cartwheel (2)|Monkey Flip|Dance|Run|Walk|Raise Hand" />
     <numeric name="sampling_representation" data="2" />
     <numeric name="agent_planner" data="2" />
     <numeric name="agent_horizon" data="0.5" />
@@ -228,4 +228,6 @@
   <!-\- run -\->
   <include file="./keyframes/CMU-CMU-137-137_40_poses.xml" />
   <!-\- walk -\->
+  <include file="./keyframes/raise_hand.xml" />
+  <!-\- raise hand -\->
 </mujoco>

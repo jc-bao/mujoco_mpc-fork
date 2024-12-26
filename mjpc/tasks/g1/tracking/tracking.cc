@@ -37,6 +37,7 @@ constexpr int kMotionLengths[] = {
     279,  // Dance - CMU-CMU-103-103_08
     39,   // Run - CMU-CMU-108-108_13
     510,  // Walk - CMU-CMU-137-137_40
+    333,  // Raise Hand - CMU-CMU-103-103_08
 };
 
 // return length of motion trajectory

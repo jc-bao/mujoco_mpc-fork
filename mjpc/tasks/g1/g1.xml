@@ -28,7 +28,7 @@
         </default>
         <default class="shoulder_pitch_motor">
             <joint damping="10.0" />
-            <position kp="100" kv="0.0" />
+            <position kp="100" kv="0.0"/>
         </default>
         <default class="shoulder_roll_motor">
             <joint damping="6.0" />
@@ -40,7 +40,7 @@
         </default>
         <default class="elbow_motor">
             <joint damping="6.0" />
-            <position kp="60" kv="0.0" />
+            <position kp="60" kv="0.0"/>
         </default>
         <default class="wrist_motor">
             <joint damping="0.4" />
@@ -534,24 +534,5 @@
         <accelerometer name="imu-linear-acceleration" site="imu" noise="1e-2" cutoff="157" />
     </sensor> -->
 
-    <keyframe>
-        <key name="stand"
-            qpos="
-      0 0 0.8
-      1 0 0 0
-      -0.5 0 0 1.4 -0.6 0
-      -0.5 0 0 1.4 -0.6 0
-      0 0 0
-      0.3 0.6 0
-      0.3 -0.6 0" />
-        <key name="stand_on_left_leg"
-            qpos="
-      0 0 0.80
-      1.0 0 0 0
-      0 0 0 0 0 0
-      -0.524 0.0 0 1.0 0 0
-       0.0 -0.262 0.0
-        0 0 0
-        0 0 0" />
-    </keyframe>
+
 </mujoco>

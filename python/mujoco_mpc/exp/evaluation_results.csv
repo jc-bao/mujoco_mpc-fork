@@ -1,0 +1,5 @@
+Task,Controller,RunIndex,Cost
+Acrobot,Feedback Sampling,1,141.47610581789897
+Acrobot,Feedback Sampling,2,123.62996100450346
+Acrobot,iLQG,1,370.3798029878372
+Acrobot,iLQG,2,375.2217191268876
