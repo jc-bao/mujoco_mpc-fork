@@ -139,6 +139,12 @@ namespace mjpc
     // feedback scale gain
     double k_feedback_scale_gain = 1.0;
 
+    // improvement value gamma
+    double improvement_value_gamma = 0.95;
+
+    // improvement value 
+    double improvement_value = 0.0;
+
     mutable std::shared_mutex mtx_;
   };
 

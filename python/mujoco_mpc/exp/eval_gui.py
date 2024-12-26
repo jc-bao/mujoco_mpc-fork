@@ -135,4 +135,4 @@ def main(config: EvaluationConfig) -> None:
     print(f"{config.task} {config.controller} cost: {costs.mean()}")
 
 if __name__ == "__main__":
-    tyro.cli(main)
+    main(tyro.cli(EvaluationConfig))
