@@ -5,7 +5,7 @@
 
   <custom>
     <text name="task_transition"
-      data="Raise Hand|Stand to Walk|Walk to Stand|Stand|Walk Turn Left 90|Down Box to Walk" />
+      data="Raise Hand|Stand to Walk|Walk to Stand|Stand|Walk Turn Left 90|Down Box to Walk|Run to Walk|Swing" />
     <numeric name="sampling_representation" data="2" />
     <numeric name="agent_planner" data="2" />
     <numeric name="agent_horizon" data="0.5" />
@@ -240,4 +240,8 @@
   <!-\- walk turn left 90 -\->
   <include file="./keyframes/down_box_to_walk.xml" />
   <!-\- down box to walk -\->
+  <include file="./keyframes/run_to_walk.xml" />
+  <!-\- run to walk -\->
+  <include file="./keyframes/swing.xml" />
+  <!-\- swing -\->
 </mujoco>
