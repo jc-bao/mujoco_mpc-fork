@@ -12,6 +12,7 @@
     <numeric name="sampling_exploration" data="0.3" />
     <numeric name="gradient_spline_points" data="5" />
     <numeric name="residual_Height Goal" data="0.25" />
+    <numeric name="New Cost Weight" data="1.0" />
   </custom>
 
   <worldbody>

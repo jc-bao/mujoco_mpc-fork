@@ -74,6 +74,9 @@ def update_planner_config(
         Path to the modified XML file.
     """
     # Verify source file exists
+    print(model_path)
+    # make model_path a path object
+    # model_path = Path(model_path)
     if not model_path.exists():
         raise FileNotFoundError(f"Source file not found: {model_path}")
 
@@ -86,7 +89,7 @@ def update_planner_config(
     # Read file
     with open(benchmark_path, "r") as file:
         content = file.read()
-
+    print(model_path)
     # 1) Update the planner ID
     # Example: <numeric name="agent_planner" data="7" />
     content = re.sub(
@@ -128,7 +131,7 @@ def walker_task_init(agent,yaml_config = None):
     """Walker task initialization."""
     print('Walker task initialization')
     agent.set_task_parameters({"Speed Goal": yaml_config["speed_goal"]})
-    
+    print('--------------------------------')
     print(agent.get_task_parameters())
 
 def allegro_task(agent, reset_time, t0):
@@ -151,7 +154,10 @@ def allegro_task(agent, reset_time, t0):
 
 def default_init(agent,yaml_config = None):
     """Default task initialization function."""
-    
+    print('--------------------------------')
+    # print(agent.get_task_parameters())
+    print(agent.get_cost_weights())
+    # agent.set_cost_weights({"Distance": 30.0})
     print('Default task initialization')
     pass
 
@@ -194,10 +200,12 @@ def main(config: EvaluationConfig) -> Optional[float]:
         print("No YAML config file provided or file does not exist. Proceeding without overrides.")
 
     # Update planner configuration
+    print(config.controller)
     planner_id = planner_id_map[config.controller]
     try:
         if planner_id == 7:
             yaml_config_feedback = yaml_config["feedback_sampling"]
+            print(yaml_config_feedback)
             model_path = update_planner_config(config.model_path, planner_id, yaml_config_feedback)
             print(f"Successfully created and updated: {model_path}")
         else:
@@ -209,6 +217,7 @@ def main(config: EvaluationConfig) -> Optional[float]:
         return
 
     # Load model
+    print(model_path)
     model = mujoco.MjModel.from_xml_path(str(model_path))
 
     # Run GUI with agent server

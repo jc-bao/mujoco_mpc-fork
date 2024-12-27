@@ -37,7 +37,8 @@ def main():
     # You can add more tasks here, or remove tasks you don’t need
     tasks_config = {
         # "Cartpole",
-        "Acrobot"
+        # "Acrobot",
+        "Quadruped Hill",
         # "allegro",
         # "swimmer",
         # "walker",
@@ -46,9 +47,9 @@ def main():
 
     # List of controllers to test
     controllers = [
-        # "Sampling",
+        "Sampling",
         "Feedback Sampling",
-        "iLQG"
+        # "iLQG"
     ]
 
     # Number of runs per (task, controller) pair
@@ -75,12 +76,17 @@ def main():
             print(f"\n=== Evaluating {task} - {controller} for {num_runs} runs ===")
             for i in range(num_runs):
                 # Read config file from ./config/<task>/config.yaml
-                config_file = Path("./config") / task / "config.yaml"
+                # if there is space in the task name, replace it with underscore
+                task_file_name = task.replace(" ", "_")
+                config_file = Path("./config") / task_file_name / "config.yaml"
+                
                 config = EvaluationConfig(
                     task=task,
                     controller=controller,
                     config_file=config_file
                 )
+                if task == "Quadruped Hill":
+                    config.model_path = Path('/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/quadruped/task_hill.xml')
                 try:
                     cost = eval_main(config)
                     if cost is not None:
