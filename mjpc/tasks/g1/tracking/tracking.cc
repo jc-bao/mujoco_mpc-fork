@@ -27,24 +27,14 @@ std::tuple<int, int, double, double> ComputeInterpolationValues(double index,
 constexpr double kFps = 30.0;
 
 constexpr int kMotionLengths[] = {
-    // 121,  // Jump - CMU-CMU-02-02_04
-    // 154,  // Kick Spin - CMU-CMU-87-87_01
-    // 115,  // Spin Kick - CMU-CMU-88-88_06
-    // 78,   // Cartwheel (1) - CMU-CMU-88-88_07
-    // 145,  // Crouch Flip - CMU-CMU-88-88_08
-    // 188,  // Cartwheel (2) - CMU-CMU-88-88_09
-    // 260,  // Monkey Flip - CMU-CMU-90-90_19
-    // 279,  // Dance - CMU-CMU-103-103_08
-    // 39,   // Run - CMU-CMU-108-108_13
-    // 510,  // Walk - CMU-CMU-137-137_40
-    333,  // Lift Hand - CMU-CMU-103-103_08
-    187,  // Stand to Walk - CMU-CMU-103-103_08
-    147,  // Walk to Stand - CMU-CMU-103-103_08
-    90,   // Stand - CMU-CMU-103-103_08
-    213,  // Walk Turn Left 90 - CMU-CMU-103-103_08
-    283,  // Down Box to Walk - CMU-CMU-103-103_08
-    106,  // Run to Walk - CMU-CMU-103-103_08
-    245,  // Swing - CMU-CMU-103-103_08
+    334,  // Lift Hand - CMU-CMU-103-103_08
+    188,  // Stand to Walk - CMU-CMU-103-103_08
+    148,  // Walk to Stand - CMU-CMU-103-103_08
+    91,   // Stand - CMU-CMU-103-103_08
+    214,  // Walk Turn Left 90 - CMU-CMU-103-103_08
+    284,  // Down Box to Walk - CMU-CMU-103-103_08
+    107,  // Run to Walk - CMU-CMU-103-103_08
+    246,  // Swing - CMU-CMU-103-103_08
 };
 
 // return length of motion trajectory

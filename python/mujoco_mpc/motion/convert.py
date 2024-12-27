@@ -160,13 +160,15 @@ class MotionReader:
             qvel_str = " ".join(["0.0"] * qvel_dim)
 
             # check if frame is the same as the previous frame, if so, skip
-            current_frame = frame['frame']
-            last_frame = self.data.iloc[idx - 1]['frame']
-            if current_frame == last_frame:
-                continue
-            
+            # current_frame = frame['frame']
+            # last_frame = self.data.iloc[idx - 1]['frame']
+            # if current_frame == last_frame:
+            #     continue
+            # if current_frame - last_frame > 1:
+            #     print(f"[Warning] Frame {current_frame} is {current_frame - last_frame} frames away from the previous frame")
+
             # Create key element
-            key_name = f"{frame['motion_key']}_{frame['frame'] + 1}"
+            key_name = f"{frame['motion_key']}_{idx + 1}"
             key_line = f'    <key name="{key_name}" mpos="{mpos_str}" qpos="{qpos_str}" qvel="{qvel_str}" />'
             xml_content.append(key_line)
         
@@ -208,7 +210,7 @@ def main():
     # parser.add_argument('--export-xml', type=str, help='Export to MuJoCo XML file')
     # parser.add_argument('--motion-key', type=str, help='Specific motion key to export to XML')
 
-    file_name = "swing"
+    file_name = "down_box_to_walk"
     fps = 30
     csv_file = f"../data/{file_name}.csv"
     motion_key = None
