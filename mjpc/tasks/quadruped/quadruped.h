@@ -139,6 +139,9 @@ class QuadrupedFlat : public Task {
     // flip: maximum height of flight phase
     constexpr static double kMaxHeight = 0.8;         // meter
 
+    // New parameter for the weight
+    int new_cost_weight_param_id_;
+
     //  ============  methods  ============
     // return internal phase clock
     double GetPhase(double time) const;
@@ -272,6 +275,7 @@ class QuadrupedHill : public Task {
    private:
     friend class QuadrupedHill;
     int current_mode_;
+    int new_cost_weight_param_id_;  // New parameter for the weight
   };
   QuadrupedHill() : residual_(this) {}
   void TransitionLocked(mjModel* model, mjData* data) override;

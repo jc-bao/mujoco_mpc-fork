@@ -530,6 +530,7 @@ void QuadrupedFlat::ResetLocked(const mjModel* model) {
   residual_.balance_cost_id_ = CostTermByName(model, "Balance");
   residual_.upright_cost_id_ = CostTermByName(model, "Upright");
   residual_.height_cost_id_ = CostTermByName(model, "Height");
+  residual_.new_cost_weight_param_id_ = ParameterIndex(model, "New Cost Weight");
 
   // ----------  model identifiers  ----------
   residual_.torso_body_id_ = mj_name2id(model, mjOBJ_XBODY, "trunk");
@@ -773,6 +774,18 @@ void QuadrupedHill::ResidualFn::Residual(const mjModel* model,
 
   // ---------- Residual (3) ----------
   mju_copy(residual + 13, data->ctrl, model->nu);
+
+  // New cost term
+  double position_error_norm = mju_norm3(residual + 1);
+  double geodesic_distance = 1.0 - mju_abs(mju_dot(goal_orientation, orientation, 4));
+  double tolerance = 1.5e-1;
+  double new_cost_weight = parameters_[new_cost_weight_param_id_];
+  // printf("new_cost_weight: %f\n", new_cost_weight);
+  if (position_error_norm > tolerance || geodesic_distance > tolerance) {
+    residual[17] = 50 * new_cost_weight;  // New term when goal not reached
+  } else {
+    residual[17] = 0;  // New term when goal is reached
+  }
 }
 
 // -------- Transition for quadruped task --------

@@ -97,7 +97,7 @@
   </worldbody>
 
   <actuator>
-    <!-- <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
+    <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
         <motor name="left_hip_roll_joint" joint="left_hip_roll_joint" gear="80" />
         <motor name="left_hip_yaw_joint" joint="left_hip_yaw_joint" gear="80" />
         <motor name="left_knee_joint" joint="left_knee_joint" gear="100" />
@@ -120,9 +120,9 @@
         <motor name="left_elbow_joint" joint="left_elbow_joint" gear="20" />
         <motor name="right_shoulder_pitch_joint" joint="right_shoulder_pitch_joint" gear="20" />
         <motor name="right_shoulder_roll_joint" joint="right_shoulder_roll_joint" gear="20" />
-        <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" /> -->
+        <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" />
 
-    <position class="hip_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
+    <!-- <position class="hip_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
     <position class="hip_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
     <position class="hip_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
     <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
@@ -151,7 +151,7 @@
       joint="right_shoulder_pitch_joint" />
     <position class="shoulder_roll_motor" name="right_shoulder_roll_joint"
       joint="right_shoulder_roll_joint" />
-    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" />
+    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" /> -->
 
 
     <!-- <motor name="left_shoulder_yaw_joint" joint="left_shoulder_yaw_joint" /> -->
@@ -163,4 +163,25 @@
         <motor name="right_wrist_pitch_joint" joint="right_wrist_pitch_joint" />
         <motor name="right_wrist_yaw_joint" joint="right_wrist_yaw_joint" /> -->
   </actuator>
+
+      <keyframe>
+        <key name="stand"
+            qpos="
+      0 0 0.8
+      1 0 0 0
+      -0.5 0 0 1.4 -0.6 0
+      -0.5 0 0 1.4 -0.6 0
+      0 0 0
+      0.3 0.6 0
+      0.3 -0.6 0" />
+        <key name="stand_on_left_leg"
+            qpos="
+      0 0 0.80
+      1.0 0 0 0
+      0 0 0 0 0 0
+      -0.524 0.0 0 1.0 0 0
+       0.0 -0.262 0.0
+        0 0 0
+        0 0 0" />
+    </keyframe>
 </mujoco>

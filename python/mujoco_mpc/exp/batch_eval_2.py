@@ -4,10 +4,15 @@ import statistics
 import re
 import csv
 from pathlib import Path
+import eval_gui
 
-# Add imports from eval_gui.py
-from eval_gui import main as eval_main
-from eval_gui import EvaluationConfig
+# Define the EvaluationConfig class
+class EvaluationConfig:
+    def __init__(self, task, controller, total_time):
+        self.task = task
+        self.controller = controller
+        self.total_time = total_time
+
 
 def parse_cost_from_output(output, task, controller):
     """
@@ -36,20 +41,15 @@ def main():
     # Dictionary mapping tasks to their total_time
     # You can add more tasks here, or remove tasks you don’t need
     tasks_config = {
-        # "Cartpole",
-        # "Acrobot",
-        "Quadruped Hill",
-        # "allegro",
-        # "swimmer",
-        # "walker",
-
+        "Cartpole": 3.0,
+        "Acrobot": 25.0,
     }
 
     # List of controllers to test
     controllers = [
-        "Sampling",
-        "Feedback Sampling",
-        # "iLQG"
+        # "Sampling",
+        # "iLQG",
+        "Feedback Sampling"
     ]
 
     # Number of runs per (task, controller) pair
@@ -71,24 +71,16 @@ def main():
     # }
     run_data_records = []
 
-    for task in tasks_config:
+    for task, total_time in tasks_config.items():
         for controller in controllers:
             print(f"\n=== Evaluating {task} - {controller} for {num_runs} runs ===")
             for i in range(num_runs):
-                # Read config file from ./config/<task>/config.yaml
-                # if there is space in the task name, replace it with underscore
-                task_file_name = task.replace(" ", "_")
-                config_file = Path("./config") / task_file_name / "config.yaml"
-                
-                config = EvaluationConfig(
-                    task=task,
-                    controller=controller,
-                    config_file=config_file
-                )
-                if task == "Quadruped Hill":
-                    config.model_path = Path('/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/quadruped/task_hill.xml')
+                # Create an EvaluationConfig instance
+                config = EvaluationConfig(task=task, controller=controller, total_time=total_time)
+
+                # Call the main function from eval_gui.py directly
                 try:
-                    cost = eval_main(config)
+                    cost = eval_gui.main(config)  # Assuming eval_gui is imported
                     if cost is not None:
                         results[task][controller].append(cost)
                         run_data_records.append({
@@ -99,10 +91,9 @@ def main():
                         })
                         print(f"Run {i+1}/{num_runs} => cost: {cost:.4f}")
                     else:
-                        print(f"Run {i+1}/{num_runs} => Invalid cost returned.")
+                        print(f"Run {i+1}/{num_runs} => Cost could not be determined.")
                 except Exception as e:
-                    print(f"Run {i+1}/{num_runs} failed with error:\n{e}")
-                    continue
+                    print(f"Run {i+1}/{num_runs} failed with error: {e}")
 
     # ================== Analyze results and print a table ==================
     print("\n================== Final Results Table ==================")

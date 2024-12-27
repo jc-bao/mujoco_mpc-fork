@@ -18,6 +18,7 @@
 *.egg-info/
 .eggs/
 build/
+build_2/
 build_cmake/
 # Exclude macOS folder attributes
 .DS_Store
@@ -36,3 +37,4 @@ python/dist/
 
 # Plots
 plots/
+python/mujoco_mpc/exp/evaluation_results.csv
