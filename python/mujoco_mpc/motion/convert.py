@@ -208,11 +208,12 @@ def main():
     # parser.add_argument('--export-xml', type=str, help='Export to MuJoCo XML file')
     # parser.add_argument('--motion-key', type=str, help='Specific motion key to export to XML')
 
+    file_name = "down_box_to_walk"
     fps = 30
-    csv_file = "../data/lift_hand.csv"
+    csv_file = f"../data/{file_name}.csv"
     motion_key = None
     animate = False
-    export_xml = "../data/lift_hand.xml"
+    export_xml = f"../data/{file_name}.xml"
     
     reader = MotionReader(csv_file)
     

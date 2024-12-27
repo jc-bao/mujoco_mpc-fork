@@ -41,10 +41,10 @@ def key_callback(keycode):
     else:
         logger.info(colored(f"Not mapped: {chr(keycode)}", "red"))
 
-def main(record: bool = True) -> None:
+def main(record: bool = True, file_name: str = "lift_hand") -> None:
     global time_step, paused, motion_id, motion_data_keys
     
-    visualize_motion_file = "../data/lift_hand.pkl"
+    visualize_motion_file = f"../data/{file_name}.pkl"
 
     humanoid_xml = "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/tracking/task.xml"
     time_step, motion_id, paused = 0, 0, False
@@ -90,8 +90,8 @@ def main(record: bool = True) -> None:
             locked_mask[locked_joint_idx] = 1
             q_partial = q_full[~locked_mask]
             # clip to ctrllimit
-            actuator_ctrlrange = mj_model.actuator_ctrlrange
-            q_partial[7:] = np.clip(q_partial[7:], actuator_ctrlrange[:, 0], actuator_ctrlrange[:, 1])
+            # actuator_ctrlrange = mj_model.actuator_ctrlrange
+            # q_partial[7:] = np.clip(q_partial[7:], actuator_ctrlrange[:, 0], actuator_ctrlrange[:, 1])
             mj_data.qpos = q_partial
 
             # translate the robot to make sure the feet is always flat relative to the ground
@@ -167,9 +167,9 @@ def main(record: bool = True) -> None:
                     break
 
     if record:
-        csv_filename = "../data/lift_hand.csv"
+        csv_filename = f"../data/{file_name}.csv"
         pd.DataFrame(sensor_data).to_csv(csv_filename, index=False)
         logger.info(colored(f"Saved tracking data to: {csv_filename}", "green"))
 
 if __name__ == "__main__":
-    main(record=True)
+    main(record=True, file_name="down_box_to_walk")

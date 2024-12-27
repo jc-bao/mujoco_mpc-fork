@@ -5,7 +5,7 @@
 
   <custom>
     <text name="task_transition"
-      data="Jump|Kick Spin|Spin Kick|Cartwheel (1)|Crouch Flip|Cartwheel (2)|Monkey Flip|Dance|Run|Walk|Raise Hand" />
+      data="Raise Hand|Stand to Walk|Walk to Stand|Stand|Walk Turn Left 90|Down Box to Walk" />
     <numeric name="sampling_representation" data="2" />
     <numeric name="agent_planner" data="2" />
     <numeric name="agent_horizon" data="0.5" />
@@ -208,7 +208,7 @@
   </actuator>
 
 
-  <include file="./keyframes/CMU-CMU-02-02_04_poses.xml" />
+  <!-- <include file="./keyframes/CMU-CMU-02-02_04_poses.xml" />
   <!-\- simple jump, balance -\->
   <include file="./keyframes/CMU-CMU-87-87_01_poses.xml" />
   <!-\- jump with kick and spin -\->
@@ -227,7 +227,17 @@
   <include file="./keyframes/CMU-CMU-108-108_13_poses.xml" />
   <!-\- run -\->
   <include file="./keyframes/CMU-CMU-137-137_40_poses.xml" />
-  <!-\- walk -\->
+  <!-\- walk -\-> -->
   <include file="./keyframes/lift_hand.xml" />
   <!-\- raise hand -\->
+  <include file="./keyframes/stand_to_walk.xml" />
+  <!-\- walk to stand -\->
+  <include file="./keyframes/walk_to_stand_t2.xml" />
+  <!-\- walk to stand -\->
+  <include file="./keyframes/stand.xml" />
+  <!-\- stand -\->
+  <include file="./keyframes/walk_turn_left_90.xml" />
+  <!-\- walk turn left 90 -\->
+  <include file="./keyframes/down_box_to_walk.xml" />
+  <!-\- down box to walk -\->
 </mujoco>
