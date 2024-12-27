@@ -7,6 +7,7 @@ import joblib
 from loguru import logger
 from termcolor import colored
 import pandas as pd
+from scipy.spatial.transform import Rotation as R
 
 def add_visual_capsule(scene, point1, point2, radius, rgba):
     """Adds one capsule to an mjvScene."""
@@ -40,7 +41,7 @@ def key_callback(keycode):
     else:
         logger.info(colored(f"Not mapped: {chr(keycode)}", "red"))
 
-def main() -> None:
+def main(record: bool = True) -> None:
     global time_step, paused, motion_id, motion_data_keys
     
     visualize_motion_file = "../data/lift_hand.pkl"
@@ -81,12 +82,54 @@ def main() -> None:
                                    curr_motion['root_rot'][curr_time][[3, 0, 1, 2]], 
                                    curr_motion['dof'][curr_time]])
             
+            # post process qpos
+
+            # lock some joints
             locked_joint_idx = np.array([2, 4, 5, 6, 9, 11, 12, 13]) + 12 + 3 + 7
             locked_mask = np.zeros_like(q_full, dtype=bool)
             locked_mask[locked_joint_idx] = 1
-            mj_data.qpos = q_full[~locked_mask]
-                
+            q_partial = q_full[~locked_mask]
+            # clip to joint limits
+            q_partial[7:] = np.clip(q_partial[7:], -1.0, 1.0)
+            mj_data.qpos = q_partial
+
+            # translate the robot to make sure the feet is always flat relative to the ground
             mujoco.mj_forward(mj_model, mj_data)
+            # frist, get the xmat of foot
+            for foot_side in ['right', 'left']:
+                foot_id = mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_BODY, f'{foot_side}_ankle_roll_link')
+                foot_xmat = np.array(mj_data.xmat[foot_id]).reshape(3, 3)
+                # get rpy of the foot
+                foot_rot = R.from_matrix(foot_xmat)
+                foot_rpy = foot_rot.as_euler('xyz')
+                # get right foot roll joint id
+                foot_roll_joint_id = mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_JOINT, f'{foot_side}_ankle_roll_joint')
+                foot_roll_joint_qpos_idx = foot_roll_joint_id - 1 + 7 # remove the free joint and add back the free joint dof
+                foot_pitch_joint_id = mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_JOINT, f'{foot_side}_ankle_pitch_joint')
+                foot_pitch_joint_qpos_idx = foot_pitch_joint_id - 1 + 7 # remove the free joint and add back the free joint dof
+                # set the roll and pitch of the foot to compensate the roll and pitch of the foot
+                mj_data.qpos[foot_roll_joint_qpos_idx] = -foot_rpy[0]
+                mj_data.qpos[foot_pitch_joint_qpos_idx] = -foot_rpy[1]
+
+            
+            mujoco.mj_forward(mj_model, mj_data)
+
+            # compare tracking site tracking[lheel] and tracking[ltoe] position
+            z_offset = 100.0
+            for foot_side in ['r', 'l']:
+                heel_id = mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_SITE, f'tracking[{foot_side}heel]')
+                toe_id = mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_SITE, f'tracking[{foot_side}toe]')
+                heel_pos = mj_data.site_xpos[heel_id]
+                toe_pos = mj_data.site_xpos[toe_id]
+                z_foot = (heel_pos[2] + toe_pos[2]) / 2
+                if z_foot < z_offset:
+                    z_offset = z_foot
+            z_offset += 0.001
+            # offset the robot by z_offset
+            mj_data.qpos[2] = mj_data.qpos[2] - z_offset
+
+            mujoco.mj_forward(mj_model, mj_data)
+
             if not paused:
                 time_step += dt
 
@@ -98,17 +141,18 @@ def main() -> None:
                 pos = mj_data.sensordata[sensor_adr:sensor_adr+3]
                 timestep_data.extend(pos)
             
-            frame_data = {
-                'timestamp': time_step,
-                'motion_id': motion_id,
-                'motion_key': curr_motion_key,
-                'frame': curr_time,
-                **{f'qpos_{i}': val for i, val in enumerate(mj_data.qpos)}
-            }
-            
-            for i, col in enumerate(columns):
-                frame_data[col] = timestep_data[i]
-            sensor_data.append(frame_data)
+            if record:
+                frame_data = {
+                    'timestamp': time_step,
+                    'motion_id': motion_id,
+                    'motion_key': curr_motion_key,
+                    'frame': curr_time,
+                    **{f'qpos_{i}': val for i, val in enumerate(mj_data.qpos)}
+                }
+                
+                for i, col in enumerate(columns):
+                    frame_data[col] = timestep_data[i]
+                sensor_data.append(frame_data)
 
             if 'smpl_joints' in curr_motion:
                 joint_gt = curr_motion['smpl_joints']
@@ -117,12 +161,14 @@ def main() -> None:
 
             viewer.sync()
 
-            if int(time_step/dt) >= curr_motion['dof'].shape[0]:
-                break
+            if record:
+                if int(time_step/dt) >= curr_motion['dof'].shape[0]:
+                    break
 
-    csv_filename = "../data/lift_hand.csv"
-    pd.DataFrame(sensor_data).to_csv(csv_filename, index=False)
-    logger.info(colored(f"Saved tracking data to: {csv_filename}", "green"))
+    if record:
+        csv_filename = "../data/lift_hand.csv"
+        pd.DataFrame(sensor_data).to_csv(csv_filename, index=False)
+        logger.info(colored(f"Saved tracking data to: {csv_filename}", "green"))
 
 if __name__ == "__main__":
-    main()
+    main(record=True)

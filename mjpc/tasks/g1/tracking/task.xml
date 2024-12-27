@@ -228,6 +228,6 @@
   <!-\- run -\->
   <include file="./keyframes/CMU-CMU-137-137_40_poses.xml" />
   <!-\- walk -\->
-  <include file="./keyframes/raise_hand.xml" />
+  <include file="./keyframes/lift_hand.xml" />
   <!-\- raise hand -\->
 </mujoco>
