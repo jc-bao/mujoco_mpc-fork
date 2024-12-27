@@ -116,5 +116,5 @@ class Controller:
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="go2", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="g1", mujoco_mpc_mode="gui")
     controller.main_loop()
