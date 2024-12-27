@@ -37,7 +37,7 @@ constexpr int kMotionLengths[] = {
     279,  // Dance - CMU-CMU-103-103_08
     39,   // Run - CMU-CMU-108-108_13
     510,  // Walk - CMU-CMU-137-137_40
-    333,  // Raise Hand - CMU-CMU-103-103_08
+    333,  // Lift Hand - CMU-CMU-103-103_08
 };
 
 // return length of motion trajectory
@@ -87,6 +87,8 @@ void Tracking::ResidualFn::Residual(const mjModel *model, const mjData *data,
   int length = MotionLength(current_mode_);
   double current_index = (data->time - reference_time_) * kFps + start;
   int last_key_index = start + length - 1;
+  // make sure current_index is within the range of the motion
+  current_index = std::clamp(current_index, 0.0, (double)last_key_index);
 
   // Positions:
   // We interpolate linearly between two consecutive key frames in order to
@@ -226,7 +228,7 @@ void Tracking::TransitionLocked(mjModel *model, mjData *d) {
   // indices
   double current_index = (d->time - residual_.reference_time_) * kFps + start;
   int last_key_index = start + length - 1;
-
+  current_index = std::clamp(current_index, 0.0, (double)last_key_index);
   // Positions:
   // We interpolate linearly between two consecutive key frames in order to
   // provide smoother signal for tracking.

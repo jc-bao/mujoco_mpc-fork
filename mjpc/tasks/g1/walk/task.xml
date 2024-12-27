@@ -97,7 +97,7 @@
   </worldbody>
 
   <actuator>
-    <!-- <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
+    <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
         <motor name="left_hip_roll_joint" joint="left_hip_roll_joint" gear="80" />
         <motor name="left_hip_yaw_joint" joint="left_hip_yaw_joint" gear="80" />
         <motor name="left_knee_joint" joint="left_knee_joint" gear="100" />
@@ -120,9 +120,9 @@
         <motor name="left_elbow_joint" joint="left_elbow_joint" gear="20" />
         <motor name="right_shoulder_pitch_joint" joint="right_shoulder_pitch_joint" gear="20" />
         <motor name="right_shoulder_roll_joint" joint="right_shoulder_roll_joint" gear="20" />
-        <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" /> -->
+        <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" />
 
-    <position class="hip_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
+    <!-- <position class="hip_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
     <position class="hip_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
     <position class="hip_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
     <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
@@ -151,7 +151,7 @@
       joint="right_shoulder_pitch_joint" />
     <position class="shoulder_roll_motor" name="right_shoulder_roll_joint"
       joint="right_shoulder_roll_joint" />
-    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" />
+    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" /> -->
 
 
     <!-- <motor name="left_shoulder_yaw_joint" joint="left_shoulder_yaw_joint" /> -->

@@ -89,8 +89,9 @@ def main(record: bool = True) -> None:
             locked_mask = np.zeros_like(q_full, dtype=bool)
             locked_mask[locked_joint_idx] = 1
             q_partial = q_full[~locked_mask]
-            # clip to joint limits
-            q_partial[7:] = np.clip(q_partial[7:], -1.0, 1.0)
+            # clip to ctrllimit
+            actuator_ctrlrange = mj_model.actuator_ctrlrange
+            q_partial[7:] = np.clip(q_partial[7:], actuator_ctrlrange[:, 0], actuator_ctrlrange[:, 1])
             mj_data.qpos = q_partial
 
             # translate the robot to make sure the feet is always flat relative to the ground
