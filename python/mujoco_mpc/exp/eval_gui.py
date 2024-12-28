@@ -219,7 +219,9 @@ def main(config: EvaluationConfig) -> Optional[float]:
     # Load model
     print(model_path)
     model = mujoco.MjModel.from_xml_path(str(model_path))
-
+    print("Agent server binary path:", Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server")
+    print("Task ID:", config.task)
+    print("Model Path:", model_path)
     # Run GUI with agent server
     with agent_lib.Agent(
         server_binary_path=Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server",

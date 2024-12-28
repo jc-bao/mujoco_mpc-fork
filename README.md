@@ -9,6 +9,12 @@ cd python/mujoco_mpc/exp
 python eval_gui.py
 ```
 
+Batch Evaluation
+
+```
+python batch_evaluation.py
+```
+
 ## How to deploy
 
 ### Sim2Sim

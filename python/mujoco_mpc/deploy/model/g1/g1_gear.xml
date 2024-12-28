@@ -19,42 +19,33 @@
     </default>
 
     <default class="hip_motor">
-      <joint damping="10.0" />
       <position kp="100" kv="2.5" />
     </default>
     <default class="knee_motor">
-      <joint damping="20.0" />
       <position kp="200" kv="5.0" />
     </default>
     <default class="ankle_pitch_motor">
-      <joint damping="2.0" armature="0.1"/>
       <position kp="20" kv="0.2" />
     </default>
     <default class="ankle_roll_motor">
       <position kp="20" kv="0.1" />
     </default>
     <default class="waist_motor">
-      <joint damping="40.0" />
       <position kp="400" kv="5.0" />
     </default>
     <default class="shoulder_pitch_motor">
-      <joint damping="10.0" />
       <position kp="90" kv="2.0" />
     </default>
     <default class="shoulder_roll_motor">
-      <joint damping="6.0" />
       <position kp="60" kv="1.0" />
     </default>
     <default class="shoulder_yaw_motor">
-      <joint damping="2.0" />
       <position kp="20" kv="0.4" />
     </default>
     <default class="elbow_motor">
-      <joint damping="6.0" />
       <position kp="60" kv="1.0" />
     </default>
     <default class="wrist_motor_pos">
-      <joint damping="0.4" />
       <position kp="4" kv="0.2" />
     </default>
 
@@ -456,66 +447,49 @@
       joint="left_shoulder_pitch_joint" />
     <position class="shoulder_roll_motor" name="left_shoulder_roll_joint"
       joint="left_shoulder_roll_joint" />
-    
+    <position class="shoulder_yaw_motor" name="left_shoulder_yaw_joint"
+      joint="left_shoulder_yaw_joint" />
     <position class="elbow_motor" name="left_elbow_joint" joint="left_elbow_joint" />
-    
+    <position class="wrist_motor_pos" name="left_wrist_roll_joint" joint="left_wrist_roll_joint" />
+    <position class="wrist_motor_pos" name="left_wrist_pitch_joint" joint="left_wrist_pitch_joint" />
+    <position class="wrist_motor_pos" name="left_wrist_yaw_joint" joint="left_wrist_yaw_joint" />
 
     <position class="shoulder_pitch_motor" name="right_shoulder_pitch_joint"
       joint="right_shoulder_pitch_joint" />
     <position class="shoulder_roll_motor" name="right_shoulder_roll_joint"
       joint="right_shoulder_roll_joint" />
-    
-    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" /> -->
-    
-   
-    
-    
-    
-
-    <motor name="left_hip_pitch" joint="left_hip_pitch_joint" ctrlrange="-88 88" />
-    <motor name="left_hip_roll" joint="left_hip_roll_joint" ctrlrange="-88 88" />
-    <motor name="left_hip_yaw" joint="left_hip_yaw_joint" ctrlrange="-88 88" />
-    <motor name="left_knee" joint="left_knee_joint" ctrlrange="-139 139" />
-    <motor name="left_ankle_pitch" joint="left_ankle_pitch_joint" ctrlrange="-50 50" />
-    <motor name="left_ankle_roll" joint="left_ankle_roll_joint" ctrlrange="-50 50" />
-
-    <motor name="right_hip_pitch" joint="right_hip_pitch_joint" ctrlrange="-88 88" />
-    <motor name="right_hip_roll" joint="right_hip_roll_joint" ctrlrange="-88 88" />
-    <motor name="right_hip_yaw" joint="right_hip_yaw_joint" ctrlrange="-88 88" />
-    <motor name="right_knee" joint="right_knee_joint" ctrlrange="-139 139" />
-    <motor name="right_ankle_pitch" joint="right_ankle_pitch_joint" ctrlrange="-50 50" />
-    <motor name="right_ankle_roll" joint="right_ankle_roll_joint" ctrlrange="-50 50" />
-
-    <motor name="waist_yaw" joint="waist_yaw_joint" ctrlrange="-88 88" />
-    <motor name="waist_roll" joint="waist_roll_joint" ctrlrange="-50 50" />
-    <motor name="waist_pitch" joint="waist_pitch_joint" ctrlrange="-50 50" />
-
-    <motor name="left_shoulder_pitch" joint="left_shoulder_pitch_joint" ctrlrange="-25 25" />
-    <motor name="left_shoulder_roll" joint="left_shoulder_roll_joint" ctrlrange="-25 25" />
-    <!-- <motor name="left_shoulder_yaw" joint="left_shoulder_yaw_joint" ctrlrange="-25 25" /> -->
-    <position class="shoulder_yaw_motor" name="left_shoulder_yaw_joint"
-      joint="left_shoulder_yaw_joint" />
-    <motor name="left_elbow" joint="left_elbow_joint" ctrlrange="-25 25" />
-    <!-- <motor name="left_wrist_roll" joint="left_wrist_roll_joint" ctrlrange="-25 25" /> -->
-    <!-- <motor name="left_wrist_pitch" joint="left_wrist_pitch_joint" ctrlrange="-5 5" /> -->
-    <!-- <motor name="left_wrist_yaw" joint="left_wrist_yaw_joint" ctrlrange="-5 5" /> -->
-    <position class="wrist_motor_pos" name="left_wrist_roll_joint" joint="left_wrist_roll_joint" />
-    <position class="wrist_motor_pos" name="left_wrist_pitch_joint" joint="left_wrist_pitch_joint" />
-    <position class="wrist_motor_pos" name="left_wrist_yaw_joint" joint="left_wrist_yaw_joint" />
-
-    <motor name="right_shoulder_pitch" joint="right_shoulder_pitch_joint" ctrlrange="-25 25" />
-    <motor name="right_shoulder_roll" joint="right_shoulder_roll_joint" ctrlrange="-25 25" />
-    <!-- <motor name="right_shoulder_yaw" joint="right_shoulder_yaw_joint" ctrlrange="-25 25" /> -->
     <position class="shoulder_yaw_motor" name="right_shoulder_yaw_joint"
       joint="right_shoulder_yaw_joint" />
-    <motor name="right_elbow" joint="right_elbow_joint" ctrlrange="-25 25" />
-    <!-- <motor name="right_wrist_roll" joint="right_wrist_roll_joint" ctrlrange="-25 25" /> -->
-    <!-- <motor name="right_wrist_pitch" joint="right_wrist_pitch_joint" ctrlrange="-5 5" /> -->
-    <!-- <motor name="right_wrist_yaw" joint="right_wrist_yaw_joint" ctrlrange="-5 5" /> -->
+    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" />
     <position class="wrist_motor_pos" name="right_wrist_roll_joint" joint="right_wrist_roll_joint" />
     <position class="wrist_motor_pos" name="right_wrist_pitch_joint"
       joint="right_wrist_pitch_joint" />
-    <position class="wrist_motor_pos" name="right_wrist_yaw_joint" joint="right_wrist_yaw_joint" />
+    <position class="wrist_motor_pos" name="right_wrist_yaw_joint" joint="right_wrist_yaw_joint" /> -->
+    <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
+    <motor name="left_hip_roll_joint" joint="left_hip_roll_joint" gear="80" />
+    <motor name="left_hip_yaw_joint" joint="left_hip_yaw_joint" gear="80" />
+    <motor name="left_knee_joint" joint="left_knee_joint" gear="100" />
+    <motor name="left_ankle_pitch_joint" joint="left_ankle_pitch_joint" gear="50" />
+    <motor name="left_ankle_roll_joint" joint="left_ankle_roll_joint" gear="50" />
+
+    <motor name="right_hip_pitch_joint" joint="right_hip_pitch_joint" gear="80" />
+    <motor name="right_hip_roll_joint" joint="right_hip_roll_joint" gear="80" />
+    <motor name="right_hip_yaw_joint" joint="right_hip_yaw_joint" gear="80" />
+    <motor name="right_knee_joint" joint="right_knee_joint" gear="100" />
+    <motor name="right_ankle_pitch_joint" joint="right_ankle_pitch_joint" gear="50" />
+    <motor name="right_ankle_roll_joint" joint="right_ankle_roll_joint" gear="50" />
+
+    <motor name="waist_yaw_joint" joint="waist_yaw_joint" gear="80" />
+    <motor name="waist_roll_joint" joint="waist_roll_joint" gear="50" />
+    <motor name="waist_pitch_joint" joint="waist_pitch_joint" gear="50" />
+
+    <motor name="left_shoulder_pitch_joint" joint="left_shoulder_pitch_joint" gear="20" />
+    <motor name="left_shoulder_roll_joint" joint="left_shoulder_roll_joint" gear="20" />
+    <motor name="left_elbow_joint" joint="left_elbow_joint" gear="20" />
+    <motor name="right_shoulder_pitch_joint" joint="right_shoulder_pitch_joint" gear="20" />
+    <motor name="right_shoulder_roll_joint" joint="right_shoulder_roll_joint" gear="20" />
+    <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" />
+    
   </actuator>
 
   <sensor>

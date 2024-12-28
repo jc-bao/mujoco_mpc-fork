@@ -67,3 +67,29 @@ def state_real2sim(q_real, qd_real, locked_joint_idx, nq_ctrl, nqd_ctrl, nq_real
     qd_sim[:6] = qd_real[:6]
     qd_sim[6:nqd_ctrl] = qd_real[6:nqd_real][~locked_mask]
     return q_sim, qd_sim
+
+def apply_gear_to_control(ctrl, gear_array):
+    """
+    Multiplies the control signals by the gear values.
+
+    Parameters:
+    - ctrl: np.ndarray, the control signals without gear.
+    - gear_array: np.ndarray, the gear values for each control signal.
+
+    Returns:
+    - np.ndarray, the control signals with gear applied.
+    """
+    return ctrl * gear_array
+
+def ctrl_real2sim(ctrl_w_mask, locked_idx, nu_real):
+    # print(ctrl_w_mask.shape)
+    # print(locked_idx.shape)
+    
+    mask = np.ones(29, dtype=bool)
+    mask[locked_idx] = False
+    print(ctrl_w_mask[mask].shape)
+    ctrl_sim = ctrl_w_mask[mask]
+    # print(ctrl_sim.shape)
+    return ctrl_sim
+# Example usage:
+# ctrl_with_gear = apply_gear_to_control(ctrl_without_gear, gear_array) 

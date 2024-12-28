@@ -90,14 +90,19 @@ class G1Config:
 
     # controller
     xml_path_ctrl: str = (
-        "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/stand/task.xml"
+        # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/stand/task.xml"
+        # "/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/g1/walk/task_benchmark.xml"
+        "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/walk/task.xml"
     )
     num_opt_steps: int = 1
-    task_id: str = "G1 Stand"
+    task_id: str = "G1 Walk"
 
     # sim
     xml_path_sim: str = (
         "./model/g1/g1.xml"
+        # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/g1.xml"
+        # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/stand/task.xml"
+        # "./model/g1/g1_gear.xml"
     )
     dt_sim: float = 0.005
     real_time_factor: float = 1.0

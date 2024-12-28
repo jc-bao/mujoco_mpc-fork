@@ -89,6 +89,9 @@ class Controller:
                     )
                     rate_limiter.sleep()
             elif self.mujoco_mpc_mode == "gui":
+                print("Agent server binary path:", pathlib.Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server")
+                print("Task ID:", self.config.task_id)
+                print("Model Path:", self.config.xml_path_ctrl)
                 with agent_lib.Agent(
                     server_binary_path=pathlib.Path(agent_lib.__file__).parent
                     / "mjpc"
@@ -106,7 +109,7 @@ class Controller:
                         self.ctrl_buffer[:] = pack_control_data(
                             self.ctrl_buffer, t_real, ctrl_real
                         )
-                        rate_limiter.sleep()
+                        # rate_limiter.sleep()
 
         except KeyboardInterrupt:
             print("Keyboard interrupt detected. Exiting...")
