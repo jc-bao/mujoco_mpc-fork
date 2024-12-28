@@ -5,7 +5,7 @@
 
   <custom>
     <text name="task_transition"
-      data="Raise Hand|Stand to Walk|Walk to Stand|Stand|Walk Turn Left 90|Down Box to Walk|Run to Walk|Swing" />
+      data="Raise Hand|Stand to Walk|Walk to Stand|Stand|Walk Turn Left 90|Down Box to Walk|Run to Walk|Swing|Tairan" />
     <numeric name="sampling_representation" data="2" />
     <numeric name="agent_planner" data="2" />
     <numeric name="agent_horizon" data="0.5" />
@@ -244,4 +244,6 @@
   <!-\- run to walk -\->
   <include file="./keyframes/swing.xml" />
   <!-\- swing -\->
+  <include file="./keyframes/tairan.xml" />
+  <!-\- tairan -\->
 </mujoco>

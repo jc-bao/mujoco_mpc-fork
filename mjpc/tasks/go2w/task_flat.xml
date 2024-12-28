@@ -128,6 +128,29 @@
     <position class="knee" name="RL_calf" joint="RL_calf_joint"/>
   </actuator> -->
 
+      <actuator>
+        <motor class="go2" name="FR_hip" joint="FR_hip_joint" gear="23.7" />
+        <motor class="go2" name="FR_thigh" joint="FR_thigh_joint" gear="23.7" />
+        <motor class="go2" name="FR_calf" joint="FR_calf_joint" gear="45.43" />
+        <motor class="go2" name="FR_wheel" joint="FR_wheel_joint" gear="15" />
+
+        <motor class="go2" name="FL_hip" joint="FL_hip_joint" gear="23.7" />
+        <motor class="go2" name="FL_thigh" joint="FL_thigh_joint" gear="23.7" />
+        <motor class="go2" name="FL_calf" joint="FL_calf_joint" gear="45.43" />
+        <motor class="go2" name="FL_wheel" joint="FL_wheel_joint" gear="15" />
+
+        <motor class="go2" name="RR_hip" joint="RR_hip_joint" gear="23.7" />
+        <motor class="go2" name="RR_thigh" joint="RR_thigh_joint" gear="23.7" />
+        <motor class="go2" name="RR_calf" joint="RR_calf_joint" gear="45.43" />
+        <motor class="go2" name="RR_wheel" joint="RR_wheel_joint" gear="15" />
+
+        <motor class="go2" name="RL_hip" joint="RL_hip_joint" gear="23.7" />
+        <motor class="go2" name="RL_thigh" joint="RL_thigh_joint" gear="23.7" />
+        <motor class="go2" name="RL_calf" joint="RL_calf_joint" gear="45.43" />
+        <motor class="go2" name="RL_wheel" joint="RL_wheel_joint" gear="15" />
+
+    </actuator>
+
   <sensor>
     <!-- cost -->
     <user name="Upright" dim="3" user="6 0.1 0 3 0.05" />
@@ -176,7 +199,7 @@
 
   <keyframe>
     <key name="home" qpos="
-      0 0 0.37
+      0 0 0.36
       1 0 0 0 
       0 0.9 -1.8 0.0
       0 0.9 -1.8 0.0

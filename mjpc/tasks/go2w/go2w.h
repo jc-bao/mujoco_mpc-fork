@@ -108,13 +108,13 @@ namespace mjpc
       constexpr static double kAutoGaitMinTime = 1; // second
 
       // target torso height over feet when quadrupedal
-      constexpr static double kHeightQuadruped = 0.27; // meter
+      constexpr static double kHeightQuadruped = 0.36; // meter
 
       // target torso height over feet when bipedal
-      constexpr static double kHeightBiped = 0.55; // meter
+      constexpr static double kHeightBiped = 0.64; // meter
 
       // radius of foot geoms
-      constexpr static double kFootRadius = 0.02; // meter
+      constexpr static double kFootRadius = 0.09; // meter
 
       // below this target yaw velocity, walk straight
       constexpr static double kMinAngvel = 0.01; // radian/second
@@ -123,7 +123,7 @@ namespace mjpc
       constexpr static double kJointPostureGain[3] = {2, 1, 1}; // unitless
 
       // flip: crouching height, from which leap is initiated
-      constexpr static double kCrouchHeight = 0.15; // meter
+      constexpr static double kCrouchHeight = 0.25; // meter
 
       // flip: leap height, beginning of flight phase
       constexpr static double kLeapHeight = 0.5; // meter

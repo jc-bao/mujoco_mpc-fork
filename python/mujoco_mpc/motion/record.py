@@ -75,8 +75,8 @@ def main(record: bool = True, file_name: str = "lift_hand") -> None:
         while viewer.is_running():
             step_start = time.time()
             curr_motion_key = motion_data_keys[motion_id]
-            curr_motion_key = file_name
             curr_motion = motion_data[curr_motion_key]
+            curr_motion_key = file_name
             curr_time = int(time_step/dt) % curr_motion['dof'].shape[0]
             
             q_full = np.concatenate([curr_motion['root_trans_offset'][curr_time], 
@@ -173,4 +173,4 @@ def main(record: bool = True, file_name: str = "lift_hand") -> None:
         logger.info(colored(f"Saved tracking data to: {csv_filename}", "green"))
 
 if __name__ == "__main__":
-    main(record=True, file_name="swing")
+    main(record=True, file_name="tairan")
