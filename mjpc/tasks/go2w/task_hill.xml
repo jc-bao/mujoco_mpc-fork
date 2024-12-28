@@ -23,7 +23,7 @@
     <geom name="floor" size="50 50 0.05" pos="0 0 -0.01" type="plane" material="blue_grid"/>
   </worldbody>
 
-  <include file="go2.xml" />
+  <include file="go2w.xml" />
 
   <default>
     <default class="task">
@@ -41,7 +41,7 @@
   </default>
 
   <!-- position actuators -->
-  <actuator>
+  <!-- <actuator>
     <position class="abduction" name="FR_hip" joint="FR_hip_joint"/>
     <position class="front_hip" name="FR_thigh" joint="FR_thigh_joint"/>
     <position class="knee" name="FR_calf" joint="FR_calf_joint"/>
@@ -54,7 +54,7 @@
     <position class="abduction" name="RL_hip" joint="RL_hip_joint"/>
     <position class="back_hip" name="RL_thigh" joint="RL_thigh_joint"/>
     <position class="knee" name="RL_calf" joint="RL_calf_joint"/>
-  </actuator>
+  </actuator> -->
 
   <include file="assets/fractal.xml" />
 
@@ -62,7 +62,7 @@
     <user name="Stand" dim="1" user="0 1.0 0.0 10.0" />
     <user name="Body Pos." dim="3" user="0 5.0 0.0 100.0" />
     <user name="Body Rot." dim="9" user="0 1.0 0.0 10.0" />
-    <user name="Control" dim="16" user="0 0.25 0.0 1.0" />
+    <user name="Control" dim="12" user="0 0.25 0.0 1.0" />
     <framepos      name="trace0" objtype="body" objname="trunk"/>
     <framepos      name="position" objtype="body" objname="trunk"/>
     <framequat     name="orientation" objtype="xbody" objname="trunk"/>

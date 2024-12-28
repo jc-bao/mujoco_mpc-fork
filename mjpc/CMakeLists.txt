@@ -66,6 +66,8 @@ add_library(
   tasks/g1/walk/walk.h
   tasks/go2/go2.cc
   tasks/go2/go2.h
+  tasks/go2w/go2w.cc
+  tasks/go2w/go2w.h
   tasks/humanoid/walk/walk.cc
   tasks/humanoid/walk/walk.h
   tasks/manipulation/common.cc
