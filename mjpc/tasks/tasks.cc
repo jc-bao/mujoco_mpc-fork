@@ -45,6 +45,7 @@
 #include "mjpc/tasks/g1/stand/stand.h"
 #include "mjpc/tasks/g1/walk/walk.h"
 #include "mjpc/tasks/go2/go2.h"
+#include "mjpc/tasks/go2w/go2w.h"
 namespace mjpc {
 
 std::vector<std::shared_ptr<Task>> GetTasks() {
@@ -66,6 +67,8 @@ std::vector<std::shared_ptr<Task>> GetTasks() {
       std::make_shared<g1::Walk>(),
       std::make_shared<Go2Flat>(),
       std::make_shared<Go2Hill>(),
+      std::make_shared<Go2WFlat>(),
+      std::make_shared<Go2WHill>(),
 
       // DEEPMIND INTERNAL TASKS
       std::make_shared<OP3>(),

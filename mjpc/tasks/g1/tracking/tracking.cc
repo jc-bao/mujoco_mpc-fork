@@ -35,6 +35,7 @@ constexpr int kMotionLengths[] = {
     284,  // Down Box to Walk - CMU-CMU-103-103_08
     107,  // Run to Walk - CMU-CMU-103-103_08
     246,  // Swing - CMU-CMU-103-103_08
+    120,  // Tairan - CMU-CMU-103-103_08
 };
 
 // return length of motion trajectory
