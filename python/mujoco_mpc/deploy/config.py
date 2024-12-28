@@ -47,7 +47,7 @@ class G1Config:
             4,
             4,
         ]
-    )
+    )*0.01
     kd_real: np.ndarray = np.array(
         [
             2.5,
@@ -83,16 +83,16 @@ class G1Config:
     )
 
     # mocap
-    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.065])
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.5])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
-    vicon_object_name: str = "lecar_g1"
+    vicon_object_name: str = "g1"
 
     # controller
     xml_path_ctrl: str = (
         # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/stand/task.xml"
         # "/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/g1/walk/task_benchmark.xml"
-        "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/walk/task.xml"
+        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
     )
     num_opt_steps: int = 1
     task_id: str = "G1 Walk"
@@ -105,6 +105,7 @@ class G1Config:
         # "./model/g1/g1_gear.xml"
     )
     dt_sim: float = 0.005
+    ctrl_dt: float = 0.01
     real_time_factor: float = 1.0
     auto_reset: bool = True
 

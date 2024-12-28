@@ -46,13 +46,13 @@ class Real:
         self.qd = self.mj_model.key_qvel[0].copy()
 
         # sanity check
-        assert (
-            len(self.config.kp_real) == len(self.config.kd_real) == self.config.nq_real
-        ), f"kp ({len(self.config.kp_real)}) and kd ({len(self.config.kd_real)}) must have the same length as nq_robot ({self.config.nq_real})"
-        assert (
-            (self.mj_model.nq + len(self.config.locked_joint_idx))
-            == self.config.nq_real
-        ), f"nq ({self.mj_model.nq}) + len(locked_joint_idx) ({len(self.config.locked_joint_idx)}) must equal nq_robot ({self.config.nq_real})"
+        # assert (
+        #     len(self.config.kp_real) == len(self.config.kd_real) == self.config.nu_real
+        # ), f"kp ({len(self.config.kp_real)}) and kd ({len(self.config.kd_real)}) must have the same length as nq_robot ({self.config.nq_real})"
+        # assert (
+        #     (self.mj_model.nq + len(self.config.locked_joint_idx))
+        #     == self.config.nq_real
+        # ), f"nq ({self.mj_model.nq}) + len(locked_joint_idx) ({len(self.config.locked_joint_idx)}) must equal nq_robot ({self.config.nq_real})"
 
         # Control message (send to robot)
         self.ctrl_msg = unitree_hg_msg_dds__LowCmd_()
@@ -82,7 +82,7 @@ class Real:
         )  # 8 bytes for utime (int64), 13 float64s (13*8 bytes)
         try:
             self.mocap_shm = shared_memory.SharedMemory(
-                name=self.shared_mem_name, create=True, size=self.shared_mem_size
+                name=self.shared_mem_name, create=False, size=self.shared_mem_size
             )
         except FileNotFoundError:
             self.mocap_shm = shared_memory.SharedMemory(
@@ -96,9 +96,9 @@ class Real:
         self.mocap_buffer = self.mocap_shm.buf
 
         # Initialize Unitree SDK2
-        ChannelFactoryInitialize(0, "lo0")
+        ChannelFactoryInitialize(0, "en0")
         self.low_state_subscriber = ChannelSubscriber("rt/lowstate", LowState_)
-        self.low_state_subscriber.Init(self.LowStateHandler, 10)
+        self.low_state_subscriber.Init(self.low_state_handler, 10)
 
         self.low_cmd_publisher = ChannelPublisher("rt/lowcmd", LowCmd_)
         self.low_cmd_publisher.Init()
@@ -113,7 +113,7 @@ class Real:
         self.low_sub.Init(self.low_state_handler, 1)
 
     def low_state_handler(self, msg: LowState_):
-        for i in range(self.config.nq_real):
+        for i in range(self.config.nq_real-7):
             self.q[7 + i] = msg.motor_state[i].q
             self.qd[6 + i] = msg.motor_state[i].dq
         if not self.config.use_mocap_ang_vel:
@@ -123,6 +123,7 @@ class Real:
     def main_loop(self):
         t0 = time.time()
         rate_limiter = RateLimiter(frequency=1 / self.config.ctrl_dt)
+        
         try:
             with mujoco.viewer.launch_passive(
                 self.mj_model, self.mj_data, show_left_ui=True, show_right_ui=False
@@ -132,7 +133,9 @@ class Real:
                     _, ctrl = unpack_control_data(self.ctrl_buffer, self.config.nu_real)
 
                     # Read mocap state from shared memory
-                    _, q_mocap, qd_mocap = unpack_mocap_data(self.mocap_buffer)
+                    q_mocap, qd_mocap = unpack_mocap_data(self.mocap_buffer)
+                    # print the first 3 dim of q mocap, corresponding to the position of the robot
+                    # print("x: ", q_mocap[0], "y: ", q_mocap[1], "z: ", q_mocap[2])
                     self.q[:7] = q_mocap[:7]
                     if self.config.use_mocap_ang_vel:
                         self.qd[:6] = qd_mocap[:6]
@@ -144,12 +147,22 @@ class Real:
                         self.low_cmd_msg.motor_cmd[
                             idx
                       ].mode = 0x01  # Set appropriate mode
-                        self.low_cmd_msg.motor_cmd[idx].q = ctrl[idx]
+                        self.low_cmd_msg.motor_cmd[idx].q = 0.0
+                        self.low_cmd_msg.motor_cmd[idx].dq = 0.0
+                        self.low_cmd_msg.motor_cmd[idx].tau = ctrl[idx] * 0.01
+                        self.low_cmd_msg.motor_cmd[idx].kp = 0.0
+                        self.low_cmd_msg.motor_cmd[idx].kd = self.config.kd_real[idx]
+
+                    for idx in self.config.locked_joint_idx:
+                        self.low_cmd_msg.motor_cmd[
+                            idx
+                      ].mode = 0x01  # Set appropriate mode
+                        self.low_cmd_msg.motor_cmd[idx].q = 0.0
                         self.low_cmd_msg.motor_cmd[idx].dq = 0.0
                         self.low_cmd_msg.motor_cmd[idx].tau = 0.0
-                        self.low_cmd_msg.motor_cmd[idx].kp = self.kp[idx]
-                        self.low_cmd_msg.motor_cmd[idx].kd = self.kd[idx]
-
+                        self.low_cmd_msg.motor_cmd[idx].kp = self.config.kp_real[idx]
+                        self.low_cmd_msg.motor_cmd[idx].kd = self.config.kd_real[idx]
+                        
                     self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
                     self.low_cmd_publisher.Write(self.low_cmd_msg)
 

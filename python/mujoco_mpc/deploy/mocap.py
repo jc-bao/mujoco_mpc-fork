@@ -57,7 +57,7 @@ class ViconDemo:
         self.shared_mem_name = "mocap_state_shm"
         self.shared_mem_size = 8 + 13 * 8  # 8 bytes for utime (int64), 13 float64s (13*8 bytes)
         try:
-            self.state_shm = shared_memory.SharedMemory(name=self.shared_mem_name, create=False, size=self.shared_mem_size)
+            self.state_shm = shared_memory.SharedMemory(name=self.shared_mem_name, create=True, size=self.shared_mem_size)
             print(f"Attach to shared memory '{self.shared_mem_name}' of size {self.shared_mem_size} bytes.")
         except FileExistsError:
             print(f"shared memory does not exist")
@@ -65,6 +65,7 @@ class ViconDemo:
 
     def get_vicon_data(self):
         position = self.tracker.get_position(self.vicon_object_name)
+        # print(f"position: {position[2][0]}")
         if not position:
             print(f"Cannot get the pose of `{self.vicon_object_name}`.")
             return None, None, None
@@ -76,6 +77,7 @@ class ViconDemo:
 
             # Position and orientation
             position = np.array([x, y, z]) / 1000.0
+            position += self.config.mocap_offset
             rotation = R.from_euler("XYZ", [roll, pitch, yaw], degrees=False)
             quaternion = rotation.as_quat()  # [x, y, z, w]
 
@@ -158,7 +160,9 @@ class ViconDemo:
 
                 # Prepare data to pack
                 x, y, z, w = quaternion
-                self.state_buffer[:] = pack_mocap_data(self.state_buffer, current_time, position, np.array([w, x, y, z]), filtered_linear_velocity, filtered_angular_velocity)
+                qmocap = np.concatenate([position, np.array([w, x, y, z])])
+                qdmocap = np.concatenate([filtered_linear_velocity, filtered_angular_velocity])
+                self.state_buffer[:] = pack_mocap_data(self.state_buffer, current_time, qmocap, qdmocap)
 
                 # Sleep to mimic sampling rate
                 rate_limiter.sleep()
