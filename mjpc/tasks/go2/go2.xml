@@ -3,6 +3,7 @@
 
     <default>
         <default class="go2">
+            <motor ctrlrange="-1 1" gear="23.7" ctrllimited="true"/>
             <geom friction="0.6" margin="0.001" condim="1" />
             <!-- <joint axis="0 1 0" damping="2" armature="0.01" /> -->
             <joint axis="0 1 0" damping="3.0" armature="0.01" />
@@ -26,6 +27,7 @@
             <default class="knee">
                 <joint range="-2.7227 -0.83776" />
                 <position forcerange="-45.43 45.43" ctrlrange="-2.7227 -0.83776" />
+                <motor gear="45.43" />
             </default>
             <default class="visual">
                 <geom type="mesh" contype="0" conaffinity="0" group="2" />
