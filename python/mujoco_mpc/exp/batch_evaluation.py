@@ -37,8 +37,8 @@ def main():
     # You can add more tasks here, or remove tasks you don’t need
     tasks_config = {
         # "Cartpole",
-        # "Acrobot",
-        "Quadruped Hill",
+        "Acrobot",
+        # "Quadruped Hill",
         # "allegro",
         # "swimmer",
         # "walker",
@@ -47,13 +47,13 @@ def main():
 
     # List of controllers to test
     controllers = [
-        "Sampling",
-        "Feedback Sampling",
-        # "iLQG"
+        # "Sampling",
+        # "Feedback Sampling",
+        "iLQG"
     ]
 
     # Number of runs per (task, controller) pair
-    num_runs = 2
+    num_runs = 3
 
     # Prepare a data structure to store all cost results
     # Example shape: results[task][controller] = [run1_cost, run2_cost, ...]

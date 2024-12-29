@@ -190,8 +190,8 @@ namespace mjpc
     // make sure feedback scaling is upper bounded by 0.9
     feedback_scale = mju_min(feedback_scale, 0.9);
     // update num_sampling_update_before_feedback
-    float feedback_scale_inv = mju_min(2.0 / feedback_scale, 100.0);
-    num_sampling_update_before_feedback = static_cast<int>(feedback_scale_inv);
+    // float feedback_scale_inv = mju_min(2.0 / feedback_scale, 100.0);
+    // num_sampling_update_before_feedback = static_cast<int>(feedback_scale_inv);
 
     // increment update count
     update_cnt++;

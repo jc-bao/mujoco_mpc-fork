@@ -86,10 +86,6 @@ def update_planner_config(
     # Copy the file
     shutil.copy(model_path, benchmark_path)
 
-    # Read file
-    with open(benchmark_path, "r") as file:
-        content = file.read()
-    print(model_path)
     # 1) Update the planner ID
     # Example: <numeric name="agent_planner" data="7" />
     content = re.sub(
@@ -217,7 +213,6 @@ def main(config: EvaluationConfig) -> Optional[float]:
         return
 
     # Load model
-    print(model_path)
     model = mujoco.MjModel.from_xml_path(str(model_path))
     print("Agent server binary path:", Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server")
     print("Task ID:", config.task)
