@@ -21,6 +21,7 @@ model_path = (
     pathlib.Path(__file__).parent.parent.parent
     / "../../build/mjpc/tasks/cartpole/task.xml"
 )
+# print("model_path:", model_path)
 model = mujoco.MjModel.from_xml_path(str(model_path))
 
 # Run GUI
