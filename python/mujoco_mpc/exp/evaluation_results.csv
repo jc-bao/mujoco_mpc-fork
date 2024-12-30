@@ -1,10 +1,10 @@
 Task,Controller,RunIndex,Cost
-allegro,Sampling,1,17.68981242508736
-allegro,Sampling,2,8.466411847132692
-allegro,Sampling,3,10.515583747990368
-allegro,Feedback Sampling,1,13.731412311315252
-allegro,Feedback Sampling,2,6.429630702954234
-allegro,Feedback Sampling,3,6.160029695979488
-allegro,iLQG,1,19.020939086371655
-allegro,iLQG,2,17.262999353722126
-allegro,iLQG,3,14.281589453661532
+Go2W Hill,Sampling,1,4.682919761540793
+Go2W Hill,Sampling,2,4.907955904134229
+Go2W Hill,Sampling,3,4.354929722863677
+Go2W Hill,Feedback Sampling,1,4.870225433529565
+Go2W Hill,Feedback Sampling,2,4.408823260418456
+Go2W Hill,Feedback Sampling,3,4.750237726612407
+Go2W Hill,iLQG,1,4.763467213523693
+Go2W Hill,iLQG,2,4.89808217179021
+Go2W Hill,iLQG,3,4.71608201915389

@@ -1,0 +1,21 @@
+# config.yaml
+# Configuration file for the Acrobot environment
+
+# Configuration for the environment
+environment:
+    total_time: 30.0
+    # agent_horizon: 0.5
+    
+
+# Configuration for the feedback sampling
+feedback_sampling:
+    # agent_horizon: 0.5
+    # sampling_exploration: [0.1, 0.2]
+    # sampling_trajectories: 24
+    # sampling_scale: 1.0
+    # sampling_representation: 1
+    # sampling_spline_points: 5
+    sampling_update_before_feedback: 10
+    # sampling_cost_variance_threshold: 10.0
+    sampling_feedback_scale_gain: 3.0
+    # sampling_improvement_value_gamma: 0.8

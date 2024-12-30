@@ -39,10 +39,10 @@ def main():
         # "Cartpole",
         # "Acrobot",
         # "Quadruped Hill",
-        "allegro",
+        # "allegro",
         # "swimmer",
         # "walker",
-        # "Go2W"
+        "Go2W Hill",
     }
 
     # List of controllers to test
@@ -87,6 +87,8 @@ def main():
                 )
                 if task == "Quadruped Hill":
                     config.model_path = Path('/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/quadruped/task_hill.xml')
+                elif task == "Go2W Hill":
+                    config.model_path = Path('/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/go2w/task_hill.xml')
                 try:
                     cost = eval_main(config)
                     if cost is not None:
