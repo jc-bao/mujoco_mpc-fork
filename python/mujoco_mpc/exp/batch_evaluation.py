@@ -38,11 +38,11 @@ def main():
     tasks_config = {
         # "Cartpole",
         # "Acrobot",
-        "Quadruped Hill",
-        # "allegro",
+        # "Quadruped Hill",
+        "allegro",
         # "swimmer",
         # "walker",
-
+        # "Go2W"
     }
 
     # List of controllers to test
