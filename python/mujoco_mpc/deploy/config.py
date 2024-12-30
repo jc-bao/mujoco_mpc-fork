@@ -145,7 +145,8 @@ class Go2Config:
     # sim
     xml_path_sim: str = (
         # "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
-        "./model/go2/go2.xml"
+        # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/go2/task_flat.xml"
+        "./model/go2/go2_torque.xml"
     )
     dt_sim: float = 0.005
     real_time_factor: float = 1.0
