@@ -275,7 +275,6 @@ class QuadrupedHill : public Task {
    private:
     friend class QuadrupedHill;
     int current_mode_;
-    int new_cost_weight_param_id_;  // New parameter for the weight
   };
   QuadrupedHill() : residual_(this) {}
   void TransitionLocked(mjModel* model, mjData* data) override;

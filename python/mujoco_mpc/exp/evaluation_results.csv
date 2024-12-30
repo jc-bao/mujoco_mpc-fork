@@ -1,4 +1,10 @@
 Task,Controller,RunIndex,Cost
-Acrobot,iLQG,1,185.20064372118128
-Acrobot,iLQG,2,299.48174064578865
-Acrobot,iLQG,3,361.65130008115557
+Quadruped Hill,Sampling,1,2.79725163881943
+Quadruped Hill,Sampling,2,2.804679625633917
+Quadruped Hill,Sampling,3,2.7631844031257367
+Quadruped Hill,Feedback Sampling,1,2.4677916604426833
+Quadruped Hill,Feedback Sampling,2,2.5041222748413112
+Quadruped Hill,Feedback Sampling,3,2.5567387640743613
+Quadruped Hill,iLQG,1,3.8079653385264156
+Quadruped Hill,iLQG,2,3.768573510085764
+Quadruped Hill,iLQG,3,2.583963957954873

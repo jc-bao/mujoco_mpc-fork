@@ -38,7 +38,7 @@ void Acrobot::ResidualFn::Residual(const mjModel* model, const mjData* data,
   mjtNum* goal_xpos = &data->site_xpos[3 * 0];
   mjtNum* tip_xpos = &data->site_xpos[3 * 1];
   residual[0] = goal_xpos[2] - tip_xpos[2];
-  residual[1] = goal_xpos[0] - tip_xpos[0];
+  residual[1] = 0.03 * (goal_xpos[0] - tip_xpos[0]);
 
   // ---------- Residual (2-3) ----------
   residual[2] = data->qvel[0];

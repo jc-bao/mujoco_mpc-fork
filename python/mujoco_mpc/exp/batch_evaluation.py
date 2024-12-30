@@ -37,8 +37,8 @@ def main():
     # You can add more tasks here, or remove tasks you don’t need
     tasks_config = {
         # "Cartpole",
-        "Acrobot",
-        # "Quadruped Hill",
+        # "Acrobot",
+        "Quadruped Hill",
         # "allegro",
         # "swimmer",
         # "walker",
@@ -47,8 +47,8 @@ def main():
 
     # List of controllers to test
     controllers = [
-        # "Sampling",
-        # "Feedback Sampling",
+        "Sampling",
+        "Feedback Sampling",
         "iLQG"
     ]
 

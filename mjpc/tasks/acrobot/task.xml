@@ -22,8 +22,7 @@
 
     <numeric name="sampling_update_before_feedback" data="10" />
     <numeric name="sampling_cost_variance_threshold" data="100.0" />
-    <numeric name="sampling_feedback_scale_gain" data="1.0" />
-    <numeric name="sampling_improvement_value_gamma" data="0.95" />
+    <numeric name="sampling_improvement_value_gamma" data="0.5" />
   </custom>
 
   <sensor>
