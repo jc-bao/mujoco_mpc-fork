@@ -530,7 +530,7 @@ void QuadrupedFlat::ResetLocked(const mjModel* model) {
   residual_.balance_cost_id_ = CostTermByName(model, "Balance");
   residual_.upright_cost_id_ = CostTermByName(model, "Upright");
   residual_.height_cost_id_ = CostTermByName(model, "Height");
-  residual_.new_cost_weight_param_id_ = ParameterIndex(model, "New Cost Weight");
+  // residual_.new_cost_weight_param_id_ = ParameterIndex(model, "New Cost Weight");
 
   // ----------  model identifiers  ----------
   residual_.torso_body_id_ = mj_name2id(model, mjOBJ_XBODY, "trunk");

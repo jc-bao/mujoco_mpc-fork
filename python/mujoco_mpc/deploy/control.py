@@ -72,6 +72,7 @@ class Controller:
 
     def main_loop(self):
         # Controller
+        # print(self.config.xml_path_ctrl)
         model = mujoco.MjModel.from_xml_path(self.config.xml_path_ctrl)
         rate_limiter = RateLimiter(frequency=1 / self.config.dt_ctrl)
         try:
@@ -103,6 +104,7 @@ class Controller:
                         q_sim, qd_sim, t_real = self.get_state()
                         agent.set_state(qpos=q_sim, qvel=qd_sim)
                         ctrl = agent.get_action()
+                        # print(ctrl)
                         ctrl_real = ctrl_sim2real(
                             ctrl, self.config.locked_joint_idx, self.config.nu_real
                         )
@@ -119,5 +121,5 @@ class Controller:
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="g1", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="go2", mujoco_mpc_mode="gui")
     controller.main_loop()

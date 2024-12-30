@@ -38,7 +38,9 @@ class Sim:
         self.mj_data = mujoco.MjData(self.mj_model)
         mujoco.mj_resetDataKeyframe(self.mj_model, self.mj_data, 0)
         self.n_sim_frame = int(self.config.dt_ctrl / self.config.dt_sim)
-        self.default_ctrl = self.mj_data.ctrl
+        self.default_ctrl = self.mj_model.key_ctrl[0].copy()  # default control is the ctrl in key frame
+        print(f"Default control: {self.default_ctrl}")
+        # exit()
         assert np.isclose(self.config.dt_ctrl, self.n_sim_frame * self.config.dt_sim), "Control timestep must be an integer multiple of simulation timestep"
 
         # Initialize state variables
@@ -111,11 +113,12 @@ class Sim:
                     # Read control inputs from shared memory
                     _, q_des = unpack_control_data(self.ctrl_buffer, self.config.nu_real)
                     # check if q_des is close to zero
-                    # if np.allclose(q_des, np.zeros_like(q_des)):
-                    #     q_des = self.default_ctrl
+                    if np.allclose(q_des, np.zeros_like(q_des)):
+                        q_des = self.default_ctrl
+                        print("Resetting control to default")
                     
                     # apply gear to control
-                    q_des_with_gear = apply_gear_to_control(q_des, self.gear_array) 
+                    # q_des_with_gear = apply_gear_to_control(q_des, self.gear_array) 
                 
                     # self.mj_data.ctrl[:] = q_des_with_gear 
 
@@ -123,8 +126,8 @@ class Sim:
                     # q_des_sim equals to q_des without locked joints
                     # q_des_sim = ctrl_real2sim(q_des, self.config.locked_joint_idx, 21)
                     # print(q_des_sim.shape)
-                    print(q_des_with_gear)
-                    self.mj_data.ctrl[:] = q_des_with_gear
+                    # print(q_des_with_gear)
+                    self.mj_data.ctrl[:] = q_des
 
                     mujoco.mj_step(self.mj_model, self.mj_data)
 
@@ -154,5 +157,5 @@ class Sim:
 
 
 if __name__ == "__main__":
-    sim = Sim(robot_name="g1")
+    sim = Sim(robot_name="go2")
     sim.main_loop()

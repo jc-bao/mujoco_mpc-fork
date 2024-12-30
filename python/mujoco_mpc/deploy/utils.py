@@ -1,6 +1,7 @@
 import numpy as np
 import struct
-
+import xml.etree.ElementTree as ET
+import mujoco
 def pack_mocap_data(buffer, timestamp, q_mocap, qd_mocap):
     struct.pack_into("d", buffer, 0, timestamp)
     struct.pack_into(f"{q_mocap.shape[0]}d", buffer, 8, *q_mocap)
@@ -93,3 +94,23 @@ def ctrl_real2sim(ctrl_w_mask, locked_idx, nu_real):
     return ctrl_sim
 # Example usage:
 # ctrl_with_gear = apply_gear_to_control(ctrl_without_gear, gear_array) 
+
+def read_motor_gears(xml_path):
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    motor_gears = {}
+    mj_model = mujoco.MjModel.from_xml_path(xml_path)
+    print('Reading motor gears from xml file...')
+    for motor in root.findall('.//motor'):
+        name = motor.get('name')
+        gear = motor.get('gear')
+        joint_name = motor.get('joint')
+        if name and gear and joint_name:
+            # Find the joint index in the MuJoCo model
+            joint_index = mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+            motor_gears[name] = {
+                'gear': float(gear),
+                'joint_index': joint_index
+            }
+    # print(f"motor_gears: {motor_gears}")
+    return motor_gears
