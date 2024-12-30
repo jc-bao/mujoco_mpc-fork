@@ -20,8 +20,8 @@ namespace mjpc
   std::string Go2WFlat::Name() const { return "Go2W Flat"; }
 
   void Go2WFlat::ResidualFn::Residual(const mjModel *model,
-                                 const mjData *data,
-                                 double *residual) const
+                                      const mjData *data,
+                                      double *residual) const
   {
     // start counter
     int counter = 0;
@@ -435,7 +435,7 @@ namespace mjpc
 
   // draw task-related geometry in the scene
   void Go2WFlat::ModifyScene(const mjModel *model, const mjData *data,
-                            mjvScene *scene) const
+                             mjvScene *scene) const
   {
     // flip target pose
     if (residual_.current_mode_ == ResidualFn::kModeFlip)
@@ -721,7 +721,7 @@ namespace mjpc
 
   // return normalized target step height
   double Go2WFlat::ResidualFn::StepHeight(double time, double footphase,
-                                         double duty_ratio) const
+                                          double duty_ratio) const
   {
     double angle = fmod(time + mjPI - footphase, 2 * mjPI) - mjPI;
     double value = 0;
@@ -735,7 +735,7 @@ namespace mjpc
 
   // compute target step height for all feet
   void Go2WFlat::ResidualFn::FootStep(double step[kNumFoot], double time,
-                                     Go2WGait gait) const
+                                      Go2WGait gait) const
   {
     double amplitude = parameters_[amplitude_param_id_];
     double duty_ratio = parameters_[duty_param_id_];
@@ -812,8 +812,8 @@ namespace mjpc
   //     Parameter (1): height_goal
   // -----------------------------------------------------------------------
   void Go2WHill::ResidualFn::Residual(const mjModel *model,
-                                     const mjData *data,
-                                     double *residual) const
+                                      const mjData *data,
+                                      double *residual) const
   {
     // ---------- Residual (0) ----------
     // standing height goal
@@ -829,9 +829,10 @@ namespace mjpc
     double RLz = SensorByName(model, data, "RL")[2];
     double avg_foot_height = 0.25 * (FRz + FLz + RRz + RLz);
 
-    residual[0] = (standing_height - avg_foot_height) - height_goal;
+    int counter = 0;
 
-    int counter = 1;
+    residual[counter] = (standing_height - avg_foot_height) - height_goal;
+    counter++;
 
     // ---------- Residual (1) ----------
     // goal position
@@ -860,23 +861,20 @@ namespace mjpc
 
     // ---------- Residual (3) ----------
     mju_copy(residual + counter, data->ctrl, model->nu);
-    // disable for wheels
-    for (int i = 0; i < 4; i++)
-    {
-      residual[counter + i*4 + 3] = 0;
-    }
     counter += model->nu;
 
-    // ---------- Residual (4) Posture ----------
-    double *home = KeyQPosByName(model, data, "home");
-    mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
-    // disable for wheels
-    for (int i = 0; i < 4; i++)
-    {
-      residual[counter + i*4 + 3] = 0;
-    }
-    counter += model->nu;
-
+    // Cost for getting close to the goal
+    // get position error
+    double position_error[3];
+    mju_sub3(position_error, position, goal_position);
+    double position_error_norm = mju_norm3(position_error);
+    // clip position error
+    position_error_norm = mju_clip(position_error_norm, 0, 0.15);
+    residual[counter] = position_error_norm;
+    counter++;
+    // double orientation_error[9];
+    // double orientation_error_norm = mju_norm3(orientation_error);
+    // mju_sub(orientation_error, body_rotmat, goal_rotmat, 9);
   }
 
   // -------- Transition for quadruped task --------
@@ -915,7 +913,7 @@ namespace mjpc
           1.0 - mju_abs(mju_dot(goal_orientation, orientation, 4));
 
       // ---------- Check tolerance ----------
-      double tolerance = 1.5e-1;
+      double tolerance = 1.0e-1;
       if (position_error_norm <= tolerance && geodesic_distance <= tolerance)
       {
         // update task state
