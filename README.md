@@ -1,5 +1,12 @@
 # Feedback Sampling with Mujoco MPC
 
+## How to install
+
+```
+sudo apt-get install libstdc++-12-dev
+sudo apt-get update && sudo apt-get install cmake libgl1-mesa-dev libxinerama-dev libxcursor-dev libxrandr-dev libxi-dev ninja-build zlib1g-dev clang-12
+```     
+
 ## How to run
 
 Evaluation
