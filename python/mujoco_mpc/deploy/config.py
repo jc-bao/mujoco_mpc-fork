@@ -119,7 +119,7 @@ class Go2Config:
     nq_ctrl: int = 19
     nqd_ctrl: int = 18
     nu_ctrl: int = 12
-    dt_ctrl: float = 0.02
+    dt_ctrl: float = 0.005
 
     # model used in real robot
     nq_real: int = 19
@@ -129,10 +129,10 @@ class Go2Config:
     locked_joint_idx: np.ndarray = np.zeros(0)
     kp_real: np.ndarray = np.array([60.0] * 12)
     kd_real: np.ndarray = np.array([3.0] * 12)
-    gear_real: np.ndarray = np.ones(12)
-    # gear_real: np.ndarray = np.array(
-    #     [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43]
-    # )
+    # gear_real: np.ndarray = np.ones(12)
+    gear_real: np.ndarray = np.array(
+        [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43]
+    )
 
     # mocap
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.065])
@@ -150,8 +150,8 @@ class Go2Config:
     # sim
     xml_path_sim: str = (
         # "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
-        "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/go2/task_flat.xml"
-        # "./model/go2/go2_torque.xml"
+        # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/go2/task_flat.xml"
+        "./model/go2/go2_torque.xml"
     )
     dt_sim: float = 0.005
     real_time_factor: float = 1.0

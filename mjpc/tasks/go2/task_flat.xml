@@ -51,7 +51,7 @@
   <worldbody>
     <light pos="0 0 1.5" dir="0 0 -1" diffuse="0.5 0.5 0.5" specular="0.3 0.3 0.3"
       directional="true" castshadow="false" />
-    <geom name="floor" size="0 0 0.1" pos="0 0 -0.01" type="plane" material="blue_grid" />
+    <geom name="floor" size="0 0 0.1" pos="0 0 0" type="plane" material="blue_grid" />
     <body name="goal" mocap="true" pos=".3 0 0.26">
       <geom size="0.12" contype="0" conaffinity="0" rgba="0 1 0 .5" group="2" />
     </body>
