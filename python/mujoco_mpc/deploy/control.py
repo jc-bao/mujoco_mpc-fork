@@ -3,7 +3,7 @@ import struct
 from multiprocessing import shared_memory
 from loop_rate_limiters import RateLimiter
 import pathlib
-
+import time
 import mujoco
 from mujoco_mpc import agent as agent_lib
 
@@ -81,33 +81,31 @@ class Controller:
                     q_sim, qd_sim, t_real = self.get_state()
                     # NOTE: t_real is not used here
                     ctrl = self.get_action(agent, q_sim, qd_sim)
+                    ctrl_with_gear = ctrl * self.config.gear_real
                     ctrl_real = ctrl_sim2real(
-                        ctrl, self.config.locked_joint_idx, self.config.nu_real
+                        ctrl_with_gear, self.config.locked_joint_idx, self.config.nu_real
                     )
                     self.ctrl_buffer[:] = pack_control_data(
                         self.ctrl_buffer, t_real, ctrl_real
                     )
                     rate_limiter.sleep()
             elif self.mujoco_mpc_mode == "gui":
-                print("Agent server binary path:", pathlib.Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server")
-                print("Task ID:", self.config.task_id)
-                print("Model Path:", self.config.xml_path_ctrl)
                 with agent_lib.Agent(
                     server_binary_path=pathlib.Path(agent_lib.__file__).parent
                     / "mjpc"
                     / "ui_agent_server",
-                    task_id=self.config.task_id,
+                    task_id="G1 Walk",
+                    # task_id=self.config.task_id,
                     model=model,
                 ) as agent:
                     while True:
                         q_sim, qd_sim, t_real = self.get_state()
                         agent.set_state(qpos=q_sim, qvel=qd_sim)
                         ctrl = agent.get_action()
+                        ctrl_with_gear = ctrl * self.config.gear_real
                         ctrl_real = ctrl_sim2real(
-                            ctrl, self.config.locked_joint_idx, self.config.nu_real
+                            ctrl_with_gear, self.config.locked_joint_idx, self.config.nu_real
                         )
-                        # times gear
-                        ctrl_real = ctrl_real * self.config.gear_real
                         self.ctrl_buffer[:] = pack_control_data(
                             self.ctrl_buffer, t_real, ctrl_real
                         )
@@ -121,5 +119,5 @@ class Controller:
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="go2", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="g1", mujoco_mpc_mode="gui")
     controller.main_loop()

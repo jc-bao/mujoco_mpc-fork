@@ -85,6 +85,17 @@ class G1Config:
             0.05,
         ]
     )
+    gear_real: np.ndarray = np.array(
+        [80] * 3
+        + [100]
+        + [50] * 2
+        + [80] * 3
+        + [100]
+        + [50] * 2
+        + [80]
+        + [50] * 2
+        + [20] * 6
+    )
 
     # mocap
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.5])
@@ -94,9 +105,9 @@ class G1Config:
 
     # controller
     xml_path_ctrl: str = (
-        # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/stand/task.xml"
+        "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/walk/task.xml"
         # "/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/g1/walk/task_benchmark.xml"
-        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
+        # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
     )
     num_opt_steps: int = 1
     task_id: str = "G1 Walk"
@@ -131,7 +142,14 @@ class Go2Config:
     kd_real: np.ndarray = np.array([3.0] * 12)
     # gear_real: np.ndarray = np.ones(12)
     gear_real: np.ndarray = np.array(
-        [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43]
+        [23.7] * 2
+        + [45.43]
+        + [23.7] * 2
+        + [45.43]
+        + [23.7] * 2
+        + [45.43]
+        + [23.7] * 2
+        + [45.43]
     )
 
     # mocap

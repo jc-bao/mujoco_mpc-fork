@@ -106,5 +106,5 @@ class Sim:
 
 
 if __name__ == "__main__":
-    sim = Sim(robot_name="go2")
+    sim = Sim(robot_name="g1")
     sim.main_loop()
