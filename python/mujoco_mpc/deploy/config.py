@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class G1Config:
     # model used in controller
     nq_ctrl: int = 28
@@ -15,39 +16,42 @@ class G1Config:
     locked_joint_idx: np.ndarray = (
         np.array([2, 4, 5, 6, 9, 11, 12, 13]) + 12 + 3
     )  # locked joints in real robot
-    kp_real: np.ndarray = np.array(
-        [
-            100,
-            100,
-            100,
-            200,
-            20,
-            20,
-            100,
-            100,
-            100,
-            200,
-            20,
-            20,
-            400,
-            400,
-            400,
-            90,
-            60,
-            20,
-            60,
-            4,
-            4,
-            4,
-            90,
-            60,
-            20,
-            60,
-            4,
-            4,
-            4,
-        ]
-    )*0.01
+    kp_real: np.ndarray = (
+        np.array(
+            [
+                100,
+                100,
+                100,
+                200,
+                20,
+                20,
+                100,
+                100,
+                100,
+                200,
+                20,
+                20,
+                400,
+                400,
+                400,
+                90,
+                60,
+                20,
+                60,
+                4,
+                4,
+                4,
+                90,
+                60,
+                20,
+                60,
+                4,
+                4,
+                4,
+            ]
+        )
+        * 0.01
+    )
     kd_real: np.ndarray = np.array(
         [
             2.5,
@@ -109,6 +113,7 @@ class G1Config:
     real_time_factor: float = 1.0
     auto_reset: bool = True
 
+
 class Go2Config:
     # model used in controller
     nq_ctrl: int = 19
@@ -122,12 +127,12 @@ class Go2Config:
     nu_real: int = 12
     dt_real: float = 0.005
     locked_joint_idx: np.ndarray = np.zeros(0)
-    kp_real: np.ndarray = np.array(
-        [60.0] * 12
-    )
-    kd_real: np.ndarray = np.array(
-        [3.0] * 12
-    )
+    kp_real: np.ndarray = np.array([60.0] * 12)
+    kd_real: np.ndarray = np.array([3.0] * 12)
+    gear_real: np.ndarray = np.ones(12)
+    # gear_real: np.ndarray = np.array(
+    #     [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43] + [23.7] * 2 + [45.43]
+    # )
 
     # mocap
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.065])
@@ -145,16 +150,21 @@ class Go2Config:
     # sim
     xml_path_sim: str = (
         # "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
-        # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/go2/task_flat.xml"
-        "./model/go2/go2_torque.xml"
+        "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/go2/task_flat.xml"
+        # "./model/go2/go2_torque.xml"
     )
     dt_sim: float = 0.005
     real_time_factor: float = 1.0
     auto_reset: bool = False
 
+
 class QuadrupedConfig(Go2Config):
     dt_ctrl: float = 0.005
     dt_sim: float = 0.005
-    xml_path_ctrl: str = "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
+    xml_path_ctrl: str = (
+        "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
+    )
     task_id: str = "Quadruped Flat"
-    xml_path_sim: str = "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
+    xml_path_sim: str = (
+        "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
+    )

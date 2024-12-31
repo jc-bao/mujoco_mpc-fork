@@ -106,6 +106,8 @@ class Controller:
                         ctrl_real = ctrl_sim2real(
                             ctrl, self.config.locked_joint_idx, self.config.nu_real
                         )
+                        # times gear
+                        ctrl_real = ctrl_real * self.config.gear_real
                         self.ctrl_buffer[:] = pack_control_data(
                             self.ctrl_buffer, t_real, ctrl_real
                         )
@@ -119,5 +121,5 @@ class Controller:
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="g1", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="go2", mujoco_mpc_mode="gui")
     controller.main_loop()

@@ -45,27 +45,6 @@ class Sim:
         self.q = self.mj_model.key_qpos[0].copy()
         self.qd = self.mj_model.key_qvel[0].copy()
         assert self.config.nq_real == self.mj_model.nq, "Number of joints in MuJoCo model must match the number of joints in the configuration"
-        # Print motor information and names
-        print(f"Available attributes in MjModel: {dir(self.mj_model)}")
-        print(f"Motor names: {self.mj_model.actuator_ctrlrange}")
-        # Read motor gear values from XML
-        self.motor_gears = self._read_motor_gears(self.config.xml_path_ctrl)
-        # print motor gears
-        # print(f"Motor gears: {self.motor_gears}")
-
-        # Initialize an array with ones
-        self.gear_array = np.ones(self.mj_model.nu)
-
-        # Update the array with gear values at the corresponding joint indices
-        for motor in self.motor_gears.values():
-            joint_index = motor['joint_index'] - 1
-            gear = motor['gear']
-            print(f"Joint index: {joint_index}, Gear: {gear}")
-            self.gear_array[joint_index] *= gear
-
-
-        # Print the gear array for verification
-        print(f"Gear array: {self.gear_array}")
 
         # Shared Memory for control inputs
         self.ctrl_shm_size = (self.config.nu_real + 1) * 8  # time + q_des
@@ -84,23 +63,6 @@ class Sim:
         )
         self.state_buffer = self.state_shm.buf
 
-    def _read_motor_gears(self, xml_path):
-        tree = ET.parse(xml_path)
-        root = tree.getroot()
-        motor_gears = {}
-        for motor in root.findall('.//motor'):
-            name = motor.get('name')
-            gear = motor.get('gear')
-            joint_name = motor.get('joint')
-            if name and gear and joint_name:
-                # Find the joint index in the MuJoCo model
-                joint_index = mujoco.mj_name2id(self.mj_model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
-                motor_gears[name] = {
-                    'gear': float(gear),
-                    'joint_index': joint_index
-                }
-        return motor_gears
-
     def main_loop(self):
         try:
             rate_limiter = RateLimiter(frequency=1 / self.config.dt_sim / self.config.real_time_factor)
@@ -109,22 +71,12 @@ class Sim:
             ) as viewer:
                 while True:
                     # Read control inputs from shared memory
-                    _, q_des = unpack_control_data(self.ctrl_buffer, self.config.nu_real)
+                    _, ctrl_real = unpack_control_data(self.ctrl_buffer, self.config.nu_real)
                     # check if q_des is close to zero
                     # if np.allclose(q_des, np.zeros_like(q_des)):
                     #     q_des = self.default_ctrl
                     
-                    # apply gear to control
-                    q_des_with_gear = apply_gear_to_control(q_des, self.gear_array) 
-                
-                    # self.mj_data.ctrl[:] = q_des_with_gear 
-
-                    # print(self.config.nu_real)
-                    # q_des_sim equals to q_des without locked joints
-                    # q_des_sim = ctrl_real2sim(q_des, self.config.locked_joint_idx, 21)
-                    # print(q_des_sim.shape)
-                    print(q_des_with_gear)
-                    self.mj_data.ctrl[:] = q_des_with_gear
+                    self.mj_data.ctrl[:] = ctrl_real
 
                     mujoco.mj_step(self.mj_model, self.mj_data)
 
