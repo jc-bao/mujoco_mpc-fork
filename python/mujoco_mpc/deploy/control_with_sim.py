@@ -3,12 +3,11 @@ import struct
 from multiprocessing import shared_memory
 from loop_rate_limiters import RateLimiter
 import pathlib
-from scipy.spatial.transform import Rotation as R
 
 import mujoco
 from mujoco_mpc import agent as agent_lib
 
-from config import G1Config, Go2Config, QuadrupedConfig, G1FixedConfig
+from config import G1Config, Go2Config, QuadrupedConfig
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -22,8 +21,6 @@ class Controller:
     def __init__(self, robot_name="g1", mujoco_mpc_mode="gui"):
         if robot_name == "g1":
             self.config = G1Config()
-        elif robot_name == "g1_fixed":
-            self.config = G1FixedConfig()
         elif robot_name == "go2":
             self.config = Go2Config()
         elif robot_name == "quadruped":
@@ -33,23 +30,30 @@ class Controller:
         self.mujoco_mpc_mode = mujoco_mpc_mode
 
         # State variables read from real robot
-        try:
-            self.state_shm = shared_memory.SharedMemory(name="state_shm")
-            self.state_buffer = self.state_shm.buf
-        except FileNotFoundError:
-            print("State shared memory 'state_shm' not found.")
-            exit()
-        # Control variables written to real robot
-        try:
-            self.ctrl_shm = shared_memory.SharedMemory(name="ctrl_shm")
-            self.ctrl_buffer = self.ctrl_shm.buf
-        except FileNotFoundError:
-            print("Could not create control shared memory 'ctrl_shm'.")
-            exit()
+        # try:
+        #     self.state_shm = shared_memory.SharedMemory(name="state_shm")
+        #     self.state_buffer = self.state_shm.buf
+        # except FileNotFoundError:
+        #     print("State shared memory 'state_shm' not found.")
+        #     exit()
+        # # Control variables written to real robot
+        # try:
+        #     self.ctrl_shm = shared_memory.SharedMemory(name="ctrl_shm")
+        #     self.ctrl_buffer = self.ctrl_shm.buf
+        # except FileNotFoundError:
+        #     print("Could not create control shared memory 'ctrl_shm'.")
+        #     exit()
 
         # Initialize control variables
         self.last_plan_time = 0.0
         self.state = None  # Will be initialized in main_loop
+
+        # Mujoco model setup
+        self.mj_model = mujoco.MjModel.from_xml_path(self.config.xml_path_sim)
+        self.mj_model.opt.timestep = self.config.dt_sim
+        self.mj_data = mujoco.MjData(self.mj_model)
+        mujoco.mj_resetDataKeyframe(self.mj_model, self.mj_data, 0)
+        self.n_sim_frame = int(self.config.dt_ctrl / self.config.dt_sim)
 
     def get_action(self, agent, qpos, qvel):
         agent.set_state(qpos=qpos, qvel=qvel)
@@ -96,8 +100,6 @@ class Controller:
                 print("Agent server binary path:", pathlib.Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server")
                 print("Task ID:", self.config.task_id)
                 print("Model Path:", self.config.xml_path_ctrl)
-                
-                
                 with agent_lib.Agent(
                     server_binary_path=pathlib.Path(agent_lib.__file__).parent
                     / "mjpc"
@@ -106,29 +108,37 @@ class Controller:
                     model=model,
                 ) as agent:
                     while True:
-                        q_sim, qd_sim, t_real = self.get_state()
-                        
-                        if self.config.task_id == "G1 Fixed":
-                            q_sim = q_sim[7:]
-                            qd_sim = qd_sim[6:]
+                        # q_sim, qd_sim, t_real = self.get_state()
 
+                        # get state from simulator
+                        q_sim = self.mj_data.qpos
+                        qd_sim = self.mj_data.qvel
+                        t_sim = self.mj_data.time
+                        
+                        # set state to agent and get action
                         agent.set_state(qpos=q_sim, qvel=qd_sim)
                         ctrl = agent.get_action()
-                        ctrl_real = ctrl_sim2real(
-                            ctrl, self.config.locked_joint_idx, self.config.nu_real
-                        )
-                        self.ctrl_buffer[:] = pack_control_data(
-                            self.ctrl_buffer, t_real, ctrl_real
-                        )
-                        # rate_limiter.sleep()
+                        # ctrl_real = ctrl_sim2real(
+                        #     ctrl, self.config.locked_joint_idx, self.config.nu_real
+                        # )
+                        # self.ctrl_buffer[:] = pack_control_data(
+                        #     self.ctrl_buffer, t_real, ctrl_real
+                        # )
+
+                        # step simulation
+                        for _ in range(self.n_sim_frame):
+                            self.mj_data.ctrl = ctrl
+                            mujoco.mj_step(self.mj_model, self.mj_data)
+                        rate_limiter.sleep()
 
         except KeyboardInterrupt:
             print("Keyboard interrupt detected. Exiting...")
         finally:
-            self.state_shm.close()
-            self.ctrl_shm.close()
+            pass
+            # self.state_shm.close()
+            # self.ctrl_shm.close()
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="g1_fixed", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="g1", mujoco_mpc_mode="gui")
     controller.main_loop()

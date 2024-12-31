@@ -14,7 +14,7 @@ import struct
 from loop_rate_limiters import RateLimiter
 import xml.etree.ElementTree as ET
 
-from config import G1Config, Go2Config, QuadrupedConfig
+from config import G1Config, Go2Config, QuadrupedConfig, G1FixedConfig
 from utils import pack_state_data, unpack_control_data, apply_gear_to_control, ctrl_real2sim, ctrl_sim2real
 
 plt.style.use(["science"])
@@ -24,6 +24,8 @@ class Sim:
     def __init__(self, robot_name="g1"):
         if robot_name == "g1":
             self.config = G1Config()
+        elif robot_name == "g1_fixed":
+            self.config = G1FixedConfig()
         elif robot_name == "go2":
             self.config = Go2Config()
         elif robot_name == "quadruped":
@@ -46,7 +48,7 @@ class Sim:
         # Initialize state variables
         self.q = self.mj_model.key_qpos[0].copy()
         self.qd = self.mj_model.key_qvel[0].copy()
-        assert self.config.nq_real == self.mj_model.nq, "Number of joints in MuJoCo model must match the number of joints in the configuration"
+        # assert self.config.nq_real == self.mj_model.nq, "Number of joints in MuJoCo model must match the number of joints in the configuration"
         # Print motor information and names
         print(f"Available attributes in MjModel: {dir(self.mj_model)}")
         print(f"Motor names: {self.mj_model.actuator_ctrlrange}")
@@ -56,21 +58,20 @@ class Sim:
         # print(f"Motor gears: {self.motor_gears}")
 
         # Initialize an array with ones
-        self.gear_array = np.ones(self.mj_model.nu)
+        if robot_name == "go2":
+            # Update the array with gear values at the corresponding joint indices
+            for motor in self.motor_gears.values():
+                joint_index = motor['joint_index'] - 1
+                gear = motor['gear']
+                print(f"Joint index: {joint_index}, Gear: {gear}")
+                self.gear_array[joint_index] = gear
 
-        # Update the array with gear values at the corresponding joint indices
-        for motor in self.motor_gears.values():
-            joint_index = motor['joint_index'] - 1
-            gear = motor['gear']
-            print(f"Joint index: {joint_index}, Gear: {gear}")
-            self.gear_array[joint_index] *= gear
 
-
-        # Print the gear array for verification
-        print(f"Gear array: {self.gear_array}")
+            # Print the gear array for verification
+            # print(f"Gear array: {self.gear_array}")
 
         # Shared Memory for control inputs
-        self.ctrl_shm_size = (self.config.nu_real + 1) * 8  # time + q_des
+        self.ctrl_shm_size = (self.config.nu_sim + 1) * 8  # time + q_des
         # If the shared memory already exists, delete it
         
         
@@ -109,30 +110,44 @@ class Sim:
             with mujoco.viewer.launch_passive(
                 self.mj_model, self.mj_data, show_left_ui=True, show_right_ui=False
             ) as viewer:
+                
+                
                 while True:
                     # Read control inputs from shared memory
-                    _, q_des = unpack_control_data(self.ctrl_buffer, self.config.nu_real)
+                    # print(self.config.nu_sim)
+                    _, q_des = unpack_control_data(self.ctrl_buffer, self.config.nu_sim)
                     # check if q_des is close to zero
                     if np.allclose(q_des, np.zeros_like(q_des)):
-                        q_des = self.default_ctrl
+                        # q_des = self.default_ctrl
+                        q_des = np.zeros(self.config.nu_sim)
                         print("Resetting control to default")
-                    
+                    # print(q_des.shape)
                     # apply gear to control
                     # q_des_with_gear = apply_gear_to_control(q_des, self.gear_array) 
-                
-                    # self.mj_data.ctrl[:] = q_des_with_gear 
+                    # q_des_sim = ctrl_real2sim(q_des, self.config.locked_joint_idx, self.config.nu_sim)
+                    # print(q_des_real.shape)
+                    # print(q_des)
+                    self.mj_data.ctrl[:] = q_des
 
-                    # print(self.config.nu_real)
+                    # print(self.config.nu_sim)
                     # q_des_sim equals to q_des without locked joints
                     # q_des_sim = ctrl_real2sim(q_des, self.config.locked_joint_idx, 21)
                     # print(q_des_sim.shape)
                     # print(q_des_with_gear)
-                    self.mj_data.ctrl[:] = q_des
+                    # self.mj_data.ctrl[:] = q_des
 
                     mujoco.mj_step(self.mj_model, self.mj_data)
+                    # DEBUG
+                    # manually set position and orientation to zero
+                    # self.mj_data.qpos[:7] = 0
+                    # self.mj_data.qpos[2] = 1.0
+                    # self.mj_data.qpos[3] = 1.0
+                    # self.mj_data.qvel[:6] = 0
+                    q_sim = self.mj_data.qpos
+                    qd_sim = self.mj_data.qvel
 
                     # Get the state from the MuJoCo model
-                    self.state_buffer[:] = pack_state_data(self.state_buffer, self.mj_data.time, self.mj_data.qpos, self.mj_data.qvel)
+                    self.state_buffer[:] = pack_state_data(self.state_buffer, self.mj_data.time, q_sim, qd_sim)
 
                     # Check if robot failed, if so, reset the simulation
                     if self.config.auto_reset:
@@ -157,5 +172,5 @@ class Sim:
 
 
 if __name__ == "__main__":
-    sim = Sim(robot_name="go2")
+    sim = Sim(robot_name="g1_fixed")
     sim.main_loop()

@@ -38,3 +38,6 @@ python/dist/
 # Plots
 plots/
 python/mujoco_mpc/exp/evaluation_results.csv
+
+# Meshes Debug
+mjpc/tasks/g1_fixed/meshes/

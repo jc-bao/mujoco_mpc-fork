@@ -485,10 +485,24 @@
 
     <motor name="left_shoulder_pitch_joint" joint="left_shoulder_pitch_joint" gear="20" />
     <motor name="left_shoulder_roll_joint" joint="left_shoulder_roll_joint" gear="20" />
+    <position class="shoulder_yaw_motor" name="left_shoulder_yaw_joint"
+      joint="left_shoulder_yaw_joint" />
     <motor name="left_elbow_joint" joint="left_elbow_joint" gear="20" />
+    <position class="wrist_motor_pos" name="left_wrist_roll_joint" joint="left_wrist_roll_joint" />
+    <position class="wrist_motor_pos" name="left_wrist_pitch_joint" joint="left_wrist_pitch_joint" />
+    <position class="wrist_motor_pos" name="left_wrist_yaw_joint" joint="left_wrist_yaw_joint" />
+
     <motor name="right_shoulder_pitch_joint" joint="right_shoulder_pitch_joint" gear="20" />
+    
     <motor name="right_shoulder_roll_joint" joint="right_shoulder_roll_joint" gear="20" />
+    <position class="shoulder_yaw_motor" name="right_shoulder_yaw_joint"
+      joint="right_shoulder_yaw_joint" />
     <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" />
+    <position class="wrist_motor_pos" name="right_wrist_roll_joint" joint="right_wrist_roll_joint" />
+    <position class="wrist_motor_pos" name="right_wrist_pitch_joint"
+      joint="right_wrist_pitch_joint" />
+    <position class="wrist_motor_pos" name="right_wrist_yaw_joint" joint="right_wrist_yaw_joint" />
+
     
   </actuator>
 
