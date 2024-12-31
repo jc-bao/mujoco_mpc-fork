@@ -747,7 +747,10 @@ void QuadrupedHill::ResidualFn::Residual(const mjModel* model,
   double RLz = SensorByName(model, data, "RL")[2];
   double avg_foot_height = 0.25 * (FRz + FLz + RRz + RLz);
 
-  residual[0] = (standing_height - avg_foot_height) - height_goal;
+  int counter = 0;
+
+  residual[counter] = (standing_height - avg_foot_height) - height_goal;
+  counter++;
 
   // ---------- Residual (1) ----------
   // goal position
@@ -757,7 +760,8 @@ void QuadrupedHill::ResidualFn::Residual(const mjModel* model,
   double* position = SensorByName(model, data, "position");
 
   // position error
-  mju_sub3(residual + 1, position, goal_position);
+  mju_sub3(residual + counter, position, goal_position);
+  counter += 3;
 
   // ---------- Residual (2) ----------
   // goal orientation
@@ -770,22 +774,26 @@ void QuadrupedHill::ResidualFn::Residual(const mjModel* model,
   double* orientation = SensorByName(model, data, "orientation");
   mju_quat2Mat(body_rotmat, orientation);
 
-  mju_sub(residual + 4, body_rotmat, goal_rotmat, 9);
+  mju_sub(residual + counter, body_rotmat, goal_rotmat, 9);
+  counter += 9;
 
   // ---------- Residual (3) ----------
-  mju_copy(residual + 13, data->ctrl, model->nu);
+  mju_copy(residual + counter, data->ctrl, model->nu);
+  counter += model->nu;
 
-  // New cost term
-  double position_error_norm = mju_norm3(residual + 1);
-  double geodesic_distance = 1.0 - mju_abs(mju_dot(goal_orientation, orientation, 4));
-  double tolerance = 1.5e-1;
-  double new_cost_weight = parameters_[new_cost_weight_param_id_];
-  // printf("new_cost_weight: %f\n", new_cost_weight);
-  if (position_error_norm > tolerance || geodesic_distance > tolerance) {
-    residual[17] = 50 * new_cost_weight;  // New term when goal not reached
-  } else {
-    residual[17] = 0;  // New term when goal is reached
-  }
+  // Cost for getting close to the goal
+  // get position error
+  double position_error[3];
+  mju_sub3(position_error, position, goal_position);
+  double position_error_norm = mju_norm3(position_error);
+  // clip position error
+  position_error_norm = mju_clip(position_error_norm, 0, 0.15);
+  residual[counter] = position_error_norm;
+  counter++;
+  // double orientation_error[9];
+  // double orientation_error_norm = mju_norm3(orientation_error);
+  // mju_sub(orientation_error, body_rotmat, goal_rotmat, 9);
+  
 }
 
 // -------- Transition for quadruped task --------
@@ -820,7 +828,7 @@ void QuadrupedHill::TransitionLocked(mjModel* model, mjData* data) {
         1.0 - mju_abs(mju_dot(goal_orientation, orientation, 4));
 
     // ---------- Check tolerance ----------
-    double tolerance = 1.5e-1;
+    double tolerance = 1.0e-1;
     if (position_error_norm <= tolerance && geodesic_distance <= tolerance) {
       // update task state
       residual_.current_mode_ += 1;

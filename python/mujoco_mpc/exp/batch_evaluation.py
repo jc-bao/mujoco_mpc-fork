@@ -38,22 +38,22 @@ def main():
     tasks_config = {
         # "Cartpole",
         # "Acrobot",
-        "Quadruped Hill",
+        # "Quadruped Hill",
         # "allegro",
         # "swimmer",
         # "walker",
-
+        "Go2W Hill",
     }
 
     # List of controllers to test
     controllers = [
         "Sampling",
         "Feedback Sampling",
-        # "iLQG"
+        "iLQG"
     ]
 
     # Number of runs per (task, controller) pair
-    num_runs = 2
+    num_runs = 3
 
     # Prepare a data structure to store all cost results
     # Example shape: results[task][controller] = [run1_cost, run2_cost, ...]
@@ -87,6 +87,8 @@ def main():
                 )
                 if task == "Quadruped Hill":
                     config.model_path = Path('/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/quadruped/task_hill.xml')
+                elif task == "Go2W Hill":
+                    config.model_path = Path('/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/go2w/task_hill.xml')
                 try:
                     cost = eval_main(config)
                     if cost is not None:

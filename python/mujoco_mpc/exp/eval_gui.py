@@ -30,7 +30,7 @@ class EvaluationConfig:
     task: str = "Acrobot"
     """Task ID (e.g., 'Cartpole')."""
     
-    controller: str = "Feedback Sampling"
+    controller: str = "iLQG"
     """Controller ID (e.g., 'Sampling', 'iLQG', 'Feedback Sampling')."""
     
     model_path: Optional[Path] = None
@@ -73,9 +73,6 @@ def update_planner_config(
     Returns:
         Path to the modified XML file.
     """
-    # Verify source file exists
-    print(model_path)
-    # make model_path a path object
     # model_path = Path(model_path)
     if not model_path.exists():
         raise FileNotFoundError(f"Source file not found: {model_path}")
@@ -89,7 +86,7 @@ def update_planner_config(
     # Read file
     with open(benchmark_path, "r") as file:
         content = file.read()
-    print(model_path)
+
     # 1) Update the planner ID
     # Example: <numeric name="agent_planner" data="7" />
     content = re.sub(
@@ -190,7 +187,6 @@ def main(config: EvaluationConfig) -> Optional[float]:
         with open(config.config_file, "r") as f:
             yaml_config = yaml.safe_load(f)
             print(f"Loaded config from {config.config_file}:")
-            print(yaml_config)
             # Only try to update total_time if yaml_config exists
             try:
                 config.total_time = yaml_config["environment"]["total_time"]
@@ -205,7 +201,7 @@ def main(config: EvaluationConfig) -> Optional[float]:
     try:
         if planner_id == 7:
             yaml_config_feedback = yaml_config["feedback_sampling"]
-            print(yaml_config_feedback)
+            print("yaml_config_feedback:", yaml_config_feedback)
             model_path = update_planner_config(config.model_path, planner_id, yaml_config_feedback)
             print(f"Successfully created and updated: {model_path}")
         else:
@@ -217,7 +213,6 @@ def main(config: EvaluationConfig) -> Optional[float]:
         return
 
     # Load model
-    print(model_path)
     model = mujoco.MjModel.from_xml_path(str(model_path))
     print("Agent server binary path:", Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server")
     print("Task ID:", config.task)
@@ -233,7 +228,6 @@ def main(config: EvaluationConfig) -> Optional[float]:
         # list agent's planner attributes
         # print(agent.planner.__dict__)
         # list agent's methods
-        print(agent.get_task_parameters())
         task_init_function = f"{config.task.lower()}_task_init"
         task_init_function = getattr(sys.modules[__name__], task_init_function, default_init)
         task_init_function(agent,yaml_config["environment"])

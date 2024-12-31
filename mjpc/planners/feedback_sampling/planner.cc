@@ -41,7 +41,7 @@ namespace mjpc
     }
 
     // number of trajectories
-    num_trajectory_ = GetNumberOrDefault(10, model, "sampling_trajectories");
+    num_trajectory_ = GetNumberOrDefault(28, model, "sampling_trajectories");
 
     // feedback scale
     feedback_scale = GetNumberOrDefault(1.0, model, "sampling_scale");
@@ -53,7 +53,7 @@ namespace mjpc
                                         "sampling_representation");
 
     // number of sampling update before feedback is applied
-    num_sampling_update_before_feedback = GetNumberOrDefault(3, model, "sampling_update_before_feedback");
+    num_sampling_update_before_feedback = GetNumberOrDefault(5, model, "sampling_update_before_feedback");
 
     // cost variance threshold
     cost_variance_threshold_ = GetNumberOrDefault(100.0, model, "sampling_cost_variance_threshold");
@@ -62,7 +62,7 @@ namespace mjpc
     k_feedback_scale_gain = GetNumberOrDefault(1.0, model, "sampling_feedback_scale_gain");
 
     // improvement value gamma
-    improvement_value_gamma = GetNumberOrDefault(0.95, model, "sampling_improvement_value_gamma");
+    improvement_value_gamma = GetNumberOrDefault(0.8, model, "sampling_improvement_value_gamma");
 
     winner = 0;
 
@@ -157,6 +157,9 @@ namespace mjpc
     {
       policy.feedback_scaling = 0.0;
     }
+
+    // reset improvement value
+    improvement_value = 3.0;
   }
 
   // optimize nominal policy using feedback-based sampling
@@ -187,11 +190,11 @@ namespace mjpc
 
     // update feedback scaling which is exp(-sampling_improvement * k_feedback_scale_gain)
     feedback_scale = exp(-improvement_value * k_feedback_scale_gain);
-    // make sure feedback scaling is upper bounded by 0.9
-    feedback_scale = mju_min(feedback_scale, 0.9);
+    // make sure feedback scaling is upper bounded by 1.0
+    feedback_scale = mju_min(feedback_scale, 1.0);
     // update num_sampling_update_before_feedback
-    float feedback_scale_inv = mju_min(2.0 / feedback_scale, 100.0);
-    num_sampling_update_before_feedback = static_cast<int>(feedback_scale_inv);
+    // float feedback_scale_inv = mju_min(2.0 / feedback_scale, 100.0);
+    // num_sampling_update_before_feedback = static_cast<int>(feedback_scale_inv);
 
     // increment update count
     update_cnt++;
@@ -352,8 +355,8 @@ namespace mjpc
         candidate_policy[i].feedback_scaling = this->feedback_scale;
         // sampling token
         absl::BitGen gen_;
-        // randomly select .0.25 * num_trajectory to disable feedback
-        if (absl::Bernoulli(gen_, 0.25))
+        // randomly select 0.1 * num_trajectory to disable feedback
+        if (absl::Bernoulli(gen_, 0.1))
         {
           candidate_policy[i].feedback_scaling = 0.0;
         }

@@ -7,7 +7,7 @@ environment:
 
 # Configuration for the feedback sampling
 feedback_sampling:
-    sampling_exploration: [0.1, 0.3]
+    # sampling_exploration: [0.1, 0.3]
     sampling_trajectories: 10
     sampling_scale: 1.0
     sampling_representation: 2

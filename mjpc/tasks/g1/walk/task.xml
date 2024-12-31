@@ -31,7 +31,7 @@
     <user name="Orientation" dim="2" user="0 0.1 0 0.2" />
     <user name="Gait" dim="12" user="6 4 0 10 0.03" />
     <user name="Balance" dim="2" user="2 0.5 0 1.0 0.1" />
-    <user name="Effort" dim="21" user="0 0.12 0.0 0.2" />
+    <user name="Effort" dim="21" user="0 0.06 0.0 0.2" />
     <user name="Posture" dim="21" user="0 0.1 0.0 0.2" />
     <!-- <framepos name="head_position" objtype="body" objname="head" />
     <framepos name="sp0" objtype="site" objname="sp0" />
@@ -98,36 +98,36 @@
   </sensor>
 
   <worldbody>
-    <body name="goal" mocap="true" pos=".3 0 0.26">
+    <body name="goal" mocap="true" pos="0.0 0 0.7">
       <geom size="0.12" contype="0" conaffinity="0" rgba="0 1 0 .5" group="2" />
     </body>
   </worldbody>
 
   <actuator>
     <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
-        <motor name="left_hip_roll_joint" joint="left_hip_roll_joint" gear="80" />
-        <motor name="left_hip_yaw_joint" joint="left_hip_yaw_joint" gear="80" />
-        <motor name="left_knee_joint" joint="left_knee_joint" gear="100" />
-        <motor name="left_ankle_pitch_joint" joint="left_ankle_pitch_joint" gear="50" />
-        <motor name="left_ankle_roll_joint" joint="left_ankle_roll_joint" gear="50" />
+    <motor name="left_hip_roll_joint" joint="left_hip_roll_joint" gear="80" />
+    <motor name="left_hip_yaw_joint" joint="left_hip_yaw_joint" gear="80" />
+    <motor name="left_knee_joint" joint="left_knee_joint" gear="100" />
+    <motor name="left_ankle_pitch_joint" joint="left_ankle_pitch_joint" gear="50" />
+    <motor name="left_ankle_roll_joint" joint="left_ankle_roll_joint" gear="50" />
 
-        <motor name="right_hip_pitch_joint" joint="right_hip_pitch_joint" gear="80" />
-        <motor name="right_hip_roll_joint" joint="right_hip_roll_joint" gear="80" />
-        <motor name="right_hip_yaw_joint" joint="right_hip_yaw_joint" gear="80" />
-        <motor name="right_knee_joint" joint="right_knee_joint" gear="100" />
-        <motor name="right_ankle_pitch_joint" joint="right_ankle_pitch_joint" gear="50" />
-        <motor name="right_ankle_roll_joint" joint="right_ankle_roll_joint" gear="50" />
+    <motor name="right_hip_pitch_joint" joint="right_hip_pitch_joint" gear="80" />
+    <motor name="right_hip_roll_joint" joint="right_hip_roll_joint" gear="80" />
+    <motor name="right_hip_yaw_joint" joint="right_hip_yaw_joint" gear="80" />
+    <motor name="right_knee_joint" joint="right_knee_joint" gear="100" />
+    <motor name="right_ankle_pitch_joint" joint="right_ankle_pitch_joint" gear="50" />
+    <motor name="right_ankle_roll_joint" joint="right_ankle_roll_joint" gear="50" />
 
-        <motor name="waist_yaw_joint" joint="waist_yaw_joint" gear="80" />
-        <motor name="waist_roll_joint" joint="waist_roll_joint" gear="50" />
-        <motor name="waist_pitch_joint" joint="waist_pitch_joint" gear="50" />
+    <motor name="waist_yaw_joint" joint="waist_yaw_joint" gear="80" />
+    <motor name="waist_roll_joint" joint="waist_roll_joint" gear="50" />
+    <motor name="waist_pitch_joint" joint="waist_pitch_joint" gear="50" />
 
-        <motor name="left_shoulder_pitch_joint" joint="left_shoulder_pitch_joint" gear="20" />
-        <motor name="left_shoulder_roll_joint" joint="left_shoulder_roll_joint" gear="20" />
-        <motor name="left_elbow_joint" joint="left_elbow_joint" gear="20" />
-        <motor name="right_shoulder_pitch_joint" joint="right_shoulder_pitch_joint" gear="20" />
-        <motor name="right_shoulder_roll_joint" joint="right_shoulder_roll_joint" gear="20" />
-        <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" />
+    <motor name="left_shoulder_pitch_joint" joint="left_shoulder_pitch_joint" gear="20" />
+    <motor name="left_shoulder_roll_joint" joint="left_shoulder_roll_joint" gear="20" />
+    <motor name="left_elbow_joint" joint="left_elbow_joint" gear="20" />
+    <motor name="right_shoulder_pitch_joint" joint="right_shoulder_pitch_joint" gear="20" />
+    <motor name="right_shoulder_roll_joint" joint="right_shoulder_roll_joint" gear="20" />
+    <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" />
 
     <!-- <position class="hip_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
     <position class="hip_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
