@@ -140,7 +140,7 @@ class QuadrupedFlat : public Task {
     constexpr static double kMaxHeight = 0.8;         // meter
 
     // New parameter for the weight
-    int new_cost_weight_param_id_;
+    // int new_cost_weight_param_id_;
 
     //  ============  methods  ============
     // return internal phase clock

@@ -1,5 +1,9 @@
 import numpy as np
+import pathlib
+from mujoco_mpc import agent as agent_lib
+import os
 
+MUJOCO_MPC_TASK_PATH = pathlib.Path(__file__).parent.parent.parent.parent / "mjpc/tasks"
 
 class G1Config:
     # model used in controller
@@ -101,7 +105,8 @@ class G1Config:
 
     # controller
     xml_path_ctrl: str = (
-        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
+        str(MUJOCO_MPC_TASK_PATH / "g1/walk/task.xml")
+        # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
         # "/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/g1/walk/task_benchmark.xml"
         # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
     )
@@ -158,8 +163,9 @@ class Go2Config:
     # controller
     xml_path_ctrl: str = (
         # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/go2/task_flat.xml"
-        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/go2/task_flat.xml"
+        # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/go2/task_flat.xml"
         # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/go2/task_real.xml"
+        str(MUJOCO_MPC_TASK_PATH / "go2/task_flat.xml")
     )
     num_opt_steps: int = 1
     task_id: str = "Go2 Flat"
@@ -192,12 +198,12 @@ class QuadrupedConfig(Go2Config):
     dt_ctrl: float = 0.005
     dt_sim: float = 0.005
     xml_path_ctrl: str = (
-        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/build/mjpc/tasks/quadruped/task_flat.xml"
+        str(MUJOCO_MPC_TASK_PATH / "quadruped/task_flat.xml")
+        # "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
     )
     task_id: str = "Quadruped Flat"
     xml_path_sim: str = (
-        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/build/mjpc/tasks/quadruped/task_flat.xml")
-    gear_real = np.array([1.0] * 12)
+        "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml")
 
 
 class G1FixedConfig:
@@ -288,9 +294,10 @@ class G1FixedConfig:
 
     # controller
     xml_path_ctrl: str = (
+        str(MUJOCO_MPC_TASK_PATH / "g1_fixed/task.xml")
         # "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/stand/task.xml"
         # "/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/g1/walk/task_benchmark.xml"
-        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1_fixed/task.xml"
+        # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1_fixed/task.xml"
     )
     num_opt_steps: int = 1
     task_id: str = "G1 Fixed"
