@@ -232,6 +232,10 @@ namespace mjpc
     mju_copy3(residual + counter, SensorByName(model, data, "torso_angmom"));
     counter += 3;
 
+    // ---------- Joint Velocity ----------
+    mju_copy(residual + counter, data->qvel + 6, model->nu);
+    counter += model->nu;
+
     // sensor dim sanity check
     CheckSensorDim(model, counter);
   }

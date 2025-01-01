@@ -139,6 +139,7 @@
     <user name="Posture" dim="12" user="0 0.02 0.0 1.0" />
     <user name="Orientation" dim="2" user="0 0 0 .03" />
     <user name="Angmom" dim="3" user="0 0 0 .03" />
+    <user name="Joint Velocity" dim="12" user="0 0.001 0.0 0.003" />
 
     <!-- estimator measurements -->
     <framepos name="torso_pos" objtype="site" objname="torso" />
