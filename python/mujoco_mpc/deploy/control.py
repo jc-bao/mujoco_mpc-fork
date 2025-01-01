@@ -78,6 +78,9 @@ class Controller:
         # Controller
         # print(self.config.xml_path_ctrl)
         model = mujoco.MjModel.from_xml_path(self.config.xml_path_ctrl)
+        print('XML PATH:')
+        print(self.config.xml_path_ctrl)
+        time_last_plan = time.time()
         rate_limiter = RateLimiter(frequency=1 / self.config.dt_ctrl)
         try:
             if self.mujoco_mpc_mode == "headless":
@@ -93,14 +96,13 @@ class Controller:
                     self.ctrl_buffer[:] = pack_control_data(
                         self.ctrl_buffer, t_real, ctrl_real
                     )
-                    rate_limiter.sleep()
+                    
             elif self.mujoco_mpc_mode == "gui":
                 with agent_lib.Agent(
                     server_binary_path=pathlib.Path(agent_lib.__file__).parent
                     / "mjpc"
                     / "ui_agent_server",
-                    task_id="G1 Walk",
-                    # task_id=self.config.task_id,
+                    task_id=self.config.task_id,
                     model=model,
                 ) as agent:
                     while True:
@@ -111,13 +113,16 @@ class Controller:
                             qd_sim = qd_sim[6:]
 
                         agent.set_state(qpos=q_sim, qvel=qd_sim)
+                        time_elapsed = time.time() - time_last_plan
+                        print(f"Time elapsed: {time_elapsed*1000:.2f} ms")
                         ctrl = agent.get_action()
-                        ctrl_with_gear = ctrl * self.config.gear_real
+                        time_last_plan = time.time()
                         ctrl_real = ctrl_sim2real(
-                            ctrl_with_gear, self.config.locked_joint_idx, self.config.nu_real
+                            ctrl, self.config.locked_joint_idx, self.config.nu_real
                         )
+                        ctrl_with_gear = ctrl_real * self.config.gear_real
                         self.ctrl_buffer[:] = pack_control_data(
-                            self.ctrl_buffer, t_real, ctrl_real
+                            self.ctrl_buffer, t_real, ctrl_with_gear
                         )
                         # rate_limiter.sleep()
 

@@ -181,5 +181,5 @@ class ViconDemo:
 
 
 if __name__ == "__main__":
-    vicon_demo = ViconDemo(robot_name="g1")
+    vicon_demo = ViconDemo(robot_name="go2")
     vicon_demo.main_loop()

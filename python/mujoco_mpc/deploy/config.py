@@ -25,7 +25,7 @@ class G1Config:
         20,20,1,20,1,1,1,
        
     ])
-    duration_1 = 500
+    duration_1 = 100
     _targetPos_1 = np.array([ 
     -0.589255, -0.00637053, -0.0617263, 1.26429, -0.727269, -0.033994, 
     -0.613536, -0.0257312, 0.0270589, 1.26707, -0.70565, 0.0334864, 
@@ -70,7 +70,6 @@ class G1Config:
                 4,
             ]
         )
-        * 0.01
     )
     kd_real: np.ndarray = np.array(
         [
@@ -82,7 +81,7 @@ class G1Config:
             10.0,6.0,2.0,
             6.0,0.4,0.4,0.4,
         ]
-    )
+    ) * 0.5
     gear_real: np.ndarray = np.array(
         [80] * 3
         + [100]
@@ -102,7 +101,7 @@ class G1Config:
 
     # controller
     xml_path_ctrl: str = (
-        "/home/pcy/Research/code/mujoco_mpc-fork/mjpc/tasks/g1/walk/task.xml"
+        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
         # "/home/pcy/Research/code/mujoco_mpc-fork/build/mjpc/tasks/g1/walk/task_benchmark.xml"
         # "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/mjpc/tasks/g1/walk/task.xml"
     )
@@ -118,7 +117,7 @@ class G1Config:
         # "./model/g1/g1_gear.xml"
     )
     dt_sim: float = 0.005
-    ctrl_dt: float = 0.01
+    ctrl_dt: float = 0.005
     real_time_factor: float = 1.0
     auto_reset: bool = True
 
@@ -214,14 +213,14 @@ class G1FixedConfig:
     nu_sim: int = 29
     nu_plan: int = 21
     dt_real: float = 0.005
-    gear_array = np.array([
+    gear_real = np.array([
         80.0, 80.0,80.0,
         100.0,50.0,50.0,
         80.0, 80.0,80.0,
         100.0,50.0,50.0,
         80,50,50,
-        20,20,1,20,1,1,1,
-        20,20,1,20,1,1,1,
+        20,20,20,
+        20,20,20,
        
     ])
     duration_1 = 500
@@ -278,7 +277,7 @@ class G1FixedConfig:
             10.0,6.0,2.0,
             6.0,0.4,0.4,0.4,
         ]
-    )
+    ) * 0.5
 
     # mocap
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.078])
@@ -304,7 +303,7 @@ class G1FixedConfig:
         "./model/g1/g1_gear.xml"
     )
     dt_sim: float = 0.005
-    ctrl_dt: float = 0.01
+    ctrl_dt: float = 0.005
     real_time_factor: float = 1.0
     auto_reset: bool = False
     

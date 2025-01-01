@@ -97,7 +97,12 @@ class Controller:
                     )
                     rate_limiter.sleep()
             elif self.mujoco_mpc_mode == "gui":
-                print("Agent server binary path:", pathlib.Path(agent_lib.__file__).parent / "mjpc" / "ui_agent_server")
+                print(
+                    "Agent server binary path:",
+                    pathlib.Path(agent_lib.__file__).parent
+                    / "mjpc"
+                    / "ui_agent_server",
+                )
                 print("Task ID:", self.config.task_id)
                 print("Model Path:", self.config.xml_path_ctrl)
                 with agent_lib.Agent(
@@ -114,20 +119,19 @@ class Controller:
                         q_sim = self.mj_data.qpos
                         qd_sim = self.mj_data.qvel
                         t_sim = self.mj_data.time
-                        
+
                         # set state to agent and get action
                         agent.set_state(qpos=q_sim, qvel=qd_sim)
                         ctrl = agent.get_action()
-                        # ctrl_real = ctrl_sim2real(
-                        #     ctrl, self.config.locked_joint_idx, self.config.nu_real
-                        # )
-                        # self.ctrl_buffer[:] = pack_control_data(
-                        #     self.ctrl_buffer, t_real, ctrl_real
-                        # )
+                        ctrl_real = ctrl_sim2real(
+                            ctrl * self.config.gear_real,
+                            self.config.locked_joint_idx,
+                            self.config.nu_real,
+                        )
 
                         # step simulation
                         for _ in range(self.n_sim_frame):
-                            self.mj_data.ctrl = ctrl
+                            self.mj_data.ctrl = ctrl_real
                             mujoco.mj_step(self.mj_model, self.mj_data)
                         rate_limiter.sleep()
 
@@ -140,5 +144,5 @@ class Controller:
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="g1", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="go2", mujoco_mpc_mode="gui")
     controller.main_loop()

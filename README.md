@@ -36,6 +36,13 @@ python control.py
 
 ### Sim2Real
 
+Real robot ip and mask:
+```
+192.168.123.222
+255.255.255.0
+```
+verify by `ping 192.168.123.161`
+
 ```
 cd python/mujoco_mpc/deploy
 python mocap.py

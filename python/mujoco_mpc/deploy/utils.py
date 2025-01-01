@@ -2,6 +2,43 @@ import numpy as np
 import struct
 import xml.etree.ElementTree as ET
 import mujoco
+import tkinter as tk
+
+def create_bar(params_dict):
+    root = tk.Tk()
+    root.title("Input Bars")
+
+    # Create a dictionary to store the scale widgets
+    bars = {}
+
+    # Create a scale widget for each parameter
+    for param_name, param_config in params_dict.items():
+        lower_bound = param_config.get('lower', 0)
+        upper_bound = param_config.get('upper', 1) 
+        step_size = param_config.get('step', 0.01)
+        
+        # Create scale (slider) with the specified parameters
+        bar = tk.Scale(
+            root,
+            from_=lower_bound,
+            to=upper_bound,
+            resolution=step_size,
+            orient="horizontal",
+            length=300,
+            label=f"Adjust {param_name}"
+        )
+        bar.pack(pady=10)
+        bars[param_name] = bar
+
+    # Create a function to keep the tkinter window running in a non-blocking way
+    def update_gui():
+        root.update_idletasks()
+        root.update()
+
+    return root, bars, update_gui
+
+
+
 def pack_mocap_data(buffer, timestamp, q_mocap, qd_mocap):
     struct.pack_into("d", buffer, 0, timestamp)
     struct.pack_into(f"{q_mocap.shape[0]}d", buffer, 8, *q_mocap)
