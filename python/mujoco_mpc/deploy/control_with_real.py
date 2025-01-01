@@ -5,7 +5,7 @@ from loop_rate_limiters import RateLimiter
 import pathlib
 import time
 from scipy.spatial.transform import Rotation as R
-
+import matplotlib.pyplot as plt
 import mujoco
 from mujoco_mpc import agent as agent_lib
 
@@ -70,10 +70,16 @@ class Controller:
             print("Could not create mocap shared memory 'mocap_state_shm'.")
             exit()
 
+        # filter variables
+        self.low_pass_filter_gamma = 0.3
+        self.low_pass_filter_window_size = 10
+        self.qd_buffer = np.zeros((self.low_pass_filter_window_size, self.config.nqd_ctrl))
+
         # Initialize state variables
         self.global_ctrl_scale = 0.0
         self.global_kd_scale = 0.0
-        self.global_z_offset = 0.0
+        self.global_z_offset = 0.01
+        self.global_rpy_offset = np.array([0.017, -0.008, 0.0])
         self.q = np.zeros(self.config.nq_real)
         self.qd = np.zeros(self.config.nqd_real)
         # Initialize control variables
@@ -93,7 +99,7 @@ class Controller:
             rsc = RobotStateClient()
             rsc.SetTimeout(3.0)
             rsc.Init()
-            code = rsc.ServiceSwitch("sport_mode", False)    
+            code = rsc.ServiceSwitch("sport_mode", False) 
             if code != 0:
                 print("[ERROR] service stop sport_mode error. code:", code)
             else:
@@ -249,6 +255,15 @@ class Controller:
         )
         # add z offset
         q_sim[2] += self.global_z_offset
+        # add rpy offset
+        # check if q_sim is zero norm, if so, set it to identity
+        if np.linalg.norm(q_sim[3:7]) < 1e-6:
+            q_sim[3:7] = np.array([1.0, 0.0, 0.0, 0.0])
+            print("[WARNING] q_sim is zero norm, setting it to identity")
+        rot_robot = R.from_quat(q_sim[3:7], scalar_first=True)
+        rot_body = R.from_euler("xyz", self.global_rpy_offset, degrees=False)
+        rot_robot_new = rot_robot * rot_body
+        q_sim[3:7] = rot_robot_new.as_quat(scalar_first=True)
         return q_sim, qd_sim
 
     def main_loop(self):
@@ -257,6 +272,8 @@ class Controller:
             "ctrl_scale": {"lower": 0, "upper": 1.0, "step": 0.01},
             "kd_scale": {"lower": 1.0, "upper": 2.0, "step": 0.01},
             "z_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
+            "roll_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
+            "pitch_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
         }
         root, bars, update_gui = create_bar(params_dict)
         # Controller
@@ -276,12 +293,20 @@ class Controller:
                     self.global_ctrl_scale = bars["ctrl_scale"].get()
                     self.global_kd_scale = bars["kd_scale"].get()
                     self.global_z_offset = bars["z_offset"].get()
+                    self.global_rpy_offset = np.array([bars["roll_offset"].get(), bars["pitch_offset"].get(), 0.0])
                     q_sim, qd_sim = self.get_state()
 
                     # DEBUG: test fixed base mode
                     if self.config.task_id == "G1 Fixed":
                         q_sim = q_sim[7:]
                         qd_sim = qd_sim[6:]
+
+                    # low pass filter
+                    qd_sim_lp = self.low_pass_filter_gamma * qd_sim + (1 - self.low_pass_filter_gamma) * self.qd_buffer[-1]
+                    self.qd_buffer = np.roll(self.qd_buffer, -1, axis=0)
+                    self.qd_buffer[-1, :] = qd_sim_lp
+                    self.qd_buffer[-1, :] = np.mean(self.qd_buffer, axis=0)
+                    qd_sim = self.qd_buffer[-1, :]
 
                     agent.set_state(qpos=q_sim, qvel=qd_sim)
                     ctrl = agent.get_action()
@@ -293,7 +318,7 @@ class Controller:
                         self.config.locked_joint_idx,
                         self.config.nu_real,
                     )
-                    self.set_action(ctrl_real)
+                    self.set_action(ctrl_real) 
 
         except KeyboardInterrupt:
             print("Keyboard interrupt detected. Exiting...")
@@ -303,5 +328,5 @@ class Controller:
 
 if __name__ == "__main__":
     controller = Controller(robot_name="go2")
-    controller.init_stand_go2()
+    controller.init_stand_go2() 
     controller.main_loop()

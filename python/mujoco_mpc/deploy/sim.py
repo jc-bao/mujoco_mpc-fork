@@ -51,7 +51,7 @@ class Sim:
         assert self.config.nq_real == self.mj_model.nq, "Number of joints in MuJoCo model must match the number of joints in the configuration"
 
         # Shared Memory for control inputs
-        self.ctrl_shm_size = (self.config.nu_sim + 1) * 8  # time + q_des
+        self.ctrl_shm_size = (self.config.nu_ctrl + 1) * 8  # time + q_des
         # If the shared memory already exists, delete it
         
         
@@ -93,6 +93,8 @@ class Sim:
                     # self.mj_data.qvel[:6] = 0
                     q_sim = self.mj_data.qpos
                     qd_sim = self.mj_data.qvel
+                    # add noise to qd_sim
+                    qd_sim[3:] += np.random.normal(0, 0.05, size=self.config.nqd_real - 3)
 
                     # Get the state from the MuJoCo model
                     self.state_buffer[:] = pack_state_data(self.state_buffer, self.mj_data.time, q_sim, qd_sim)
@@ -120,5 +122,5 @@ class Sim:
 
 
 if __name__ == "__main__":
-    sim = Sim(robot_name="g1_fixed")
+    sim = Sim(robot_name="go2")
     sim.main_loop()

@@ -41,3 +41,9 @@ python/mujoco_mpc/exp/evaluation_results.csv
 
 # Meshes Debug
 mjpc/tasks/g1_fixed/meshes/
+
+# Deploy
+
+python/mujoco_mpc/deploy/plot_low_state.py
+python/mujoco_mpc/deploy/contact_calculation.py
+python/mujoco_mpc/deploy/contact_calculation.py

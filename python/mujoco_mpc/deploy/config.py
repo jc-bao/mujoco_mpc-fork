@@ -192,11 +192,12 @@ class QuadrupedConfig(Go2Config):
     dt_ctrl: float = 0.005
     dt_sim: float = 0.005
     xml_path_ctrl: str = (
-        "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
+        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/build/mjpc/tasks/quadruped/task_flat.xml"
     )
     task_id: str = "Quadruped Flat"
     xml_path_sim: str = (
-        "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml")
+        "/Users/tairanhe/Workspace_MPC_Chaoyi/mpc_chaoyi/build/mjpc/tasks/quadruped/task_flat.xml")
+    gear_real = np.array([1.0] * 12)
 
 
 class G1FixedConfig:
