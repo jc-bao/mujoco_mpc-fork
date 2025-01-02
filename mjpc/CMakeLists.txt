@@ -66,6 +66,8 @@ add_library(
   tasks/g1/walk/walk.h
   tasks/g1_fixed/g1_fixed.cc
   tasks/g1_fixed/g1_fixed.h
+  tasks/h1_2/walk/walk.cc
+  tasks/h1_2/walk/walk.h
   tasks/go2/go2.cc
   tasks/go2/go2.h
   tasks/go2w/go2w.cc

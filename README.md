@@ -52,6 +52,11 @@ cd python/mujoco_mpc/deploy
 python control.py
 ```
 
+## How to add new robot
+
+1. match the site name and position
+2. match the actuator, please use position control and use damping in joint rather than kv. 
+
 ## Notes
 
 1. for pd position controller, try to use damping instead of kv to make the system more stable.
