@@ -203,7 +203,7 @@ class QuadrupedConfig(Go2Config):
     )
     task_id: str = "Quadruped Flat"
     xml_path_sim: str = (
-        "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml")
+        str(MUJOCO_MPC_TASK_PATH / "quadruped/task_flat.xml"))
 
 
 class G1FixedConfig:
