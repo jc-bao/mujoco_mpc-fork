@@ -19,7 +19,7 @@ import pathlib
 # Cartpole model
 model_path = (
     pathlib.Path(__file__).parent.parent.parent
-    / "../../build/mjpc/tasks/g1_fixed/task.xml"
+    / "../../build/mjpc/tasks/g1/walk/task.xml"
 )
 # print("model_path:", model_path)
 model = mujoco.MjModel.from_xml_path(str(model_path))
@@ -29,7 +29,7 @@ with agent_lib.Agent(
     server_binary_path=pathlib.Path(agent_lib.__file__).parent
     / "mjpc"
     / "ui_agent_server",
-    task_id="G1 Fixed",
+    task_id="G1 Walk",
     model=model,
 ) as agent:
   while True:

@@ -180,7 +180,7 @@ namespace mjpc::g1
     residual[counter++] = capture_point[1] - avg_foot_pos[1];
 
     // ----- effort ----- //
-    mju_copy(&residual[counter], data->ctrl, model->nu);
+    mju_scl(residual + counter, data->actuator_force, 2e-2, model->nu);
     counter += model->nu;
 
     // ----- posture ----- //

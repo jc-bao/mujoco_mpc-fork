@@ -83,7 +83,7 @@
 
   <include file="go2.xml" />
 
-  <actuator>
+  <!-- <actuator>
     <motor class="go2" name="FR_hip" joint="FR_hip_joint"/>
     <motor class="go2" name="FR_thigh" joint="FR_thigh_joint"/>
     <motor class="go2" name="FR_calf" joint="FR_calf_joint" gear="45.43"/>
@@ -96,7 +96,7 @@
     <motor class="go2" name="RL_hip" joint="RL_hip_joint"/>
     <motor class="go2" name="RL_thigh" joint="RL_thigh_joint"/>
     <motor class="go2" name="RL_calf" joint="RL_calf_joint" gear="45.43"/>
-  </actuator>
+  </actuator> -->
 
   <!-- <actuator>
     <general class="torque" name="FR_hip" joint="FR_hip_joint"/>
@@ -113,7 +113,7 @@
     <general class="torque" name="RL_calf" joint="RL_calf_joint"/>
   </actuator> -->
 
-  <!-- <actuator>
+  <actuator>
     <position class="abduction" name="FR_hip" joint="FR_hip_joint"/>
     <position class="front_hip" name="FR_thigh" joint="FR_thigh_joint"/>
     <position class="knee" name="FR_calf" joint="FR_calf_joint"/>
@@ -126,7 +126,7 @@
     <position class="abduction" name="RL_hip" joint="RL_hip_joint"/>
     <position class="back_hip" name="RL_thigh" joint="RL_thigh_joint"/>
     <position class="knee" name="RL_calf" joint="RL_calf_joint"/>
-  </actuator> -->
+  </actuator>
 
   <sensor>
     <!-- cost -->
@@ -135,11 +135,21 @@
     <user name="Position" dim="3" user="2 0.2 0 0.5 0.1" />
     <user name="Gait" dim="4" user="6 2 0 10 0.03" />
     <user name="Balance" dim="2" user="2 0.2 0 0.3 0.1" />
+    <user name="Effort" dim="12" user="0 0.03 0.0 0.1" />
+    <user name="Posture" dim="12" user="0 0.02 0.0 0.1" />
+    <user name="Orientation" dim="2" user="0 0.02 0 .03" />
+    <user name="Angmom" dim="3" user="0 0 0 .03" />
+    <user name="Joint Velocity" dim="12" user="0 0.0 0.0 0.003" />
+    <!-- <user name="Upright" dim="3" user="6 0.1 0 3 0.05" />
+    <user name="Height" dim="1" user="6 1 0 3 0.04" />
+    <user name="Position" dim="3" user="2 0.2 0 0.5 0.1" />
+    <user name="Gait" dim="4" user="6 2 0 10 0.03" />
+    <user name="Balance" dim="2" user="2 0.2 0 0.3 0.1" />
     <user name="Effort" dim="12" user="0 0.08 0.0 1.0" />
     <user name="Posture" dim="12" user="0 0.02 0.0 1.0" />
     <user name="Orientation" dim="2" user="0 0 0 .03" />
     <user name="Angmom" dim="3" user="0 0 0 .03" />
-    <user name="Joint Velocity" dim="12" user="0 0.001 0.0 0.003" />
+    <user name="Joint Velocity" dim="12" user="0 0.0 0.0 0.003" /> -->
 
     <!-- estimator measurements -->
     <framepos name="torso_pos" objtype="site" objname="torso" />
@@ -176,7 +186,7 @@
   </sensor>
 
   <keyframe>
-    <key name="home" qpos="0 0 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8"
+    <key name="home" qpos="0 0 0.47 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8"
       ctrl="0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8" />
     <key name="crouch"
       qpos="-0.0501827 0.00107117 0.143925
