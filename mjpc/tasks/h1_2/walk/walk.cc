@@ -100,8 +100,8 @@ namespace mjpc::h1_2
     }
     double duty_ratio = 0.5;
     double footphase = 0.0;
-    double frequency = 3.0;
-    double foot_y_distance_target = 0.13;
+    double frequency = 2.0;
+    double foot_y_distance_target = 0.20;
     double foot_x_distance_target = 0.0;
     for (int i = 0; i < 2; i++)
     {
