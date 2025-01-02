@@ -7,7 +7,7 @@ import pathlib
 import mujoco
 from mujoco_mpc import agent as agent_lib
 
-from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig
+from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, H1_2PositionConfig
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -19,12 +19,15 @@ from utils import (
 
 class Controller:
     def __init__(self, robot_name="g1", mujoco_mpc_mode="gui"):
+        self.robot_name = robot_name
         if robot_name == "g1":
             self.config = G1PositionConfig()
         elif robot_name == "go2":
             self.config = Go2PositionConfig()
         elif robot_name == "quadruped":
             self.config = QuadrupedConfig()
+        elif robot_name == "h1_2":
+            self.config = H1_2PositionConfig()
         else:
             raise ValueError(f"Robot {robot_name} not supported")
         self.mujoco_mpc_mode = mujoco_mpc_mode
@@ -119,7 +122,16 @@ class Controller:
                         q_sim = self.mj_data.qpos
                         qd_sim = self.mj_data.qvel
                         t_sim = self.mj_data.time
-
+                        if self.robot_name == "h1_2":
+                            q_sim, qd_sim = state_real2sim(
+                                q_sim,
+                                qd_sim,
+                                self.config.locked_joint_idx,
+                                self.config.nq_ctrl,
+                                self.config.nqd_ctrl,
+                                self.config.nq_real,
+                                self.config.nqd_real,
+                            )
                         # set state to agent and get action
                         agent.set_state(qpos=q_sim, qvel=qd_sim)
                         ctrl = agent.get_action()
@@ -144,5 +156,5 @@ class Controller:
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="go2", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="h1_2", mujoco_mpc_mode="gui")
     controller.main_loop()
