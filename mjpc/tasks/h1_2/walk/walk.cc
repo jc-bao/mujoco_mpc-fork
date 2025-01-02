@@ -73,17 +73,19 @@ namespace mjpc::h1_2
     double *torso_xmat = data->xmat + 9 * torso_body_id;
     double torso_heading[2] = {torso_xmat[0], torso_xmat[3]};
     mju_normalize(torso_heading, 2);
-    // TODO: make this a parameter
     double heading_goal = 0.0;
     double target_heading[2] = {mju_cos(heading_goal), mju_sin(heading_goal)};
     residual[counter++] = torso_heading[0] - target_heading[0];
     residual[counter++] = torso_heading[1] - target_heading[1];
-
-    // ----- gait ----- //
     int pelvis_body_id = mj_name2id(model, mjOBJ_BODY, "pelvis");
-    double *pelvis_pos = SensorByName(model, data, "pelvis_position");
     double *pelvis_xmat = data->xmat + 9 * pelvis_body_id;
     double pelvis_heading[2] = {pelvis_xmat[0], pelvis_xmat[3]};
+    mju_normalize(pelvis_heading, 2);
+    residual[counter++] = pelvis_heading[0] - target_heading[0];
+    residual[counter++] = pelvis_heading[1] - target_heading[1];
+
+    // ----- gait ----- //
+    double *pelvis_pos = SensorByName(model, data, "pelvis_position");
     double pelvis_heading_ortho[2] = {-pelvis_heading[1], pelvis_heading[0]};
     mju_normalize(pelvis_heading, 2);
     mju_normalize(pelvis_heading_ortho, 2);
@@ -100,9 +102,13 @@ namespace mjpc::h1_2
     }
     double duty_ratio = 0.5;
     double footphase = 0.0;
-    double frequency = 2.0;
-    double foot_y_distance_target = 0.20;
+    double frequency = 3.0;
+    double foot_y_distance_target = 0.18;
     double foot_x_distance_target = 0.0;
+    double left_toe_cost[3] = {0.0, 0.0, 0.0};
+    double left_heel_cost[3] = {0.0, 0.0, 0.0};
+    double right_toe_cost[3] = {0.0, 0.0, 0.0};
+    double right_heel_cost[3] = {0.0, 0.0, 0.0};
     for (int i = 0; i < 2; i++)
     {
       if (i == 0)
@@ -133,10 +139,12 @@ namespace mjpc::h1_2
           if (j == 0)
           {
             frame_pos = toe_right_pos;
+            x_tar = x_tar + 0.17;
           }
           else
           {
             frame_pos = heel_right_pos;
+            x_tar = x_tar - 0.08;
           }
           y_tar = -foot_y_distance_target;
         }
@@ -146,10 +154,12 @@ namespace mjpc::h1_2
           if (j == 0)
           {
             frame_pos = toe_left_pos;
+            x_tar = x_tar + 0.17;
           }
           else
           {
             frame_pos = heel_left_pos;
+            x_tar = x_tar - 0.08;
           }
           y_tar = foot_y_distance_target;
         }
@@ -159,10 +169,44 @@ namespace mjpc::h1_2
         frame_pos_pelvis[0] = mju_dot(pelvis_heading, frame_pos_world, 2);
         frame_pos_pelvis[1] = mju_dot(pelvis_heading_ortho, frame_pos_world, 2);
         frame_pos_pelvis[2] = frame_pos[2];
-        residual[counter++] = 0.1 * (frame_pos_pelvis[0] - x_tar);
-        residual[counter++] = 0.1 * (frame_pos_pelvis[1] - y_tar);
-        residual[counter++] = 1.0 * (frame_pos[2] - target_foot_height);
+        if (i == 0)
+        {
+          if (j == 0)
+          {
+            right_toe_cost[0] = 1.0 * (frame_pos_pelvis[0] - x_tar);
+            right_toe_cost[1] = 1.0 * (frame_pos_pelvis[1] - y_tar);
+            right_toe_cost[2] = 1.0 * (frame_pos[2] - target_foot_height);
+          }
+          else
+          {
+            right_heel_cost[0] = 1.0 * (frame_pos_pelvis[0] - x_tar);
+            right_heel_cost[1] = 1.0 * (frame_pos_pelvis[1] - y_tar);
+            right_heel_cost[2] = 1.0 * (frame_pos[2] - target_foot_height);
+          }
+        }
+        else
+        {
+          if (j == 0)
+          {
+            left_toe_cost[0] = 1.0 * (frame_pos_pelvis[0] - x_tar);
+            left_toe_cost[1] = 1.0 * (frame_pos_pelvis[1] - y_tar);
+            left_toe_cost[2] = 1.0 * (frame_pos[2] - target_foot_height);
+          }
+          else
+          {
+            left_heel_cost[0] = 1.0 * (frame_pos_pelvis[0] - x_tar);
+            left_heel_cost[1] = 1.0 * (frame_pos_pelvis[1] - y_tar);
+            left_heel_cost[2] = 1.0 * (frame_pos[2] - target_foot_height);
+          }
+        }
       }
+    }
+    for (int i = 0; i < 3; i++)
+    {
+      residual[counter++] = left_heel_cost[i];
+      residual[counter++] = left_toe_cost[i];
+      residual[counter++] = right_heel_cost[i];
+      residual[counter++] = right_toe_cost[i];
     }
 
     // ----- balance ----- //

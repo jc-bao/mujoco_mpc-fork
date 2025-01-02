@@ -17,7 +17,7 @@
 
   <default>
     <motor ctrlrange="-1 1" ctrllimited="true" />
-    <joint armature="0.01" />
+    <joint armature="0.1" />
     <default class="hip_yaw_motor">
       <joint damping="2.5" />
       <position kp="200" kv="0.0" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
@@ -31,16 +31,16 @@
       <position kp="200" kv="0.0" ctrlrange="-0.43 3.14" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="knee_motor">
-      <joint damping="4.0" />
+      <joint damping="4.0" armature="0.1" />
       <position kp="300" kv="0.0" ctrlrange="-0.12 2.19" forcelimited="true" forcerange="-300 300" />
     </default>
     <default class="ankle_pitch_motor">
-      <joint damping="2.0" armature="0.1" />
+      <joint damping="2.0" armature="0.2" />
       <position kp="40" kv="0.0" ctrlrange="-0.897334 0.523598" forcelimited="true"
         forcerange="-60 60" />
     </default>
     <default class="ankle_roll_motor">
-      <joint damping="2.0" armature="0.1" />
+      <joint damping="2.0" armature="0.2" />
       <position kp="40" kv="0.0" ctrlrange="-0.261799 0.261799" forcelimited="true"
         forcerange="-40 40" />
     </default>
@@ -49,23 +49,23 @@
       <position kp="300" kv="0.0" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="shoulder_pitch_motor">
-      <joint damping="2.0" />
+      <joint damping="2.0" armature="0.1" />
       <position kp="120" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_roll_motor">
-      <joint damping="2.0" />
+      <joint damping="2.0" armature="0.1" />
       <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_yaw_motor">
-      <joint damping="2.0" />
+      <joint damping="2.0" armature="0.1" />
       <position kp="120" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
-      <joint damping="1.0" />
+      <joint damping="1.0" armature="0.1" />
       <position kp="80" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
-      <joint damping="0.5" />
+      <joint damping="0.5" armature="0.1" />
       <position kp="40" kv="0.0" />
     </default>
     <default class="visual">
@@ -76,7 +76,7 @@
     </default>
   </default>
 
-  <statistic meansize="0.112107" extent="1.95557" center="0.0256948 1.86841e-05 -0.178443" />
+  <!-- <statistic meansize="0.112107" extent="1.95557" center="0.0256948 1.86841e-05 -0.178443" /> -->
   <asset>
     <mesh name="pelvis" file="./meshes/pelvis.STL" />
     <mesh name="left_hip_yaw_link" file="./meshes/left_hip_yaw_link.STL" />
@@ -184,18 +184,18 @@
                     rgba="0.1 0.1 0.1 1" mesh="left_ankle_roll_link" />
                   <geom class="visual" type="mesh" rgba="0.1 0.1 0.1 1" mesh="left_ankle_roll_link" />
 
-                  <geom size="0.005" pos="-0.08 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="-0.08 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="-0.08 0.04 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="-0.08 -0.04 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="0.17 0.04 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="0.17 -0.04 -0.035" rgba="0.2 0.2 0.2 1" />
 
                   <site name="foot_left" pos="0.03 0 0" group="4" />
-                  <site name="sp0" pos="-0.05 0 0" type="sphere" size="0.027" />
-                  <site name="sp1" pos="0.12 0 0" type="sphere" size="0.027" />
-                  <body name="heel_left" pos="-0.05 0 -0.03">
+                  <site name="sp0" pos="-0.08 0 0" type="sphere" size="0.027" />
+                  <site name="sp1" pos="0.17 0 0" type="sphere" size="0.027" />
+                  <body name="heel_left" pos="-0.08 0 -0.035">
                     <site name="tracking[lheel]" class="tracking_site" />
                   </body>
-                  <body name="toe_left" pos="0.12 0 -0.03">
+                  <body name="toe_left" pos="0.17 0 -0.035">
                     <site name="tracking[ltoe]" class="tracking_site" />
                   </body>
                 </body>
@@ -264,18 +264,18 @@
                     rgba="0.1 0.1 0.1 1" mesh="right_ankle_roll_link" />
                   <geom class="visual" type="mesh" rgba="0.1 0.1 0.1 1" mesh="right_ankle_roll_link" />
 
-                  <geom size="0.005" pos="-0.08 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="-0.08 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="-0.08 0.04 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="-0.08 -0.04 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="0.17 0.04 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.01" pos="0.17 -0.04 -0.035" rgba="0.2 0.2 0.2 1" />
 
                   <site name="foot_right" pos="0.03 0 0" group="4" />
-                  <site name="sp2" pos="-0.05 0 0" type="sphere" size="0.027" />
-                  <site name="sp3" pos="0.12 0 0" type="sphere" size="0.027" />
-                  <body name="heel_right" pos="-0.08 0 -0.03">
+                  <site name="sp2" pos="-0.08 0 0" type="sphere" size="0.027" />
+                  <site name="sp3" pos="0.17 0 0" type="sphere" size="0.027" />
+                  <body name="heel_right" pos="-0.08 0 -0.035">
                     <site name="tracking[rheel]" class="tracking_site" />
                   </body>
-                  <body name="toe_right" pos="0.17 0 -0.03">
+                  <body name="toe_right" pos="0.17 0 -0.035">
                     <site name="tracking[rtoe]" class="tracking_site" />
                   </body>
                 </body>
