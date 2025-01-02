@@ -7,7 +7,7 @@
     <default class="go2">
       <geom friction="0.6" margin="0.001" condim="1" />
       <joint axis="0 1 0" damping="0.0" armature="0.01" />
-      <position forcelimited="true" forcerange="-23.7 23.7" kp="60" kv="3.0"
+      <position forcelimited="true" forcerange="-23.7 23.7" kp="30" kv="0.6"
         inheritrange="0.0" />
       <default class="abduction">
         <joint axis="1 0 0" range="-1.0472 1.0472" />

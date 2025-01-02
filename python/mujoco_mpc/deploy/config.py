@@ -5,7 +5,7 @@ import os
 
 MUJOCO_MPC_TASK_PATH = pathlib.Path(__file__).parent.parent.parent.parent / "mjpc/tasks"
 
-class G1Config:
+class G1TorqueConfig:
     # model used in controller
     nq_ctrl: int = 28
     nqd_ctrl: int = 27
@@ -40,41 +40,7 @@ class G1Config:
     locked_joint_idx: np.ndarray = (
         np.array([2, 4, 5, 6, 9, 11, 12, 13]) + 12 + 3
     )  # locked joints in real robot
-    kp_real: np.ndarray = (
-        np.array(
-            [
-                100,
-                100,
-                100,
-                200,
-                20,
-                20,
-                100,
-                100,
-                100,
-                200,
-                20,
-                20,
-                400,
-                400,
-                400,
-                90,
-                60,
-                20,
-                60,
-                4,
-                4,
-                4,
-                90,
-                60,
-                20,
-                60,
-                4,
-                4,
-                4,
-            ]
-        )
-    )
+    kp_real: np.ndarray = np.ones(29)
     kd_real: np.ndarray = np.array(
         [
             10.0,10.0,10.0,20.0,2.0,2.0,
@@ -126,8 +92,56 @@ class G1Config:
     real_time_factor: float = 1.0
     auto_reset: bool = True
 
+    control_mode = "torque"
+    q_default = np.array([ 
+    -0.589255, -0.00637053, -0.0617263, 1.26429, -0.727269, -0.033994, 
+    -0.613536, -0.0257312, 0.0270589, 1.26707, -0.70565, 0.0334864, 
+    0.00208437, 0.00127694, 0.0327588, 
+    0.371187, 0.511203, 0.0, 0.0543319, 0.0,0.0,0.0,
+    0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
+    ])
 
-class Go2Config:
+class G1PositionConfig(G1TorqueConfig):
+    kp_real: np.ndarray = (
+        np.array(
+            [
+                100,
+                100,
+                100,
+                200,
+                20,
+                20,
+                100,
+                100,
+                100,
+                200,
+                20,
+                20,
+                400,
+                400,
+                400,
+                90,
+                60,
+                20,
+                60,
+                4,
+                4,
+                4,
+                90,
+                60,
+                20,
+                60,
+                4,
+                4,
+                4,
+            ]
+        )
+    )
+    gear_real = np.ones(21)
+    xml_path_sim = "./model/g1/g1_position.xml"
+    control_mode = "position"
+
+class Go2TorqueConfig:
     # model used in controller
     nq_ctrl: int = 19
     nqd_ctrl: int = 18
@@ -140,7 +154,7 @@ class Go2Config:
     nu_real: int = 12
     dt_real: float = 0.005
     locked_joint_idx: np.ndarray = np.zeros(0)
-    kp_real: np.ndarray = np.array([60.0] * 12)
+    kp_real: np.ndarray = np.array([0.0] * 12)
     kd_real: np.ndarray = np.array([3.0] * 12)
     # gear_real: np.ndarray = np.ones(12)
     gear_real: np.ndarray = np.array(
@@ -192,9 +206,19 @@ class Go2Config:
     percent_3 = 0
     percent_4 = 0
 
+    control_mode = "torque"
+    q_default = np.array([0, 0.9, -1.8, 0, 0.9, -1.8, 0, 0.9, -1.8, 0, 0.9, -1.8])
+
+class Go2PositionConfig(Go2TorqueConfig):
+    gear_real = np.ones(12)
+    kp_real = np.array([30.0] * 12)
+    kd_real = np.array([0.6] * 12)
+    xml_path_sim = "./model/go2/go2_position.xml"
+    control_mode = "position"
 
 
-class QuadrupedConfig(Go2Config):
+
+class QuadrupedConfig(Go2TorqueConfig):
     dt_ctrl: float = 0.005
     dt_sim: float = 0.005
     xml_path_ctrl: str = (

@@ -7,7 +7,7 @@ import pathlib
 import mujoco
 from mujoco_mpc import agent as agent_lib
 
-from config import G1Config, Go2Config, QuadrupedConfig
+from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -20,9 +20,9 @@ from utils import (
 class Controller:
     def __init__(self, robot_name="g1", mujoco_mpc_mode="gui"):
         if robot_name == "g1":
-            self.config = G1Config()
+            self.config = G1PositionConfig()
         elif robot_name == "go2":
-            self.config = Go2Config()
+            self.config = Go2PositionConfig()
         elif robot_name == "quadruped":
             self.config = QuadrupedConfig()
         else:

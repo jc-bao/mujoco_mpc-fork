@@ -16,6 +16,7 @@ def create_bar(params_dict):
         lower_bound = param_config.get('lower', 0)
         upper_bound = param_config.get('upper', 1) 
         step_size = param_config.get('step', 0.01)
+        default_value = param_config.get('default', 0)
         
         # Create scale (slider) with the specified parameters
         bar = tk.Scale(
@@ -25,9 +26,10 @@ def create_bar(params_dict):
             resolution=step_size,
             orient="horizontal",
             length=300,
-            label=f"Adjust {param_name}"
+            label=f"Adjust {param_name}",
         )
         bar.pack(pady=10)
+        bar.set(default_value)
         bars[param_name] = bar
 
     # Create a function to keep the tkinter window running in a non-blocking way

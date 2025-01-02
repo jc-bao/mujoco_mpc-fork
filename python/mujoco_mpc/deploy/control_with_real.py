@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import mujoco
 from mujoco_mpc import agent as agent_lib
 
-from config import G1Config, Go2Config, QuadrupedConfig, G1FixedConfig
+from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, G1FixedConfig
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -43,7 +43,7 @@ class Controller:
     def __init__(self, robot_name="g1"):
         self.firstRun = True
         if robot_name == "g1":
-            self.config = G1Config()
+            self.config = G1PositionConfig()
             from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowCmd_ 
             from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowState_
             from unitree_sdk2py.idl.default import unitree_hg_msg_dds__LowCmd_
@@ -56,7 +56,7 @@ class Controller:
             from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_ 
             from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
             from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowCmd_
-            self.config = Go2Config()
+            self.config = Go2PositionConfig()
         elif robot_name == "quadruped":
             self.config = QuadrupedConfig()
         else:
@@ -72,12 +72,13 @@ class Controller:
 
         # filter variables
         self.low_pass_filter_gamma = 1.0
-        self.low_pass_filter_window_size = 5
+        self.low_pass_filter_window_size = 1
         self.qd_buffer = np.zeros((self.low_pass_filter_window_size, self.config.nqd_ctrl))
 
         # Initialize state variables
         self.global_ctrl_scale = 0.0
-        self.global_kd_scale = 0.0
+        self.global_kp_scale = 0.0
+        self.global_kd_scale = 1.0
         self.global_z_offset = 0.01
         self.global_rpy_offset = np.array([0.017, -0.008, 0.0])
         self.q = np.zeros(self.config.nq_real)
@@ -189,26 +190,35 @@ class Controller:
                     self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i]
                     self.low_cmd_msg.motor_cmd[i].tau = 0
 
-            if (self.config.percent_1 == 1) and (self.config.percent_2 == 1) and (self.config.percent_3 < 1):
-                self.config.percent_3 += 1.0 / self.config.duration_3
-                self.config.percent_3 = min(self.config.percent_3, 1)
-                for i in range(self.config.nu_real):
-                    self.low_cmd_msg.motor_cmd[i].q = self.config._targetPos_2[i] 
-                    self.low_cmd_msg.motor_cmd[i].dq = 0
-                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i]
-                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i]
-                    self.low_cmd_msg.motor_cmd[i].tau = 0
+            if self.config.control_mode == "torque":
+                # laydown in torque mode
+                if (self.config.percent_1 == 1) and (self.config.percent_2 == 1) and (self.config.percent_3 < 1):
+                    self.config.percent_3 += 1.0 / self.config.duration_3
+                    self.config.percent_3 = min(self.config.percent_3, 1)
+                    for i in range(self.config.nu_real):
+                        self.low_cmd_msg.motor_cmd[i].q = self.config._targetPos_2[i] 
+                        self.low_cmd_msg.motor_cmd[i].dq = 0
+                        self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i]
+                        self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i]
+                        self.low_cmd_msg.motor_cmd[i].tau = 0
 
             
             
             self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
             self.low_cmd_publisher.Write(self.low_cmd_msg)
             # print('standing',self.config.percent_3)
+
+            if self.config.control_mode == "position" and np.isclose(self.config.percent_1, 1):
+                break
         print("Stand up complete")
 
-
-
     def set_action(self, ctrl):
+        if self.config.control_mode == "torque":
+            tau = ctrl * self.global_ctrl_scale
+            q_des = np.zeros(self.config.nu_real)
+        elif self.config.control_mode == "position":
+            tau = np.zeros(self.config.nu_real)
+            q_des = ctrl * self.global_ctrl_scale + (1 - self.global_ctrl_scale) * self.config.q_default
         self.low_cmd_msg.mode_pr = 0
         self.low_cmd_msg.mode_machine = 5
         for i in range(self.config.nu_real):
@@ -218,7 +228,7 @@ class Controller:
             print("Control disabled")
             ctrl = np.zeros(self.config.nu_real)
             for i in range(self.config.nu_real):
-                self.low_cmd_msg.motor_cmd[i].q = self.config._targetPos_1[i]
+                self.low_cmd_msg.motor_cmd[i].q = self.config.q_default[i]
                 self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i]
                 self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i] 
                 self.low_cmd_msg.motor_cmd[i].tau = 0
@@ -227,12 +237,12 @@ class Controller:
                 if i in self.config.locked_joint_idx:
                     self.low_cmd_msg.motor_cmd[i].q = self.config._targetPos_1[i]
                     self.low_cmd_msg.motor_cmd[i].tau = 0.0
-                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i] * 2
-                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i] * 0.4
+                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i]
+                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i]
                 else:
-                    self.low_cmd_msg.motor_cmd[i].q = 0.0
-                    self.low_cmd_msg.motor_cmd[i].tau = ctrl[i] * self.global_ctrl_scale
-                    self.low_cmd_msg.motor_cmd[i].kp = 0.0
+                    self.low_cmd_msg.motor_cmd[i].q = q_des[i]
+                    self.low_cmd_msg.motor_cmd[i].tau = tau[i]
+                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i] * self.global_kp_scale
                     self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i] * self.global_kd_scale
         self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
         self.low_cmd_publisher.Write(self.low_cmd_msg)
@@ -269,11 +279,12 @@ class Controller:
     def main_loop(self):
         # Create the GUI elements
         params_dict = {
-            "ctrl_scale": {"lower": 0, "upper": 1.0, "step": 0.01},
-            "kd_scale": {"lower": 0.5, "upper": 2.0, "step": 0.01},
-            "z_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
-            "roll_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
-            "pitch_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
+            "ctrl_scale": {"lower": 0, "upper": 1.0, "step": 0.01, "default": 0.0},
+            "kp_scale": {"lower": 0.0, "upper": 2.0, "step": 0.01, "default": 1.0},
+            "kd_scale": {"lower": 0.5, "upper": 2.0, "step": 0.01, "default": 1.0},
+            "z_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": 0.005},
+            "roll_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": 0.013},
+            "pitch_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": -0.009},
         }
         root, bars, update_gui = create_bar(params_dict)
         # Controller
@@ -291,6 +302,7 @@ class Controller:
                 while True:
                     update_gui()
                     self.global_ctrl_scale = bars["ctrl_scale"].get()
+                    self.global_kp_scale = bars["kp_scale"].get()
                     self.global_kd_scale = bars["kd_scale"].get()
                     self.global_z_offset = bars["z_offset"].get()
                     self.global_rpy_offset = np.array([bars["roll_offset"].get(), bars["pitch_offset"].get(), 0.0])

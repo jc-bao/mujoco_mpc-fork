@@ -6,8 +6,8 @@
             <!-- <motor ctrlrange="-1 1" gear="23.7" ctrllimited="true"/> -->
             <geom friction="0.6" margin="0.001" condim="1" />
             <!-- <joint axis="0 1 0" damping="2" armature="0.01" /> -->
-            <joint axis="0 1 0" damping="3.0" armature="0.01" />
-            <position forcelimited="true" forcerange="-23.7 23.7" kp="60" kv="0.0" />
+            <joint axis="0 1 0" damping="0.6" armature="0.01" />
+            <position forcelimited="true" forcerange="-23.7 23.7" kp="30" kv="0.0" />
             <!-- <position forcelimited="true" forcerange="-23.7 23.7" kp="100" kv="2.0"
                 inheritrange="0.0" /> -->
             <default class="abduction">
