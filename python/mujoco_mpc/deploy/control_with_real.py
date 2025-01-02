@@ -71,8 +71,8 @@ class Controller:
             exit()
 
         # filter variables
-        self.low_pass_filter_gamma = 0.3
-        self.low_pass_filter_window_size = 10
+        self.low_pass_filter_gamma = 1.0
+        self.low_pass_filter_window_size = 5
         self.qd_buffer = np.zeros((self.low_pass_filter_window_size, self.config.nqd_ctrl))
 
         # Initialize state variables
@@ -270,7 +270,7 @@ class Controller:
         # Create the GUI elements
         params_dict = {
             "ctrl_scale": {"lower": 0, "upper": 1.0, "step": 0.01},
-            "kd_scale": {"lower": 1.0, "upper": 2.0, "step": 0.01},
+            "kd_scale": {"lower": 0.5, "upper": 2.0, "step": 0.01},
             "z_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
             "roll_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},
             "pitch_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001},

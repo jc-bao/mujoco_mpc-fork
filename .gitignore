@@ -47,3 +47,5 @@ mjpc/tasks/g1_fixed/meshes/
 python/mujoco_mpc/deploy/plot_low_state.py
 python/mujoco_mpc/deploy/contact_calculation.py
 python/mujoco_mpc/deploy/contact_calculation.py
+python/mujoco_mpc/deploy/read_with_real.py
+python/mujoco_mpc/deploy/contact_calculation.py
