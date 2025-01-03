@@ -189,7 +189,7 @@
                   <geom size="0.01" pos="0.17 0.04 -0.035" rgba="0.2 0.2 0.2 1" />
                   <geom size="0.01" pos="0.17 -0.04 -0.035" rgba="0.2 0.2 0.2 1" />
 
-                  <site name="foot_left" pos="0.03 0 0" group="4" />
+                  <site name="foot_left" pos="0.045 0 0" group="4" />
                   <site name="sp0" pos="-0.08 0 0" type="sphere" size="0.027" />
                   <site name="sp1" pos="0.17 0 0" type="sphere" size="0.027" />
                   <body name="heel_left" pos="-0.08 0 -0.035">
@@ -269,7 +269,7 @@
                   <geom size="0.01" pos="0.17 0.04 -0.035" rgba="0.2 0.2 0.2 1" />
                   <geom size="0.01" pos="0.17 -0.04 -0.035" rgba="0.2 0.2 0.2 1" />
 
-                  <site name="foot_right" pos="0.03 0 0" group="4" />
+                  <site name="foot_right" pos="0.045 0 0" group="4" />
                   <site name="sp2" pos="-0.08 0 0" type="sphere" size="0.027" />
                   <site name="sp3" pos="0.17 0 0" type="sphere" size="0.027" />
                   <body name="heel_right" pos="-0.08 0 -0.035">

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import mujoco
 from mujoco_mpc import agent as agent_lib
 
-from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, G1FixedConfig
+from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, G1FixedConfig, H1_2PositionConfig
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -41,7 +41,9 @@ from unitree_sdk2py.go2.robot_state.robot_state_client import RobotStateClient
 
 class Controller:
     def __init__(self, robot_name="g1"):
+        self.act_time = time.time()
         self.firstRun = True
+        self.robot_name = robot_name
         if robot_name == "g1":
             self.config = G1PositionConfig()
             from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowCmd_ 
@@ -59,6 +61,11 @@ class Controller:
             self.config = Go2PositionConfig()
         elif robot_name == "quadruped":
             self.config = QuadrupedConfig()
+        elif robot_name == "h1_2":
+            self.config = H1_2PositionConfig()
+            from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowCmd_ 
+            from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowState_
+            from unitree_sdk2py.idl.default import unitree_hg_msg_dds__LowCmd_
         else:
             raise ValueError(f"Robot {robot_name} not supported")
 
@@ -90,8 +97,10 @@ class Controller:
             self.low_cmd_msg = unitree_hg_msg_dds__LowCmd_()
         elif robot_name == "go2":
             self.low_cmd_msg = unitree_go_msg_dds__LowCmd_()
+        elif robot_name == "h1_2":
+            self.low_cmd_msg = unitree_hg_msg_dds__LowCmd_()
         self.low_cmd_msg.mode_pr = 0
-        self.low_cmd_msg.mode_machine = 5
+        self.low_cmd_msg.mode_machine = 6
         self.crc = CRC()
         # Initialize Unitree SDK2
         ChannelFactoryInitialize(0, "en0")
@@ -137,7 +146,7 @@ class Controller:
             if self.config.percent_1 < 1:
                 for i in range(self.config.nu_real):
                     self.low_cmd_msg.mode_pr = 0
-                    self.low_cmd_msg.mode_machine = 5
+                    self.low_cmd_msg.mode_machine = 6
                     self.low_cmd_msg.motor_cmd[i].mode = 1  # 1:Enab
                     self.low_cmd_msg.motor_cmd[i].q = (
                         1 - self.config.percent_1
@@ -155,7 +164,40 @@ class Controller:
             rate_limiter.sleep()
         print("Stand up complete")
 
-            
+    def init_stand_h1_2(self):
+        rate_limiter = RateLimiter(frequency=1 / 0.02)
+        self.config.startPos = np.zeros(self.config.nu_real)
+        for i in range(self.config.nu_real):
+            self.config.startPos[i] = self.q[7 + i]
+        self.config.percent_1 = 0
+        while self.config.percent_1 < 1:
+
+            print("percent_1", self.config.percent_1)
+            self.config.percent_1 += 1.0 / self.config.duration_1
+            self.config.percent_1 = min(self.config.percent_1, 1)
+            if self.config.percent_1 < 1:
+                for i in range(self.config.nu_real):
+                    self.low_cmd_msg.mode_pr = 0
+                    self.low_cmd_msg.mode_machine = 6
+                    self.low_cmd_msg.motor_cmd[i].mode = 1  # 1:Enab
+                    self.low_cmd_msg.motor_cmd[i].q = (
+                        1 - self.config.percent_1
+                    ) * self.config.startPos[
+                        i
+                    ] + self.config.percent_1 * self.config._targetPos_1[
+                        i
+                    ]
+                    self.low_cmd_msg.motor_cmd[i].dq = 0
+                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i]
+                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i] 
+                    self.low_cmd_msg.motor_cmd[i].tau = 0
+                self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
+                self.low_cmd_publisher.Write(self.low_cmd_msg)
+            rate_limiter.sleep()
+        print("Stand up complete")
+
+
+
     def init_stand_go2(self):
         while self.config.percent_3<1:
             time.sleep(0.002)
@@ -220,7 +262,7 @@ class Controller:
             tau = np.zeros(self.config.nu_real)
             q_des = ctrl * self.global_ctrl_scale + (1 - self.global_ctrl_scale) * self.config.q_default
         self.low_cmd_msg.mode_pr = 0
-        self.low_cmd_msg.mode_machine = 5
+        self.low_cmd_msg.mode_machine = 6
         for i in range(self.config.nu_real):
             self.low_cmd_msg.motor_cmd[i].mode = 1  # 1:Enab
             self.low_cmd_msg.motor_cmd[i].dq = 0
@@ -246,6 +288,8 @@ class Controller:
                     self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i] * self.global_kd_scale
         self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
         self.low_cmd_publisher.Write(self.low_cmd_msg)
+        print("act_time", time.time() - self.act_time)
+        self.act_tiime = time.time()
 
     def get_state(self):
         q_mocap, qd_mocap = unpack_mocap_data(self.mocap_buffer)
@@ -299,6 +343,9 @@ class Controller:
                 model=model,
             ) as agent:
                 first_ctrl = agent.get_action()
+                print("first_ctrl", first_ctrl)
+                if self.robot_name == "h1_2":
+                    self.init_stand_h1_2()
                 while True:
                     update_gui()
                     self.global_ctrl_scale = bars["ctrl_scale"].get()
@@ -312,6 +359,7 @@ class Controller:
                     if self.config.task_id == "G1 Fixed":
                         q_sim = q_sim[7:]
                         qd_sim = qd_sim[6:]
+                    
 
                     # low pass filter
                     qd_sim_lp = self.low_pass_filter_gamma * qd_sim + (1 - self.low_pass_filter_gamma) * self.qd_buffer[-1]
@@ -322,6 +370,7 @@ class Controller:
 
                     agent.set_state(qpos=q_sim, qvel=qd_sim)
                     ctrl = agent.get_action()
+                    # print("ctrl", ctrl)
                     if np.allclose(ctrl, first_ctrl, atol=1e-3):
                         print("Control disabled")
                         ctrl = np.zeros_like(first_ctrl)
@@ -339,6 +388,7 @@ class Controller:
             root.destroy()
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="go2")
-    controller.init_stand_go2() 
+    controller = Controller(robot_name="h1_2")
+    # controller.init_stand_go2() 
+    # controller.init_stand_h1_2()
     controller.main_loop()

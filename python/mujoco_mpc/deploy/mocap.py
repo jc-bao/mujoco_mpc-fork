@@ -8,7 +8,7 @@ import struct
 from loop_rate_limiters import RateLimiter
 
 from utils import pack_mocap_data
-from config import G1PositionConfig, Go2PositionConfig
+from config import G1PositionConfig, Go2PositionConfig, H1_2PositionConfig
 class ViconDemo:
     """
     Vicon data acquisition and filtering
@@ -22,6 +22,8 @@ class ViconDemo:
             self.config = G1PositionConfig()
         elif robot_name == "go2":
             self.config = Go2PositionConfig()
+        elif robot_name == "h1_2":
+            self.config = H1_2PositionConfig()
         else:
             raise ValueError(f"Robot {robot_name} not supported")
 
@@ -181,5 +183,5 @@ class ViconDemo:
 
 
 if __name__ == "__main__":
-    vicon_demo = ViconDemo(robot_name="go2")
+    vicon_demo = ViconDemo(robot_name="h1_2")
     vicon_demo.main_loop()

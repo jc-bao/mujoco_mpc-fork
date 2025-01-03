@@ -339,8 +339,6 @@ class G1FixedConfig:
     real_time_factor: float = 1.0
     auto_reset: bool = False
     
-
-
 class H1_2PositionConfig:
     # model used in controller
     nq_ctrl: int = 26
@@ -355,21 +353,12 @@ class H1_2PositionConfig:
     nu_sim: int = 27
     nu_plan: int = 21
     dt_real: float = 0.005
-    gear_array = np.array([
-        80.0, 80.0,80.0,
-        100.0,50.0,50.0,
-        80.0, 80.0,80.0,
-        100.0,50.0,50.0,
-        80,50,50,
-        20,20,1,20,1,1,1,
-        20,20,1,20,1,1,1,
-       
-    ])
+   
     duration_1 = 100
     _targetPos_1 = np.array([ 
-    -0.589255, -0.00637053, -0.0617263, 1.26429, -0.727269, -0.033994, 
-    -0.613536, -0.0257312, 0.0270589, 1.26707, -0.70565, 0.0334864, 
-    0.00208437, 0.00127694, 0.0327588, 
+   0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
+    0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 
+    0.0,
     0.371187, 0.511203, 0.0, 0.0543319, 0.0,0.0,0.0,
     0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
     ])
@@ -403,7 +392,7 @@ class H1_2PositionConfig:
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.078])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
-    vicon_object_name: str = "h1-2"
+    vicon_object_name: str = "lecar_h1-2"
 
     # controller
     xml_path_ctrl: str = (
@@ -428,7 +417,7 @@ class H1_2PositionConfig:
     real_time_factor: float = 1.0
     auto_reset: bool = True
 
-    control_mode = "torque"
+    control_mode = "position"
     q_default = np.array([ 
     0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
     0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 

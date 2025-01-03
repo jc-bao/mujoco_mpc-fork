@@ -139,12 +139,12 @@ namespace mjpc::h1_2
           if (j == 0)
           {
             frame_pos = toe_right_pos;
-            x_tar = x_tar + 0.17;
+            x_tar = x_tar + 0.17 - 0.045;
           }
           else
           {
             frame_pos = heel_right_pos;
-            x_tar = x_tar - 0.08;
+            x_tar = x_tar - 0.08 - 0.045;
           }
           y_tar = -foot_y_distance_target;
         }
@@ -154,12 +154,12 @@ namespace mjpc::h1_2
           if (j == 0)
           {
             frame_pos = toe_left_pos;
-            x_tar = x_tar + 0.17;
+            x_tar = x_tar + 0.17 - 0.045;
           }
           else
           {
             frame_pos = heel_left_pos;
-            x_tar = x_tar - 0.08;
+            x_tar = x_tar - 0.08 - 0.045;
           }
           y_tar = foot_y_distance_target;
         }
