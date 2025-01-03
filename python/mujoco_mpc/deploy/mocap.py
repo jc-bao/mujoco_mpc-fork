@@ -81,6 +81,7 @@ class ViconDemo:
 
             # Position and orientation
             position = np.array([x, y, z]) / 1000.0
+
             position += self.config.mocap_offset
             rotation = R.from_euler("XYZ", [roll, pitch, yaw], degrees=False)
             quaternion = rotation.as_quat()  # [x, y, z, w]

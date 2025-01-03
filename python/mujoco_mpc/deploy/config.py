@@ -375,7 +375,7 @@ class H1_2PositionConfig:
             120.0,120.0,120.0,
             80.0,40.0,40.0,40.0
         ]
-    )
+    )*0.5
     kd_real: np.ndarray = np.array(
         [
            2.5,2.5,2.5,4.0,2.0,2.0,
@@ -392,7 +392,7 @@ class H1_2PositionConfig:
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.078])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
-    vicon_object_name: str = "lecar_h1-2"
+    vicon_object_name: str = "lecar_h1_2_mpc"
 
     # controller
     xml_path_ctrl: str = (

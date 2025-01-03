@@ -98,17 +98,19 @@
   </worldbody>
 
   <actuator>
+   <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
     <position class="hip_pitch_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
     <position class="hip_roll_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
-    <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
+    
     <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
     <position class="ankle_pitch_motor" name="left_ankle_pitch_joint"
       joint="left_ankle_pitch_joint" />
     <position class="ankle_roll_motor" name="left_ankle_roll_joint" joint="left_ankle_roll_joint" />
-
+    
+    <position class="hip_yaw_motor" name="right_hip_yaw_joint" joint="right_hip_yaw_joint" />
     <position class="hip_pitch_motor" name="right_hip_pitch_joint" joint="right_hip_pitch_joint" />
     <position class="hip_roll_motor" name="right_hip_roll_joint" joint="right_hip_roll_joint" />
-    <position class="hip_yaw_motor" name="right_hip_yaw_joint" joint="right_hip_yaw_joint" />
+    
     <position class="knee_motor" name="right_knee_joint" joint="right_knee_joint" />
     <position class="ankle_pitch_motor" name="right_ankle_pitch_joint"
       joint="right_ankle_pitch_joint" />

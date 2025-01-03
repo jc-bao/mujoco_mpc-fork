@@ -282,6 +282,8 @@ class Controller:
                     self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i]
                     self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i]
                 else:
+                    #fix the print format
+                    print(f"Control Command sent to motor index {i}: q_des={q_des[i]}, tau={tau[i]}, kp={self.config.kp_real[i]}, kd={self.config.kd_real[i]}")
                     self.low_cmd_msg.motor_cmd[i].q = q_des[i]
                     self.low_cmd_msg.motor_cmd[i].tau = tau[i]
                     self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[i] * self.global_kp_scale

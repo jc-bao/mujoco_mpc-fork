@@ -1,6 +1,7 @@
 <mujoco model="h1_2">
   <compiler angle="radian" meshdir="meshes" autolimits="true" />
-
+  <option gravity="0 0 0" />
+  
   <!-- <default>
     <default >
       <geom type="mesh"/>
@@ -20,53 +21,53 @@
     <joint armature="0.01" />
     <default class="hip_yaw_motor">
       <joint damping="2.5" />
-      <position kp="200" kv="0.0" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
+      <position kp="100" kv="0.0" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="hip_pitch_motor">
       <joint damping="2.5" />
-      <position kp="200" kv="0.0" ctrlrange="-3.14 2.5" forcelimited="true" forcerange="-200 200" />
+      <position kp="100" kv="0.0" ctrlrange="-3.14 2.5" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="hip_roll_motor">
       <joint damping="2.5" />
-      <position kp="200" kv="0.0" ctrlrange="-0.43 3.14" forcelimited="true" forcerange="-200 200" />
+      <position kp="100" kv="0.0" ctrlrange="-0.43 3.14" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="knee_motor">
       <joint damping="4.0" />
-      <position kp="300" kv="0.0" ctrlrange="-0.12 2.19" forcelimited="true" forcerange="-300 300" />
+      <position kp="150" kv="0.0" ctrlrange="-0.12 2.19" forcelimited="true" forcerange="-300 300" />
     </default>
     <default class="ankle_pitch_motor">
       <joint damping="2.0" armature="0.1" />
-      <position kp="40" kv="0.0" ctrlrange="-0.897334 0.523598" forcelimited="true"
+      <position kp="20" kv="0.0" ctrlrange="-0.897334 0.523598" forcelimited="true"
         forcerange="-60 60" />
     </default>
     <default class="ankle_roll_motor">
       <joint damping="2.0" armature="0.1" />
-      <position kp="40" kv="0.0" ctrlrange="-0.261799 0.261799" forcelimited="true"
+      <position kp="20" kv="0.0" ctrlrange="-0.261799 0.261799" forcelimited="true"
         forcerange="-40 40" />
     </default>
     <default class="torso_motor">
       <joint damping="3.0" armature="0.1" />
-      <position kp="300" kv="0.0" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
+      <position kp="150" kv="0.0" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="shoulder_pitch_motor">
       <joint damping="2.0" />
-      <position kp="120" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_roll_motor">
       <joint damping="2.0" />
-      <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_yaw_motor">
       <joint damping="2.0" />
-      <position kp="120" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" />
+      <position kp="60" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
       <joint damping="1.0" />
-      <position kp="80" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
+      <position kp="40" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
       <joint damping="0.5" />
-      <position kp="40" kv="0.0" />
+      <position kp="20" kv="0.0" />
     </default>
     <default class="visual">
       <geom contype="0" conaffinity="0" group="1" density="0" />
@@ -478,17 +479,18 @@
 
 
   <actuator>
+    <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
     <position class="hip_pitch_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
     <position class="hip_roll_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
-    <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
+    
     <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
     <position class="ankle_pitch_motor" name="left_ankle_pitch_joint"
     joint="left_ankle_pitch_joint" />
     <position class="ankle_roll_motor" name="left_ankle_roll_joint" joint="left_ankle_roll_joint" />
-
+    <position class="hip_yaw_motor" name="right_hip_yaw_joint" joint="right_hip_yaw_joint" />
     <position class="hip_pitch_motor" name="right_hip_pitch_joint" joint="right_hip_pitch_joint" />
     <position class="hip_roll_motor" name="right_hip_roll_joint" joint="right_hip_roll_joint" />
-    <position class="hip_yaw_motor" name="right_hip_yaw_joint" joint="right_hip_yaw_joint" />
+    
     <position class="knee_motor" name="right_knee_joint" joint="right_knee_joint" />
     <position class="ankle_pitch_motor" name="right_ankle_pitch_joint"
       joint="right_ankle_pitch_joint" />
