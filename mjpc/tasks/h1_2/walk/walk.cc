@@ -63,10 +63,20 @@ namespace mjpc::h1_2
     double torso_to_goal[2];
     mju_sub(torso_to_goal, goal, torso_pos, 2);
     double dist2goal = mju_norm(torso_to_goal, 2);
-    // get target position to {0, 0, 0}
-    residual[counter++] = torso_to_goal[0];
-    residual[counter++] = torso_to_goal[1];
-    residual[counter++] = 0.0;
+    if (dist2goal < 0.1)
+    {
+      // get target position to {0, 0, 0}
+      residual[counter++] = 0.0;
+      residual[counter++] = 0.0;
+      residual[counter++] = 0.0;
+    }
+    else
+    {
+      // get target position to {0, 0, 0}
+      residual[counter++] = torso_to_goal[0];
+      residual[counter++] = torso_to_goal[1];
+      residual[counter++] = 0.0;
+    }
 
     // ----- yaw ----- //
     int torso_body_id = mj_name2id(model, mjOBJ_BODY, "torso");
