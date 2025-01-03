@@ -288,8 +288,10 @@ class Controller:
                     self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[i] * self.global_kd_scale
         self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
         self.low_cmd_publisher.Write(self.low_cmd_msg)
-        print("act_time", time.time() - self.act_time)
-        self.act_tiime = time.time()
+        # print the time in ms
+        action_duration = (time.time() - self.act_time) * 1000
+        print(f"Action duration: {action_duration:.2f} ms")
+        self.act_time = time.time()
 
     def get_state(self):
         q_mocap, qd_mocap = unpack_mocap_data(self.mocap_buffer)
