@@ -131,11 +131,11 @@ namespace mjpc::h1_2
       }
       double currentphase = data->time * mjPI * frequency; // 2.0 is the gait frequency
       double angle = fmod(currentphase + mjPI - footphase, 2 * mjPI) - mjPI;
-      double target_foot_height = 0;
+      double target_foot_height = 0.01;
       if (duty_ratio < 1)
       {
         angle *= 0.5 / (1 - duty_ratio);
-        target_foot_height = amplitude * mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2));
+        target_foot_height += amplitude * mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2));
       }
       // z position of the foot
       double *frame_pos = nullptr;
@@ -211,12 +211,20 @@ namespace mjpc::h1_2
         }
       }
     }
+    double gait_scale = 1.0;
     for (int i = 0; i < 3; i++)
     {
-      residual[counter++] = left_heel_cost[i];
-      residual[counter++] = left_toe_cost[i];
-      residual[counter++] = right_heel_cost[i];
-      residual[counter++] = right_toe_cost[i];
+      if (i == 2) {
+        if (dist2goal < 0.1) {
+          gait_scale = 0.1;
+        } else {
+          gait_scale = 1.0;
+        }
+      }
+      residual[counter++] = left_heel_cost[i] * gait_scale;
+      residual[counter++] = left_toe_cost[i] * gait_scale;
+      residual[counter++] = right_heel_cost[i] * gait_scale;
+      residual[counter++] = right_toe_cost[i] * gait_scale;
     }
 
     // ----- balance ----- //
@@ -240,6 +248,17 @@ namespace mjpc::h1_2
     // ----- posture ----- //
     double *home = KeyQPosByName(model, data, "stand");
     mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
+    double upper_body_posture_scale = parameters_[1]; 
+    mju_scl(residual + counter + 6 + 6 + 1, residual + counter + 6 + 6 + 1, upper_body_posture_scale, 6);
+    double hip_motor_scale = parameters_[2];
+    mju_scl(residual + counter, residual + counter, hip_motor_scale, 3);
+    mju_scl(residual + counter + 6, residual + counter + 6, hip_motor_scale, 3);
+    double knee_motor_scale = parameters_[3];
+    mju_scl(residual + counter + 3, residual + counter + 3, knee_motor_scale, 3);
+    mju_scl(residual + counter + 6 + 3, residual + counter + 6 + 3, knee_motor_scale, 3);
+    double ankle_motor_scale = parameters_[4];
+    mju_scl(residual + counter + 4, residual + counter + 4, ankle_motor_scale, 2);
+    mju_scl(residual + counter + 6 + 4, residual + counter + 6 + 4, ankle_motor_scale, 2);
     counter += model->nu;
 
     // sensor dim sanity check

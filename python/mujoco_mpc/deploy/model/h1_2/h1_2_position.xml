@@ -1,6 +1,6 @@
 <mujoco model="h1_2">
   <compiler angle="radian" meshdir="meshes" autolimits="true" />
-  <option gravity="0 0 0" />
+  <!-- <option gravity="0 0 0" /> -->
   
   <!-- <default>
     <default >
@@ -18,55 +18,65 @@
 
   <default>
     <motor ctrlrange="-1 1" ctrllimited="true" />
-    <joint armature="0.01" />
+    <joint armature="0.1" />
     <default class="hip_yaw_motor">
       <joint damping="2.5" />
+      <!-- <position kp="200" kv="0.0" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" /> -->
       <position kp="100" kv="0.0" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="hip_pitch_motor">
       <joint damping="2.5" />
+      <!-- <position kp="200" kv="0.0" ctrlrange="-3.14 2.5" forcelimited="true" forcerange="-200 200" /> -->
       <position kp="100" kv="0.0" ctrlrange="-3.14 2.5" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="hip_roll_motor">
       <joint damping="2.5" />
+      <!-- <position kp="200" kv="0.0" ctrlrange="-0.43 3.14" forcelimited="true" forcerange="-200 200" /> -->
       <position kp="100" kv="0.0" ctrlrange="-0.43 3.14" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="knee_motor">
-      <joint damping="4.0" />
+      <joint damping="4.0"  />
+      <!-- <position kp="300" kv="0.0" ctrlrange="-0.12 2.19" forcelimited="true" forcerange="-300 300" /> -->
       <position kp="150" kv="0.0" ctrlrange="-0.12 2.19" forcelimited="true" forcerange="-300 300" />
     </default>
     <default class="ankle_pitch_motor">
-      <joint damping="2.0" armature="0.1" />
-      <position kp="20" kv="0.0" ctrlrange="-0.897334 0.523598" forcelimited="true"
-        forcerange="-60 60" />
+      <joint damping="3.0" armature = "0.03"/>
+      <!-- <position kp="40" kv="0.0" ctrlrange="-0.897334 0.523598" forcelimited="true" forcerange="-60 60" /> -->
+      <position kp="20.0" kv="0.0" ctrlrange="-0.897334 0.523598" forcelimited="true" forcerange="-60 60" />
     </default>
     <default class="ankle_roll_motor">
-      <joint damping="2.0" armature="0.1" />
-      <position kp="20" kv="0.0" ctrlrange="-0.261799 0.261799" forcelimited="true"
-        forcerange="-40 40" />
+      <joint damping="3.0" armature = "0.03"/>
+      <!-- <position kp="40" kv="0.0" ctrlrange="-0.261799 0.261799" forcelimited="true" forcerange="-40 40" /> -->
+      <position kp="20.0" kv="0.0" ctrlrange="-0.261799 0.261799" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="torso_motor">
-      <joint damping="3.0" armature="0.1" />
+      <joint damping="3.0" />
+      <!-- <position kp="300" kv="0.0" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" /> -->
       <position kp="150" kv="0.0" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="shoulder_pitch_motor">
-      <joint damping="2.0" />
+      <joint damping="2.0"  />
+      <!-- <position kp="120" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" /> -->
       <position kp="60" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_roll_motor">
-      <joint damping="2.0" />
+      <joint damping="2.0"  />
+      <!-- <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" /> -->
       <position kp="60" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_yaw_motor">
-      <joint damping="2.0" />
+      <joint damping="2.0"/>
+      <!-- <position kp="120" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" /> -->
       <position kp="60" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
       <joint damping="1.0" />
+      <!-- <position kp="80" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" /> -->
       <position kp="40" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
-      <joint damping="0.5" />
+      <joint damping="0.5"/>
+      <!-- <position kp="40" kv="0.0" /> -->
       <position kp="20" kv="0.0" />
     </default>
     <default class="visual">
@@ -77,6 +87,7 @@
     </default>
   </default>
 
+ 
   <statistic meansize="0.112107" extent="1.95557" center="0.0256948 1.86841e-05 -0.178443" />
   <asset>
     <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4"

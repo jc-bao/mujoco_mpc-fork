@@ -13,8 +13,10 @@
     <numeric name="sampling_exploration" data="0.05" />
     <numeric name="gradient_spline_points" data="5" />
     <numeric name="residual_Torso" data="1.05 0.7 1.2" />
-    <numeric name="residual_Speed" data="0.0 -1.5 1.5" />
-    <numeric name="residual_Gait" data="0.0 0.0 1.0" />
+    <numeric name="residual_UpperBodyPosture" data="0.3 0.0 1.0" />
+    <numeric name="residual_HipPosture" data="0.3 0.0 1.0" />
+    <numeric name="residual_KneePosture" data="0.3 0.0 1.0" />
+    <numeric name="residual_AnklePosture" data="0.3 0.0 1.0" />
     <!-- estimator -->
     <numeric name="estimator" data="0" />
     <numeric name="estimator_sensor_start" data="8" />
@@ -148,20 +150,12 @@
       0.3 -0.3 0"
     /> -->
     <key name="stand"
-      qpos="
-      0 0 0.95
-      1 0 0 0
-      0 -0.3 0 0.8 -0.5 0
-      0 -0.3 0 0.8 -0.5 0
-      0
-      0.3 0.3 0
-      0.3 -0.3 0"
+      qpos='
+      0 0 0.912521 
+      0.998659 -0.0178738 -0.0481535 0.00652783 
+      -0.0244855 -0.470142 0.0763105 1.10722 -0.54191 -0.025998 0.00721417 -0.402708 0.0146467 1.05035 -0.551837 0.0198956 0.0212447 0.271887 0.296825 0.0132549 0.252738 -0.291554 0.000715386'
       ctrl="
-      0 -0.3 0 0.8 -0.5 0
-      0 -0.3 0 0.8 -0.5 0
-      0
-      0.3 0.3 0
-      0.3 -0.3 0"
+      -0.0244855 -0.470142 0.0763105 1.10722 -0.54191 -0.025998 0.00721417 -0.402708 0.0146467 1.05035 -0.551837 0.0198956 0.0212447 0.271887 0.296825 0.0132549 0.252738 -0.291554 0.000715386"
     />
     <key name="stand_on_left_leg"
       qpos="

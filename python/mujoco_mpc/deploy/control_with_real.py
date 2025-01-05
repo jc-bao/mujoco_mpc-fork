@@ -36,7 +36,7 @@ from unitree_sdk2py.core.channel import (
 # from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowState_
 
 from unitree_sdk2py.utils.crc import CRC
-from unitree_sdk2py.go2.robot_state.robot_state_client import RobotStateClient
+# from unitree_sdk2py.go2.robot_state.robot_state_client import RobotStateClient
 
 
 class Controller:
@@ -103,7 +103,7 @@ class Controller:
         self.low_cmd_msg.mode_machine = 6
         self.crc = CRC()
         # Initialize Unitree SDK2
-        ChannelFactoryInitialize(0, "en0")
+        ChannelFactoryInitialize(0, "enp2s0")
         # disable sport mode for go2
         if robot_name == "go2":
             rsc = RobotStateClient()
