@@ -13,10 +13,14 @@
     <numeric name="sampling_exploration" data="0.05" />
     <numeric name="gradient_spline_points" data="5" />
     <numeric name="residual_Torso" data="1.05 0.7 1.2" />
-    <numeric name="residual_UpperBodyPosture" data="0.3 0.0 1.0" />
+    <numeric name="residual_UpperBodyPosture" data="0.6 0.0 1.0" />
     <numeric name="residual_HipPosture" data="0.3 0.0 1.0" />
     <numeric name="residual_KneePosture" data="0.3 0.0 1.0" />
     <numeric name="residual_AnklePosture" data="0.3 0.0 1.0" />
+    <numeric name="residual_select_Gait" data="0" />
+    <text name="residual_list_Gait" data="Stand|Walk" />
+    <numeric name="residual_foot_y_distance" data="0.12 0.1 0.2" />
+    <numeric name="residual_foot_x_distance" data="0.00 -0.05 0.05" />
     <!-- estimator -->
     <numeric name="estimator" data="0" />
     <numeric name="estimator_sensor_start" data="8" />
@@ -38,6 +42,8 @@
     <user name="Balance" dim="2" user="2 0.5 0 1.0 0.1" />
     <user name="Effort" dim="19" user="0 0.03 0.0 0.1" />
     <user name="Posture" dim="19" user="0 0.1 0.0 0.2" />
+    <user name="Linear Velocity" dim="3" user="0 0.015 0 0.1" />
+    <user name="Angular Momentum" dim="3" user="0 0.015 0 0.1" />
     <framepos name="pelvis" objtype="site" objname="tracking[pelvis]" />
     <framepos name="right_foot_position" objtype="site" objname="foot_right" />
     <framepos name="left_foot_position" objtype="site" objname="foot_left" />
@@ -91,6 +97,8 @@
     <framelinvel name="torso_velocity" objtype="body" objname="torso" />
     <framelinvel name="foot_right_velocity" objtype="body" objname="right_ankle_roll_link" />
     <framelinvel name="foot_left_velocity" objtype="body" objname="left_ankle_roll_link" />
+    <subtreelinvel name="torso_linvel" body="torso" />
+    <subtreeangmom name="torso_angmom" body="torso" />
   </sensor>
 
   <worldbody>

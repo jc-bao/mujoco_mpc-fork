@@ -34,6 +34,11 @@ namespace mjpc::h1_2
   {
     int counter = 0;
 
+
+    double gait_selection = parameters_[5];
+    // if 0, stand, if 1, walk
+    int gait_mode = ReinterpretAsInt(gait_selection);
+
     // ----- upright ----- //
     double *torso_up = SensorByName(model, data, "torso_up");
     // double *pelvis_up = SensorByName(model, data, "pelvis_up");
@@ -62,10 +67,9 @@ namespace mjpc::h1_2
     double *torso_pos = SensorByName(model, data, "torso_position");
     double torso_to_goal[2];
     mju_sub(torso_to_goal, goal, torso_pos, 2);
-    double dist2goal = mju_norm(torso_to_goal, 2);
-    if (dist2goal < 0.1)
+    // double dist2goal = mju_norm(torso_to_goal, 2);
+    if (gait_mode == 0)
     {
-      // get target position to {0, 0, 0}
       residual[counter++] = 0.0;
       residual[counter++] = 0.0;
       residual[counter++] = 0.0;
@@ -106,15 +110,15 @@ namespace mjpc::h1_2
     // TODO: make this a parameter
     double amplitude = 0.03;
     // set amplitude to 0 if torso_pos - goal is smaller than 0.1 
-    if (dist2goal < 0.1)
+    if (gait_mode == 0)
     {
       amplitude = 0.0;
     }
     double duty_ratio = 0.5;
     double footphase = 0.0;
     double frequency = 3.0;
-    double foot_y_distance_target = 0.18;
-    double foot_x_distance_target = 0.0;
+    double foot_y_distance_target = parameters_[6];
+    double foot_x_distance_target = parameters_[7];
     double left_toe_cost[3] = {0.0, 0.0, 0.0};
     double left_heel_cost[3] = {0.0, 0.0, 0.0};
     double right_toe_cost[3] = {0.0, 0.0, 0.0};
@@ -215,7 +219,7 @@ namespace mjpc::h1_2
     for (int i = 0; i < 3; i++)
     {
       if (i == 2) {
-        if (dist2goal < 0.1) {
+        if (gait_mode == 0) {
           gait_scale = 0.1;
         } else {
           gait_scale = 1.0;
@@ -260,6 +264,14 @@ namespace mjpc::h1_2
     mju_scl(residual + counter + 4, residual + counter + 4, ankle_motor_scale, 2);
     mju_scl(residual + counter + 6 + 4, residual + counter + 6 + 4, ankle_motor_scale, 2);
     counter += model->nu;
+
+    // ----- linear velocity ----- //
+    mju_copy3(residual + counter, SensorByName(model, data, "torso_linvel"));
+    counter += 3;
+
+    // ----- angular momentum ----- //
+    mju_copy3(residual + counter, SensorByName(model, data, "torso_angmom"));
+    counter += 3;
 
     // sensor dim sanity check
     // TODO: use this pattern everywhere and make this a utility function
