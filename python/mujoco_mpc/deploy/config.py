@@ -416,6 +416,10 @@ class H1_2PositionConfig:
     ctrl_dt: float = 0.005
     real_time_factor: float = 1.0
     auto_reset: bool = True
+    sim_mocap_z_offset = -0.020
+    sim_mocap_roll_offset = 0.01
+    sim_mocap_pitch_offset = -0.02
+    auto_reset = True
 
     control_mode = "position"
     q_default = np.array([ 

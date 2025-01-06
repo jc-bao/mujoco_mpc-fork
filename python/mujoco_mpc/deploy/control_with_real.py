@@ -320,7 +320,7 @@ class Controller:
             print("[WARNING] q_sim is zero norm, setting it to identity")
         rot_robot = R.from_quat(q_sim[3:7], scalar_first=True)
         rot_body = R.from_euler("xyz", self.global_rpy_offset, degrees=False)
-        rot_robot_new = rot_robot * rot_body
+        rot_robot_new = rot_body * rot_robot
         q_sim[3:7] = rot_robot_new.as_quat(scalar_first=True)
         return q_sim, qd_sim
 

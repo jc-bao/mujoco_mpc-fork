@@ -3,6 +3,7 @@ import struct
 from multiprocessing import shared_memory
 from loop_rate_limiters import RateLimiter
 import pathlib
+from scipy.spatial.transform import Rotation as R
 
 import mujoco
 from mujoco_mpc import agent as agent_lib
@@ -57,6 +58,12 @@ class Controller:
         self.mj_data = mujoco.MjData(self.mj_model)
         mujoco.mj_resetDataKeyframe(self.mj_model, self.mj_data, 0)
         self.n_sim_frame = int(self.config.dt_ctrl / self.config.dt_sim)
+
+        # compute ground truth mocap rotation matrix
+        self.marker_R_robot_gt = R.from_euler('xyz', [self.config.sim_mocap_roll_offset, self.config.sim_mocap_pitch_offset, 0.0], degrees=False)
+        self.marker_p_robot_gt = np.array([0.0, 0.0, self.config.sim_mocap_z_offset])
+        self.marker_R_robot_est = R.from_euler('xyz', [0.0, 0.0, 0.0], degrees=False)
+        self.marker_p_robot_est = np.array([0.0, 0.0, 0.0])
 
     def get_action(self, agent, qpos, qvel):
         agent.set_state(qpos=qpos, qvel=qvel)
@@ -119,9 +126,21 @@ class Controller:
                         # q_sim, qd_sim, t_real = self.get_state()
 
                         # get state from simulator
-                        q_sim = self.mj_data.qpos
-                        qd_sim = self.mj_data.qvel
-                        t_sim = self.mj_data.time
+                        q_sim = self.mj_data.qpos.copy()
+                        qd_sim = self.mj_data.qvel.copy()
+
+                        # get marker position
+                        marker_pos_sim = q_sim[:3] + self.marker_p_robot_est
+                        robot_R_mocap = R.from_quat(q_sim[3:7])
+                        marker_R_mocap = self.marker_R_robot_gt * robot_R_mocap
+                        # convert it back to robot position with estimated marker position
+                        robot_pos_est = marker_pos_sim - self.marker_p_robot_est
+                        robot_R_mocap_est = self.marker_R_robot_est.inv() * marker_R_mocap
+                        q_sim[:3] = robot_pos_est
+                        q_sim[3:7] = robot_R_mocap_est.as_quat()
+
+
+                        # compute mocap rotation matrix 
                         if self.robot_name == "h1_2":
                             q_sim, qd_sim = state_real2sim(
                                 q_sim,
