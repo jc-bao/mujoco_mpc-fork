@@ -68,6 +68,8 @@ add_library(
   tasks/g1_fixed/g1_fixed.h
   tasks/h1_2/walk/walk.cc
   tasks/h1_2/walk/walk.h
+  tasks/h1_2/pnp/pnp.cc
+  tasks/h1_2/pnp/pnp.h
   tasks/go2/go2.cc
   tasks/go2/go2.h
   tasks/go2w/go2w.cc

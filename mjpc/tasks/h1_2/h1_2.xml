@@ -387,7 +387,7 @@
                       <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0"
                         rgba="0.1 0.1 0.1 1" mesh="wrist_yaw_link" />
 
-                      <geom class="visual" type="sphere" size="0.02" pos="0.0415 0.003 0" rgba="0.7 0.7 0.7 1" />
+                      <geom type="sphere" size="0.02" pos="0.0415 0.003 0" rgba="0.7 0.7 0.7 1" />
                       <site name="left_palm" pos="0 0 0" group="4" />
                       <site name="tracking[lhand]" class="tracking_site" pos="0 0 0" />
                     </body>

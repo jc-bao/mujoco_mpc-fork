@@ -1,4 +1,4 @@
-#include "mjpc/tasks/g1/walk/walk.h"
+#include "mjpc/tasks/h1_2/pnp/pnp.h"
 
 #include <iostream>
 #include <string>
@@ -7,35 +7,35 @@
 #include "mjpc/task.h"
 #include "mjpc/utilities.h"
 
-namespace mjpc::g1
+namespace mjpc::h1_2
 {
-  std::string Walk::XmlPath() const
+  std::string PNP::XmlPath() const
   {
-    return GetModelPath("g1/walk/task.xml");
+    return GetModelPath("h1_2/pnp/task.xml");
   }
-  std::string Walk::Name() const { return "G1 Walk"; }
+  std::string PNP::Name() const { return "H1_2 PNP"; }
 
-  // ------------------ Residuals for humanoid walk task ------------
+  // ------------------ Residuals for humanoid pnp task ------------
   //   Number of residuals:
   //     Residual (0): torso height
   //     Residual (1): pelvis-feet aligment
   //     Residual (2): balance
   //     Residual (3): upright
   //     Residual (4): posture
-  //     Residual (5): walk
+  //     Residual (5): pnp
   //     Residual (6): move feet
   //     Residual (7): control
   //   Number of parameters:
   //     Parameter (0): torso height goal
   //     Parameter (1): speed goal
   // ----------------------------------------------------------------
-  void Walk::ResidualFn::Residual(const mjModel *model, const mjData *data,
-                                  double *residual) const
+  void PNP::ResidualFn::Residual(const mjModel *model, const mjData *data,
+                                 double *residual) const
   {
     int counter = 0;
 
     double gait_selection = parameters_[5];
-    // if 0, stand, if 1, walk
+    // if 0, stand, if 1, pnp
     int gait_mode = ReinterpretAsInt(gait_selection);
 
     // ----- upright ----- //
@@ -98,6 +98,7 @@ namespace mjpc::g1
     residual[counter++] = pelvis_heading[1] - target_heading[1];
 
     // ----- gait ----- //
+    // TODO: make regularization of the gaits cleaner
     double *pelvis_pos = SensorByName(model, data, "pelvis_position");
     double pelvis_heading_ortho[2] = {-pelvis_heading[1], pelvis_heading[0]};
     mju_normalize(pelvis_heading, 2);
@@ -152,12 +153,12 @@ namespace mjpc::g1
           if (j == 0)
           {
             frame_pos = toe_right_pos;
-            x_tar = x_tar + 0.12 - 0.035;
+            x_tar = x_tar + 0.17 - 0.045;
           }
           else
           {
             frame_pos = heel_right_pos;
-            x_tar = x_tar - 0.05 - 0.035;
+            x_tar = x_tar - 0.08 - 0.045;
           }
           y_tar = -foot_y_distance_target;
         }
@@ -167,12 +168,12 @@ namespace mjpc::g1
           if (j == 0)
           {
             frame_pos = toe_left_pos;
-            x_tar = x_tar + 0.12 - 0.035;
+            x_tar = x_tar + 0.17 - 0.045;
           }
           else
           {
             frame_pos = heel_left_pos;
-            x_tar = x_tar - 0.05 - 0.035;
+            x_tar = x_tar - 0.08 - 0.045;
           }
           y_tar = foot_y_distance_target;
         }
@@ -256,7 +257,7 @@ namespace mjpc::g1
     double *home = KeyQPosByName(model, data, "stand");
     mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
     double upper_body_posture_scale = parameters_[1];
-    mju_scl(residual + counter + 6 + 6 + 3, residual + counter + 6 + 6 + 3, upper_body_posture_scale, 6);
+    mju_scl(residual + counter + 6 + 6 + 1, residual + counter + 6 + 6 + 1, upper_body_posture_scale, 6);
     double hip_motor_scale = parameters_[2];
     mju_scl(residual + counter, residual + counter, hip_motor_scale, 3);
     mju_scl(residual + counter + 6, residual + counter + 6, hip_motor_scale, 3);
@@ -274,6 +275,24 @@ namespace mjpc::g1
 
     // ----- angular momentum ----- //
     mju_copy3(residual + counter, SensorByName(model, data, "torso_angmom"));
+    counter += 3;
+
+    // ----- hand reach ----- //
+    double *left_hand = SensorByName(model, data, "left_hand");
+    double *right_hand = SensorByName(model, data, "right_hand");
+    double *right_box = SensorByName(model, data, "right_box");
+    double *left_box = SensorByName(model, data, "left_box");
+    mju_sub3(residual + counter, left_hand, left_box);
+    counter += 3;
+    mju_sub3(residual + counter, right_hand, right_box);
+    counter += 3;
+
+    // ----- target reach ----- //
+    double *left_target = SensorByName(model, data, "left_target");
+    double *right_target = SensorByName(model, data, "right_target");
+    mju_sub3(residual + counter, left_box, left_target);
+    counter += 3;
+    mju_sub3(residual + counter, right_box, right_target);
     counter += 3;
 
     // sensor dim sanity check
@@ -295,4 +314,4 @@ namespace mjpc::g1
     }
   }
 
-} // namespace mjpc::g1
+} // namespace mjpc::h1_2

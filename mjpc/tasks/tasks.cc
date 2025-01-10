@@ -46,6 +46,7 @@
 #include "mjpc/tasks/g1/walk/walk.h"
 #include "mjpc/tasks/g1_fixed/g1_fixed.h"
 #include "mjpc/tasks/h1_2/walk/walk.h"
+#include "mjpc/tasks/h1_2/pnp/pnp.h"
 #include "mjpc/tasks/go2/go2.h"
 #include "mjpc/tasks/go2w/go2w.h"
 namespace mjpc {
@@ -69,6 +70,7 @@ std::vector<std::shared_ptr<Task>> GetTasks() {
       std::make_shared<g1::Walk>(),
       std::make_shared<g1_fixed::G1Fixed>(),
       std::make_shared<h1_2::Walk>(),
+      std::make_shared<h1_2::PNP>(),
       std::make_shared<Go2Flat>(),
       std::make_shared<Go2Hill>(),
       std::make_shared<Go2WFlat>(),
