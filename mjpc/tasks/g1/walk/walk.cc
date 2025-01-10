@@ -40,17 +40,17 @@ namespace mjpc::g1
 
     // ----- upright ----- //
     double *torso_up = SensorByName(model, data, "torso_up");
-    // double *pelvis_up = SensorByName(model, data, "pelvis_up");
-    // double *foot_right_up = SensorByName(model, data, "foot_right_up");
-    // double *foot_left_up = SensorByName(model, data, "foot_left_up");
+    double *pelvis_up = SensorByName(model, data, "pelvis_up");
+    double *foot_right_up = SensorByName(model, data, "foot_right_up");
+    double *foot_left_up = SensorByName(model, data, "foot_left_up");
     // torso
     residual[counter++] = torso_up[2] - 1.0;
     // pelvis
-    // residual[counter++] = 0.3 * (pelvis_up[2] - 1.0);
+    residual[counter++] = pelvis_up[2] - 1.0;
     // right foot
-    // residual[counter++] = 1.0 * (foot_right_up[2] - 1.0);
+    residual[counter++] = foot_right_up[2] - 1.0;
     // left foot
-    // residual[counter++] = 1.0 * (foot_left_up[2] - 1.0);
+    residual[counter++] = foot_left_up[2] - 1.0;
 
     // ----- torso height ----- //
     double height_goal = parameters_[0];

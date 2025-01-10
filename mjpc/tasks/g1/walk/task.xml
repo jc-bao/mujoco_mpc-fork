@@ -12,7 +12,7 @@
     <numeric name="sampling_exploration" data="0.05" />
     <numeric name="gradient_spline_points" data="5" />
     <numeric name="residual_Torso" data="0.9 0.5 1.0" />
-    <numeric name="residual_UpperBodyPosture" data="0.6 0.0 1.0" />
+    <numeric name="residual_UpperBodyPosture" data="0.3 0.0 1.0" />
     <numeric name="residual_HipPosture" data="0.3 0.0 1.0" />
     <numeric name="residual_KneePosture" data="0.3 0.0 1.0" />
     <numeric name="residual_AnklePosture" data="0.3 0.0 1.0" />
@@ -24,7 +24,10 @@
 
   <sensor>
     <!-- user="[norm_type] [weight] [weight_lower_bound] [weight_upper_bound] [norm_parameters...]" -->
-    <user name="Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Torso Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Pelvis Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Right Foot Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Left Foot Upright" dim="1" user="6 3.0 0 20.0 0.05" />
     <user name="Height" dim="1" user="6 1 0 3 0.04" />
     <user name="Position" dim="3" user="2 0.6 0 20.0 0.1" />
     <user name="Orientation" dim="4" user="0 0.1 0 0.2" />
@@ -32,7 +35,7 @@
     <user name="Gait Y" dim="4" user="6 1 0 10 0.03" />
     <user name="Gait Z" dim="4" user="6 10 0 100 0.03" />
     <user name="Balance" dim="2" user="2 0.5 0 1.0 0.1" />
-    <user name="Effort" dim="21" user="0 0.06 0.0 0.2" />
+    <user name="Effort" dim="21" user="0 0.1 0.0 0.2" />
     <user name="Posture" dim="21" user="0 0.1 0.0 0.2" />
     <user name="Linear Velocity" dim="3" user="0 0.015 0 0.1" />
     <user name="Angular Momentum" dim="3" user="0 0.015 0 0.1" />
