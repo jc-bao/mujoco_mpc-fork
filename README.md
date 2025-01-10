@@ -54,8 +54,11 @@ python control.py
 
 ## How to add new robot
 
-1. match the site name and position
-2. match the actuator, please use position control and use damping in joint rather than kv. 
+1. add/match the site name
+2. port all default class and set related joint to the new property
+3. comment out the joint that is not used in the reference model while keep
+4. disable all collisions expect the one on the foot (i.e. match the collision group)
+5. match the actuator, please use position control and use damping in joint rather than kv. 
 
 ## Notes
 

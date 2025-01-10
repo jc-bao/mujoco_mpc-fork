@@ -261,8 +261,8 @@ namespace mjpc::g1
     mju_scl(residual + counter, residual + counter, hip_motor_scale, 3);
     mju_scl(residual + counter + 6, residual + counter + 6, hip_motor_scale, 3);
     double knee_motor_scale = parameters_[3];
-    mju_scl(residual + counter + 3, residual + counter + 3, knee_motor_scale, 3);
-    mju_scl(residual + counter + 6 + 3, residual + counter + 6 + 3, knee_motor_scale, 3);
+    mju_scl(residual + counter + 3, residual + counter + 3, knee_motor_scale, 1);
+    mju_scl(residual + counter + 6 + 3, residual + counter + 6 + 3, knee_motor_scale, 1);
     double ankle_motor_scale = parameters_[4];
     mju_scl(residual + counter + 4, residual + counter + 4, ankle_motor_scale, 2);
     mju_scl(residual + counter + 6 + 4, residual + counter + 6 + 4, ankle_motor_scale, 2);

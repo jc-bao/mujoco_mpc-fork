@@ -70,6 +70,8 @@ add_library(
   tasks/h1_2/walk/walk.h
   tasks/h1_2/pnp/pnp.cc
   tasks/h1_2/pnp/pnp.h
+  tasks/h1/walk/walk.cc
+  tasks/h1/walk/walk.h
   tasks/go2/go2.cc
   tasks/go2/go2.h
   tasks/go2w/go2w.cc
