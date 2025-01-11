@@ -2,7 +2,7 @@
   <include file="../../common.xml" />
   <include file="../h1_2.xml" />
   <size memory="400K" />
-  <option timestep="0.005" />
+  <option timestep="0.002" />
   <compiler angle="radian" meshdir=".." autolimits="true" />
   <custom>
     <!-- agent -->
@@ -13,7 +13,7 @@
     <numeric name="sampling_exploration" data="0.05" />
     <numeric name="gradient_spline_points" data="5" />
     <numeric name="residual_Torso" data="1.05 0.7 1.2" />
-    <numeric name="residual_UpperBodyPosture" data="0.6 0.0 1.0" />
+    <numeric name="residual_UpperBodyPosture" data="0.6 0.0 2.0" />
     <numeric name="residual_HipPosture" data="0.3 0.0 1.0" />
     <numeric name="residual_KneePosture" data="0.3 0.0 1.0" />
     <numeric name="residual_AnklePosture" data="0.3 0.0 1.0" />
@@ -32,7 +32,10 @@
 
   <sensor>
     <!-- user="[norm_type] [weight] [weight_lower_bound] [weight_upper_bound] [norm_parameters...]" -->
-    <user name="Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Torso Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Pelvis Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Left Foot Upright" dim="1" user="6 3.0 0 20.0 0.05" />
+    <user name="Right Foot Upright" dim="1" user="6 3.0 0 20.0 0.05" />
     <user name="Height" dim="1" user="6 1 0 3 0.04" />
     <user name="Position" dim="3" user="2 0.6 0 3.0 0.1" />
     <user name="Orientation" dim="4" user="0 0.1 0 0.2" />
@@ -130,12 +133,12 @@
 
     <position class="shoulder_pitch_motor" name="left_shoulder_pitch_joint"
       joint="left_shoulder_pitch_joint" />
-    <position class="shoulder_roll_motor" name="left_shoulder_roll_joint"
+    <position class="left_shoulder_roll_motor" name="left_shoulder_roll_joint"
       joint="left_shoulder_roll_joint" />
     <position class="elbow_motor" name="left_elbow_joint" joint="left_elbow_joint" />
     <position class="shoulder_pitch_motor" name="right_shoulder_pitch_joint"
       joint="right_shoulder_pitch_joint" />
-    <position class="shoulder_roll_motor" name="right_shoulder_roll_joint"
+    <position class="right_shoulder_roll_motor" name="right_shoulder_roll_joint"
       joint="right_shoulder_roll_joint" />
     <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" />
   </actuator>
@@ -161,7 +164,11 @@
       qpos='
       0 0 0.912521 
       0.998659 -0.0178738 -0.0481535 0.00652783 
-      -0.0244855 -0.470142 0.0763105 1.10722 -0.54191 -0.025998 0.00721417 -0.402708 0.0146467 1.05035 -0.551837 0.0198956 0.0212447 0.271887 0.296825 0.0132549 0.252738 -0.291554 0.000715386'
+      -0.0244855 -0.470142 0.0763105 1.10722 -0.54191 -0.025998 
+      0.00721417 -0.402708 0.0146467 1.05035 -0.551837 0.0198956 
+      0.0212447 
+      0.26 0.29  0.00
+      0.26 -0.29 0.00'
       ctrl="
       -0.0244855 -0.470142 0.0763105 1.10722 -0.54191 -0.025998 0.00721417 -0.402708 0.0146467 1.05035 -0.551837 0.0198956 0.0212447 0.271887 0.296825 0.0132549 0.252738 -0.291554 0.000715386"
     />

@@ -58,12 +58,17 @@
     <default class="shoulder_pitch_motor">
       <joint damping="2.0"  />
       <!-- <position kp="120" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" /> -->
-      <position kp="60" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" kv="0.0" ctrlrange="-0.6 0.6" forcelimited="true" forcerange="-40 40" />
     </default>
-    <default class="shoulder_roll_motor">
+    <default class="left_shoulder_roll_motor">
       <joint damping="2.0"  />
       <!-- <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" /> -->
-      <position kp="60" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" kv="0.0" ctrlrange="0.0 1.0" forcelimited="true" forcerange="-40 40" />
+    </default>
+    <default class="right_shoulder_roll_motor">
+      <joint damping="2.0"  />
+      <!-- <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" /> -->
+      <position kp="60" kv="0.0" ctrlrange="-1.0 0.0" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_yaw_motor">
       <joint damping="2.0"/>
@@ -73,7 +78,7 @@
     <default class="elbow_motor">
       <joint damping="1.0" />
       <!-- <position kp="80" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" /> -->
-      <position kp="40" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
+      <position kp="40" kv="0.0" ctrlrange="-0.5 0.5" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
       <joint damping="0.5"/>
@@ -331,7 +336,7 @@
               quat="0.986055 0.000456937 0.166408 0.00213553" mass="1.393"
               diaginertia="0.00200869 0.00193464 0.000449847" />
             <joint name="left_shoulder_roll_joint" pos="0 0 0" axis="1 0 0" range="-0.38 3.4"
-              actuatorfrcrange="-40 40" class="shoulder_roll_motor" />
+              actuatorfrcrange="-40 40" class="left_shoulder_roll_motor" />
             <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.1 0.1 0.1 1"
               mesh="left_shoulder_roll_link" />
             <geom class="visual" type="mesh" rgba="0.1 0.1 0.1 1" mesh="left_shoulder_roll_link" />
@@ -415,7 +420,7 @@
               quat="0.986055 -0.000456937 0.166408 -0.00213553" mass="1.393"
               diaginertia="0.00200869 0.00193464 0.000449847" />
             <joint name="right_shoulder_roll_joint" pos="0 0 0" axis="1 0 0" range="-3.4 0.38"
-              actuatorfrcrange="-40 40" class="shoulder_roll_motor" />
+              actuatorfrcrange="-40 40" class="right_shoulder_roll_motor" />
             <geom class="visual" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.1 0.1 0.1 1"
               mesh="right_shoulder_roll_link" />
             <geom class="visual" type="mesh" rgba="0.1 0.1 0.1 1" mesh="right_shoulder_roll_link" />

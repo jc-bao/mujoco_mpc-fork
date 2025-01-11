@@ -41,17 +41,17 @@ namespace mjpc::h1_2
 
     // ----- upright ----- //
     double *torso_up = SensorByName(model, data, "torso_up");
-    // double *pelvis_up = SensorByName(model, data, "pelvis_up");
-    // double *foot_right_up = SensorByName(model, data, "foot_right_up");
-    // double *foot_left_up = SensorByName(model, data, "foot_left_up");
+    double *pelvis_up = SensorByName(model, data, "pelvis_up");
+    double *foot_right_up = SensorByName(model, data, "foot_right_up");
+    double *foot_left_up = SensorByName(model, data, "foot_left_up");
     // torso
     residual[counter++] = torso_up[2] - 1.0;
     // pelvis
-    // residual[counter++] = 0.3 * (pelvis_up[2] - 1.0);
+    residual[counter++] = 0.3 * (pelvis_up[2] - 1.0);
     // right foot
-    // residual[counter++] = 1.0 * (foot_right_up[2] - 1.0);
+    residual[counter++] = 1.0 * (foot_right_up[2] - 1.0);
     // left foot
-    // residual[counter++] = 1.0 * (foot_left_up[2] - 1.0);
+    residual[counter++] = 1.0 * (foot_left_up[2] - 1.0);
 
     // ----- torso height ----- //
     double height_goal = parameters_[0];
@@ -253,7 +253,8 @@ namespace mjpc::h1_2
     double *home = KeyQPosByName(model, data, "stand");
     mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
     double upper_body_posture_scale = parameters_[1]; 
-    mju_scl(residual + counter + 6 + 6 + 1, residual + counter + 6 + 6 + 1, upper_body_posture_scale, 6);
+    mju_scl(residual + counter + 6 + 6 + 1, residual + counter + 6 + 6 + 1, upper_body_posture_scale, 3);
+    mju_scl(residual + counter + 6 + 6 + 4, residual + counter + 6 + 6 + 4, upper_body_posture_scale, 3);
     double hip_motor_scale = parameters_[2];
     mju_scl(residual + counter, residual + counter, hip_motor_scale, 3);
     mju_scl(residual + counter + 6, residual + counter + 6, hip_motor_scale, 3);
