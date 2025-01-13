@@ -47,11 +47,11 @@ namespace mjpc::h1
     // torso
     residual[counter++] = torso_up[2] - 1.0;
     // pelvis
-    residual[counter++] = pelvis_up[2] - 1.0;
+    residual[counter++] = 0.3 * (pelvis_up[2] - 1.0);
     // right foot
-    residual[counter++] = foot_right_up[2] - 1.0;
+    residual[counter++] = 1.0 * (foot_right_up[2] - 1.0);
     // left foot
-    residual[counter++] = foot_left_up[2] - 1.0;
+    residual[counter++] = 1.0 * (foot_left_up[2] - 1.0);
 
     // ----- torso height ----- //
     double height_goal = parameters_[0];
@@ -87,19 +87,29 @@ namespace mjpc::h1
     double *torso_xmat = data->xmat + 9 * torso_body_id;
     double torso_heading[2] = {torso_xmat[0], torso_xmat[3]};
     mju_normalize(torso_heading, 2);
-    double heading_goal = 0.0;
+    double heading_goal = parameters_[8];
     double target_heading[2] = {mju_cos(heading_goal), mju_sin(heading_goal)};
-    residual[counter++] = torso_heading[0] - target_heading[0];
-    residual[counter++] = torso_heading[1] - target_heading[1];
+    if (gait_mode == 0) {
+      residual[counter++] = 0.0;
+      residual[counter++] = 0.0;
+    } else {
+      residual[counter++] = torso_heading[0] - target_heading[0];
+      residual[counter++] = torso_heading[1] - target_heading[1];
+    }
     int pelvis_body_id = mj_name2id(model, mjOBJ_BODY, "pelvis");
     double *pelvis_xmat = data->xmat + 9 * pelvis_body_id;
     double pelvis_heading[2] = {pelvis_xmat[0], pelvis_xmat[3]};
     mju_normalize(pelvis_heading, 2);
-    residual[counter++] = pelvis_heading[0] - target_heading[0];
-    residual[counter++] = pelvis_heading[1] - target_heading[1];
+    if (gait_mode == 0) {
+      residual[counter++] = 0.0;
+      residual[counter++] = 0.0;
+    } else {
+      residual[counter++] = pelvis_heading[0] - target_heading[0];
+      residual[counter++] = pelvis_heading[1] - target_heading[1];
+    }
 
     // ----- gait ----- //
-    double *pelvis_pos = SensorByName(model, data, "pelvis_position");
+    // double *pelvis_pos = SensorByName(model, data, "pelvis_position");
     double pelvis_heading_ortho[2] = {-pelvis_heading[1], pelvis_heading[0]};
     mju_normalize(pelvis_heading, 2);
     mju_normalize(pelvis_heading_ortho, 2);
@@ -114,16 +124,16 @@ namespace mjpc::h1
     {
       amplitude = 0.0;
     }
-    double duty_ratio = 0.5;
+    double duty_ratio = parameters_[9];
     double footphase = 0.0;
-    double frequency = 3.0;
+    double frequency = parameters_[10];
     double foot_y_distance_target = parameters_[6];
     double foot_x_distance_target = parameters_[7];
     double left_toe_cost[3] = {0.0, 0.0, 0.0};
     double left_heel_cost[3] = {0.0, 0.0, 0.0};
     double right_toe_cost[3] = {0.0, 0.0, 0.0};
     double right_heel_cost[3] = {0.0, 0.0, 0.0};
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 2; i++) // 0: left, 1: right
     {
       if (i == 0)
       {
@@ -143,46 +153,45 @@ namespace mjpc::h1
       }
       // z position of the foot
       double *frame_pos = nullptr;
-      double x_tar = foot_x_distance_target;
+      double x_tar = 0.0;
       double y_tar = 0.0;
-      for (int j = 0; j < 2; j++)
+      for (int j = 0; j < 2; j++) // 0: toe, 1: heel
       {
-        if (i == 0)
+        if (i == 0) // left foot
         {
           // right foot
-          if (j == 0)
+          if (j == 0) // toe
           {
             frame_pos = toe_right_pos;
-            x_tar = x_tar + 0.17 - 0.045;
+            x_tar = foot_x_distance_target + 0.17 - 0.045;
           }
           else
           {
             frame_pos = heel_right_pos;
-            x_tar = x_tar - 0.08 - 0.045;
+            x_tar = foot_x_distance_target - 0.08 - 0.045;
           }
           y_tar = -foot_y_distance_target;
         }
-        else
+        else // right foot
         {
-          // left foot
-          if (j == 0)
+          if (j == 0) // toe
           {
             frame_pos = toe_left_pos;
-            x_tar = x_tar + 0.17 - 0.045;
+            x_tar = foot_x_distance_target + 0.17 - 0.045;
           }
           else
           {
             frame_pos = heel_left_pos;
-            x_tar = x_tar - 0.08 - 0.045;
+            x_tar = foot_x_distance_target - 0.08 - 0.045;
           }
           y_tar = foot_y_distance_target;
         }
         double frame_pos_world[3];
-        mju_sub3(frame_pos_world, frame_pos, pelvis_pos);
-        double frame_pos_pelvis[3];
+        double *compos_pelvis = SensorByName(model, data, "pelvis_subcom");
+        mju_sub3(frame_pos_world, frame_pos, compos_pelvis);
+        double frame_pos_pelvis[2];
         frame_pos_pelvis[0] = mju_dot(pelvis_heading, frame_pos_world, 2);
         frame_pos_pelvis[1] = mju_dot(pelvis_heading_ortho, frame_pos_world, 2);
-        frame_pos_pelvis[2] = frame_pos[2];
         if (i == 0)
         {
           if (j == 0)
@@ -252,17 +261,23 @@ namespace mjpc::h1
     // ----- posture ----- //
     double *home = KeyQPosByName(model, data, "stand");
     mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
-    double upper_body_posture_scale = parameters_[1]; 
-    mju_scl(residual + counter + 5 + 5 + 1, residual + counter + 5 + 5 + 1, upper_body_posture_scale, 6);
+    // double upper_body_posture_scale = parameters_[1]; 
+    int n_motor_per_leg = 5;
+    int n_hip_motor = 3;
+    int n_upper_body_motor = 0;
     double hip_motor_scale = parameters_[2];
-    mju_scl(residual + counter, residual + counter, hip_motor_scale, 3);
-    mju_scl(residual + counter + 5, residual + counter + 5, hip_motor_scale, 3);
+    mju_scl(residual + counter, residual + counter, hip_motor_scale, n_hip_motor);
+    mju_scl(residual + counter + n_motor_per_leg, residual + counter + n_motor_per_leg, hip_motor_scale, n_hip_motor);
     double knee_motor_scale = parameters_[3];
-    mju_scl(residual + counter + 3, residual + counter + 3, knee_motor_scale, 1);
-    mju_scl(residual + counter + 5 + 3, residual + counter + 5 + 3, knee_motor_scale, 1);
+    mju_scl(residual + counter + n_hip_motor, residual + counter + n_hip_motor, knee_motor_scale, 1);
+    mju_scl(residual + counter + n_motor_per_leg + n_hip_motor, residual + counter + n_motor_per_leg + n_hip_motor, knee_motor_scale, 1);
     double ankle_motor_scale = parameters_[4];
-    mju_scl(residual + counter + 4, residual + counter + 4, ankle_motor_scale, 1);
-    mju_scl(residual + counter + 5 + 4, residual + counter + 5 + 4, ankle_motor_scale, 1);
+    mju_scl(residual + counter + n_motor_per_leg - 1, residual + counter + n_motor_per_leg - 1, ankle_motor_scale, 1);
+    mju_scl(residual + counter + 2 * n_motor_per_leg - 1, residual + counter + 2 * n_motor_per_leg - 1, ankle_motor_scale, 1);
+    double upper_body_motor_scale = parameters_[1];
+    if (upper_body_motor_scale > 0) {
+      mju_scl(residual + counter + 2 * n_motor_per_leg, residual + counter + 2 * n_motor_per_leg, upper_body_motor_scale, n_upper_body_motor);
+    }
     counter += model->nu;
 
     // ----- linear velocity ----- //

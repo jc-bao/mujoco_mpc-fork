@@ -172,7 +172,7 @@ class Go2TorqueConfig:
     mocap_offset: np.ndarray = np.array([0.0, 0.0, -0.060])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
-    vicon_object_name: str = "lecar_go2_mpc"
+    vicon_object_name: str = "lecar_go2"
 
     # controller
     xml_path_ctrl: str = (
@@ -215,6 +215,9 @@ class Go2PositionConfig(Go2TorqueConfig):
     kd_real = np.array([0.6] * 12)
     xml_path_sim = "./model/go2/go2_position.xml"
     control_mode = "position"
+    sim_mocap_z_offset = -0.00
+    sim_mocap_roll_offset = 0.00
+    sim_mocap_pitch_offset = -0.00
 
 
 
@@ -351,7 +354,7 @@ class H1_2PositionConfig:
     nqd_real: int = 33
     nu_real: int = 27
     nu_sim: int = 27
-    nu_plan: int = 21
+   
     dt_real: float = 0.005
    
     duration_1 = 100
@@ -369,22 +372,22 @@ class H1_2PositionConfig:
         [
             200.0,200.0,200.0,300.0,40.0,40.0,
             200.0,200.0,200.0,300.0,40.0,40.0,
-            300.0,
-            120.0,120.0,120.0,
-            80.0,40.0,40.0,40.0,
-            120.0,120.0,120.0,
-            80.0,40.0,40.0,40.0
+            500.0,
+            250.0,250.0,250.0,
+            160.0,80.0,80.0,80.0,
+            250.0,250.0,250.0,
+            160.0,80.0,80.0,80.0
         ]
     )*0.5
     kd_real: np.ndarray = np.array(
         [
            2.5,2.5,2.5,4.0,3.0,3.0,
            2.5,2.5,2.5,4.0,3.0,3.0,
-           3.0,
-           2.0,2.0,2.0,
-           1.0,0.5,0.5,0.5,
-           2.0,2.0,2.0,
-           1.0,0.5,0.5,0.5
+           5.0,
+           4.0,4.0,4.0,
+           2.0,1.0,1.0,1.0,
+           4.0,4.0,4.0,
+           2.0,1.0,1.0,1.0,
         ]
     ) 
     gear_real = np.ones(19)
@@ -392,7 +395,7 @@ class H1_2PositionConfig:
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.078])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
-    vicon_object_name: str = "lecar_h1_2_mpc"
+    vicon_object_name: str = "lecar_h1-2"
 
     # controller
     xml_path_ctrl: str = (
@@ -430,3 +433,38 @@ class H1_2PositionConfig:
     0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
     ])
 
+class H1_2_simpleConfig(H1_2PositionConfig):
+    gear_real = np.ones(12)
+    xml_path_ctrl = str(MUJOCO_MPC_TASK_PATH / "h1_2_simple/walk/task.xml")
+    # xml_path_sim = str(MUJOCO_MPC_TASK_PATH / "h1_2_simple/walk/task.xml")
+    # xml_path_sim = "./model/h1_2/h1_2_simple.xml"
+    xml_path_sim = "./model/h1_2/h1_2_position.xml"
+    task_id = "H1_2_Simple Walk"
+    nq_ctrl: int = 19
+    nqd_ctrl: int = 18
+    nu_ctrl: int = 12
+    dt_ctrl: float = 0.02
+    locked_joint_idx: np.ndarray = (
+        np.array([12,13,14,15,16,17,18,19,20,21,22,23,24,25,26])
+    )  
+    _targetPos_1 = np.array([ 
+    0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
+    0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 
+    0.0,
+    0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+    0.0,0.0,0.0,0.0,0.0,0.0,0.0
+    ])
+    q_default = np.array([ 
+    0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
+    0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 
+    0.0,
+    0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+    0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+    ])
+    
+    # model used in real robot
+    nq_real: int = 34
+    nqd_real: int = 33
+    nu_real: int = 27
+    nu_sim: int = 27
+    

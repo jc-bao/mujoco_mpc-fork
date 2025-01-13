@@ -8,7 +8,7 @@ import struct
 from loop_rate_limiters import RateLimiter
 
 from utils import pack_mocap_data
-from config import G1PositionConfig, Go2PositionConfig, H1_2PositionConfig
+from config import G1PositionConfig, Go2PositionConfig, H1_2PositionConfig, H1_2_simpleConfig
 class ViconDemo:
     """
     Vicon data acquisition and filtering
@@ -24,6 +24,8 @@ class ViconDemo:
             self.config = Go2PositionConfig()
         elif robot_name == "h1_2":
             self.config = H1_2PositionConfig()
+        elif robot_name == "h1_2_simple":
+            self.config = H1_2_simpleConfig()
         else:
             raise ValueError(f"Robot {robot_name} not supported")
 
@@ -83,7 +85,7 @@ class ViconDemo:
             position = np.array([x, y, z]) / 1000.0
 
             position += self.config.mocap_offset
-            rotation = R.from_euler("XYZ", [roll, pitch, yaw], degrees=False)
+            rotation = R.from_euler("xyz", [roll, pitch, yaw], degrees=False)
             quaternion = rotation.as_quat()  # [x, y, z, w]
 
             return current_time, position, quaternion
@@ -184,5 +186,5 @@ class ViconDemo:
 
 
 if __name__ == "__main__":
-    vicon_demo = ViconDemo(robot_name="h1_2")
+    vicon_demo = ViconDemo(robot_name="h1_2_simple")
     vicon_demo.main_loop()

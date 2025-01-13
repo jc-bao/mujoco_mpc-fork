@@ -55,29 +55,29 @@
       <position kp="150" kv="0.0" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="shoulder_pitch_motor">
-      <joint damping="2.0"  />
+      <joint damping="4.0"  />
       <!-- <position kp="120" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" /> -->
-      <position kp="60" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
+      <position kp="125.0" kv="0.0" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_roll_motor">
-      <joint damping="2.0"  />
+      <joint damping="4.0"  />
       <!-- <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" /> -->
-      <position kp="60" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
+      <position kp="125.0" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_yaw_motor">
-      <joint damping="2.0"/>
+      <joint damping="4.0"/>
       <!-- <position kp="120" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" /> -->
-      <position kp="60" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" />
+      <position kp="125.0" kv="0.0" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
-      <joint damping="1.0" />
+      <joint damping="2.0" />
       <!-- <position kp="80" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" /> -->
-      <position kp="40" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
+      <position kp="80" kv="0.0" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
-      <joint damping="0.5"/>
+      <joint damping="1.0"/>
       <!-- <position kp="40" kv="0.0" /> -->
-      <position kp="20" kv="0.0" />
+      <position kp="40" kv="0.0" />
     </default>
     <default class="visual">
       <geom contype="0" conaffinity="0" group="1" density="0" />
@@ -90,7 +90,7 @@
  
   <statistic meansize="0.112107" extent="1.95557" center="0.0256948 1.86841e-05 -0.178443" />
   <asset>
-    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4"
+     <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4"
       rgb2="0.1 0.2 0.3"
       markrgb="0.8 0.8 0.8" width="300" height="300" />
     <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5"
@@ -128,6 +128,7 @@
   </asset>
 
   <worldbody>
+  <light pos="0 0 10" dir="0 0 -1" />
     <camera name="frontview" pos="2.0 0 0.7" euler="1.57 1.57 0" />
      <geom name="floor" size="0 0 0.05" type="plane" material="groundplane" />
     <body name="pelvis" pos="0 0 1.03">
@@ -200,10 +201,15 @@
                     rgba="0.1 0.1 0.1 1" mesh="left_ankle_roll_link" />
                   <geom class="visual" type="mesh" rgba="0.1 0.1 0.1 1" mesh="left_ankle_roll_link" />
 
-                  <geom size="0.005" pos="-0.08 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="-0.08 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.005" pos="-0.08 0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <geom size="0.005" pos="-0.08 -0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <geom size="0.005" pos="0.17 0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <geom size="0.005" pos="0.17 -0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <!-- <geom name="left_heel_left" size="0.01" pos="-0.08 0.00 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom name="left_heel_right" size="0.01" pos="-0.08 -0.00 -0.035" rgba="0.2 0.2 0.2 1" class="visual"/>
+                  <geom name="left_toe_left" size="0.01" pos="0.17 0.00 -0.035" rgba="0.2 0.2 0.2 1" />
+                  <geom name="left_toe_right" size="0.01" pos="0.17 -0.00 -0.035" rgba="0.2 0.2 0.2 1" class="visual"/> -->
+
 
                   <site name="foot_left" pos="0.03 0 0" group="4" />
                   <site name="sp0" pos="-0.05 0 0" type="sphere" size="0.027" />
@@ -280,10 +286,14 @@
                     rgba="0.1 0.1 0.1 1" mesh="right_ankle_roll_link" />
                   <geom type="mesh" class="visual" rgba="0.1 0.1 0.1 1" mesh="right_ankle_roll_link" />
 
-                  <geom size="0.005" pos="-0.08 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="-0.08 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 0.04 -0.04" rgba="0.2 0.2 0.2 1" />
-                  <geom size="0.005" pos="0.17 -0.04 -0.04" rgba="0.2 0.2 0.2 1" />
+                  <geom size="0.005" pos="-0.08 0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <geom size="0.005" pos="-0.08 -0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <geom size="0.005" pos="0.17 0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <geom size="0.005" pos="0.17 -0.04 -0.04" rgba="0.2 0.2 0.2 1" condim="3"/>
+                  <!-- <geom name="right_heel_left" size="0.01" pos="-0.08 0.00 -0.035" rgba="0.2 0.2 0.2 1"/>
+                  <geom name="right_heel_right" size="0.01" pos="-0.08 -0.00 -0.035" rgba="0.2 0.2 0.2 1" class="visual"/>
+                  <geom name="right_toe_left" size="0.01" pos="0.17 0.00 -0.035" rgba="0.2 0.2 0.2 1"/>
+                  <geom name="right_toe_right" size="0.01" pos="0.17 -0.00 -0.035" rgba="0.2 0.2 0.2 1" class="visual"/> -->
 
                   <site name="foot_right" pos="0.03 0 0" group="4" />
                   <site name="sp2" pos="-0.05 0 0" type="sphere" size="0.027" />

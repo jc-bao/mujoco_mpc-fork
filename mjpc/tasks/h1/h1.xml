@@ -15,15 +15,15 @@
     </default>
     <default class="hip_roll_motor">
       <joint damping="2.5" />
-      <position kp="100" ctrlrange="-0.43 3.14" forcelimited="true" forcerange="-200 200" />
+      <position kp="100" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="knee_motor">
       <joint damping="4.0" />
-      <position kp="150" ctrlrange="-0.12 2.19" forcelimited="true" forcerange="-300 300" />
+      <position kp="150" ctrlrange="-0.26 2.05" forcelimited="true" forcerange="-300 300" />
     </default>
     <default class="ankle_pitch_motor">
       <joint damping="3.0" armature="0.03" />
-      <position kp="20.0" ctrlrange="-0.897334 0.523598" forcelimited="true" forcerange="-60 60" />
+      <position kp="20.0" ctrlrange="-0.87 0.52" forcelimited="true" forcerange="-60 60" />
     </default>
     <default class="ankle_roll_motor">
       <joint damping="3.0" armature="0.03" />
@@ -35,19 +35,23 @@
     </default>
     <default class="shoulder_pitch_motor">
       <joint damping="2.0" />
-      <position kp="60" ctrlrange="-3.14 1.57" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" ctrlrange="-2.87 2.87" forcelimited="true" forcerange="-40 40" />
     </default>
-    <default class="shoulder_roll_motor">
+    <default class="left_shoulder_roll_motor">
       <joint damping="2.0" />
-      <position kp="60" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
+    </default>
+    <default class="right_shoulder_roll_motor">
+      <joint damping="2.0" />
+      <position kp="60" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_yaw_motor">
       <joint damping="2.0" />
-      <position kp="60" ctrlrange="-2.66 3.01" forcelimited="true" forcerange="-18 18" />
+      <position kp="60" ctrlrange="-3.11 0.34" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
       <joint damping="1.0" />
-      <position kp="40" ctrlrange="-0.95 3.18" forcelimited="true" forcerange="-18 18" />
+      <position kp="40" ctrlrange="-1.25 2.61" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
       <joint damping="0.5" />
@@ -226,7 +230,7 @@
         <inertial pos="0.000489 0.002797 0.20484"
           quat="0.999989 -0.00130808 -0.00282289 -0.00349105" mass="17.789"
           diaginertia="0.487315 0.409628 0.127837" />
-        <joint name="torso_joint" axis="0 0 1" range="-2.35 2.35" class="torso_motor"/>
+        <!-- <joint name="torso_joint" axis="0 0 1" range="-2.35 2.35" class="torso_motor"/> -->
         <geom class="visual" mesh="torso_link" />
         <!-- <geom class="collision" mesh="torso_link" /> -->
         <geom class="visual" material="white" mesh="logo_link" />
@@ -243,7 +247,7 @@
             quat="0.814858 0.579236 -0.0201072 -0.00936488" mass="1.033"
             diaginertia="0.00129936 0.000987113 0.000858198" />
           <site name="tracking[lshoulder]" class="tracking_site" pos="0.0 0.025 0.025" />
-          <joint name="left_shoulder_pitch_joint" axis="0 1 0" range="-2.87 2.87" class="shoulder_pitch_motor"/>
+          <!-- <joint name="left_shoulder_pitch_joint" axis="0 1 0" range="-2.87 2.87" class="shoulder_pitch_motor"/> -->
           <geom class="visual" mesh="left_shoulder_pitch_link" />
           <!-- <geom class="collision" mesh="left_shoulder_pitch_link" /> -->
           <body name="left_shoulder_roll_link" pos="-0.0055 0.0565 -0.0165"
@@ -251,7 +255,7 @@
             <inertial pos="0.000679 0.00115 -0.094076" quat="0.732491 0.00917179 0.0766656 0.676384"
               mass="0.793"
               diaginertia="0.00170388 0.00158256 0.00100336" />
-            <joint name="left_shoulder_roll_joint" axis="1 0 0" range="-0.34 3.11" class="shoulder_roll_motor"/>
+            <!-- <joint name="left_shoulder_roll_joint" axis="1 0 0" range="-0.34 3.11" class="left_shoulder_roll_motor"/> -->
             <geom class="visual" mesh="left_shoulder_roll_link" />
             <!-- <geom class="collision" mesh="left_shoulder_roll_link" /> -->
             <body name="left_shoulder_yaw_link" pos="0 0 -0.1343">
@@ -265,7 +269,7 @@
                 <inertial pos="0.15908 -0.000144 -0.015776"
                   quat="0.0765232 0.720327 0.0853116 0.684102" mass="0.669"
                   diaginertia="0.00601829 0.00600579 0.000408305" />
-                <joint name="left_elbow_joint" axis="0 1 0" range="-1.25 2.61" class="elbow_motor"/>
+                <!-- <joint name="left_elbow_joint" axis="0 1 0" range="-1.25 2.61" class="elbow_motor"/> -->
                 <geom class="visual" mesh="left_elbow_link" />
                 <!-- <geom class="collision" mesh="left_elbow_link" /> -->
 
@@ -282,7 +286,7 @@
           <inertial pos="0.005045 -0.053657 -0.015715" quat="0.579236 0.814858 0.00936488 0.0201072"
             mass="1.033"
             diaginertia="0.00129936 0.000987113 0.000858198" />
-          <joint name="right_shoulder_pitch_joint" axis="0 1 0" range="-2.87 2.87" class="shoulder_pitch_motor"/>
+          <!-- <joint name="right_shoulder_pitch_joint" axis="0 1 0" range="-2.87 2.87" class="shoulder_pitch_motor"/> -->
           <geom class="visual" mesh="right_shoulder_pitch_link" />
           <!-- <geom class="collision" mesh="right_shoulder_pitch_link" /> -->
           <body name="right_shoulder_roll_link" pos="-0.0055 -0.0565 -0.0165"
@@ -290,7 +294,7 @@
             <inertial pos="0.000679 -0.00115 -0.094076"
               quat="0.676384 0.0766656 0.00917179 0.732491" mass="0.793"
               diaginertia="0.00170388 0.00158256 0.00100336" />
-            <joint name="right_shoulder_roll_joint" axis="1 0 0" range="-3.11 0.34" class="shoulder_roll_motor"/>
+            <!-- <joint name="right_shoulder_roll_joint" axis="1 0 0" range="-3.11 0.34" class="right_shoulder_roll_motor"/> -->
             <geom class="visual" mesh="right_shoulder_roll_link" />
             <!-- <geom class="collision" mesh="right_shoulder_roll_link" /> -->
             <body name="right_shoulder_yaw_link" pos="0 0 -0.1343">
@@ -305,7 +309,7 @@
                 <inertial pos="0.15908 0.000144 -0.015776"
                   quat="-0.0765232 0.720327 -0.0853116 0.684102" mass="0.669"
                   diaginertia="0.00601829 0.00600579 0.000408305" />
-                <joint name="right_elbow_joint" axis="0 1 0" range="-1.25 2.61" class="elbow_motor"/>
+                <!-- <joint name="right_elbow_joint" axis="0 1 0" range="-1.25 2.61" class="elbow_motor"/> -->
                 <geom class="visual" mesh="right_elbow_link" />
                 <!-- <geom class="collision" mesh="right_elbow_link" /> -->
 

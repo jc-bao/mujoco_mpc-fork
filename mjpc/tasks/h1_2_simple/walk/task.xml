@@ -22,6 +22,8 @@
     <numeric name="residual_foot_y_distance" data="0.168 0.1 0.2" />
     <numeric name="residual_foot_x_distance" data="0.00 -0.05 0.05" />
     <numeric name="residual_heading" data="0.0 -3.14 3.14" />
+    <numeric name="residual_duty_ratio" data="0.6 0.0 1.0" />
+    <numeric name="residual_frequency" data="3.0 0.0 4.0" />
     <!-- estimator -->
     <numeric name="estimator" data="0" />
     <numeric name="estimator_sensor_start" data="8" />
@@ -37,15 +39,15 @@
     <user name="Pelvis Upright" dim="1" user="6 3.0 0 20.0 0.05" />
     <user name="Left Foot Upright" dim="1" user="6 3.0 0 20.0 0.05" />
     <user name="Right Foot Upright" dim="1" user="6 3.0 0 20.0 0.05" />
-    <user name="Height" dim="1" user="6 1 0 3 0.04" />
+    <user name="Height" dim="1" user="6 3 0 6 0.04" />
     <user name="Position" dim="3" user="2 0.6 0 3.0 0.1" />
     <user name="Orientation" dim="4" user="0 0.1 0 0.2" />
     <user name="Gait X" dim="4" user="6 1 0 10 0.03" />
     <user name="Gait Y" dim="4" user="6 1 0 10 0.03" />
     <user name="Gait Z" dim="4" user="6 10 0 100 0.03" />
     <user name="Balance" dim="2" user="2 0.5 0 1.0 0.1" />
-    <user name="Effort" dim="8" user="0 0.03 0.0 0.1" />
-    <user name="Posture" dim="8" user="0 0.1 0.0 0.2" />
+    <user name="Effort" dim="12" user="0 0.01 0.0 0.1" />
+    <user name="Posture" dim="12" user="0 0.1 0.0 0.2" />
     <user name="Linear Velocity" dim="3" user="0 0.015 0 0.1" />
     <user name="Angular Momentum" dim="3" user="0 0.015 0 0.1" />
     <framepos name="pelvis" objtype="site" objname="tracking[pelvis]" />
@@ -60,13 +62,13 @@
     <!-- <jointpos name="abdomen_z" joint="waist_yaw_joint" />
     <jointpos name="abdomen_y" joint="waist_pitch_joint" />
     <jointpos name="abdomen_x" joint="waist_roll_joint" /> -->
-    <!-- <jointpos name="hip_x_right" joint="right_hip_roll_joint" /> -->
+    <jointpos name="hip_x_right" joint="right_hip_roll_joint" />
     <jointpos name="hip_z_right" joint="right_hip_yaw_joint" />
     <jointpos name="hip_y_right" joint="right_hip_pitch_joint" />
     <jointpos name="knee_right" joint="right_knee_joint" />
     <jointpos name="ankle_y_right" joint="right_ankle_pitch_joint" />
     <!-- <jointpos name="ankle_x_right" joint="right_ankle_roll_joint" /> -->
-    <!-- <jointpos name="hip_x_left" joint="left_hip_roll_joint" /> -->
+    <jointpos name="hip_x_left" joint="left_hip_roll_joint" />
     <jointpos name="hip_z_left" joint="left_hip_yaw_joint" />
     <jointpos name="hip_y_left" joint="left_hip_pitch_joint" />
     <jointpos name="knee_left" joint="left_knee_joint" />
@@ -112,34 +114,34 @@
   </worldbody>
 
   <actuator>
-   <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
+    <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
     <position class="hip_pitch_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
-    <!-- <position class="hip_roll_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" /> -->
-    
+    <position class="left_hip_roll_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
+
     <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
     <position class="ankle_pitch_motor" name="left_ankle_pitch_joint"
       joint="left_ankle_pitch_joint" />
-    <!-- <position class="ankle_roll_motor" name="left_ankle_roll_joint" joint="left_ankle_roll_joint" /> -->
-    
+    <position class="ankle_roll_motor" name="left_ankle_roll_joint" joint="left_ankle_roll_joint" />
+
     <position class="hip_yaw_motor" name="right_hip_yaw_joint" joint="right_hip_yaw_joint" />
     <position class="hip_pitch_motor" name="right_hip_pitch_joint" joint="right_hip_pitch_joint" />
-    <!-- <position class="hip_roll_motor" name="right_hip_roll_joint" joint="right_hip_roll_joint" /> -->
-    
+    <position class="right_hip_roll_motor" name="right_hip_roll_joint" joint="right_hip_roll_joint" />
+
     <position class="knee_motor" name="right_knee_joint" joint="right_knee_joint" />
     <position class="ankle_pitch_motor" name="right_ankle_pitch_joint"
       joint="right_ankle_pitch_joint" />
-    <!-- <position class="ankle_roll_motor" name="right_ankle_roll_joint" joint="right_ankle_roll_joint" /> -->
+    <position class="ankle_roll_motor" name="right_ankle_roll_joint" joint="right_ankle_roll_joint" />
 
-    <!-- <position class="torso_motor" name="torso_joint" joint="torso_joint" />
+    <!-- <position class="torso_motor" name="torso_joint" joint="torso_joint" /> -->
 
-    <position class="shoulder_pitch_motor" name="left_shoulder_pitch_joint"
-      joint="left_shoulder_pitch_joint" />
-    <position class="left_shoulder_roll_motor" name="left_shoulder_roll_joint"
+    <!-- <position class="shoulder_pitch_motor" name="left_shoulder_pitch_joint"
+      joint="left_shoulder_pitch_joint" /> -->
+    <!-- <position class="left_shoulder_roll_motor" name="left_shoulder_roll_joint"
       joint="left_shoulder_roll_joint" />
-    <position class="elbow_motor" name="left_elbow_joint" joint="left_elbow_joint" />
-    <position class="shoulder_pitch_motor" name="right_shoulder_pitch_joint"
-      joint="right_shoulder_pitch_joint" />
-    <position class="right_shoulder_roll_motor" name="right_shoulder_roll_joint"
+    <position class="elbow_motor" name="left_elbow_joint" joint="left_elbow_joint" /> -->
+    <!-- <position class="shoulder_pitch_motor" name="right_shoulder_pitch_joint"
+      joint="right_shoulder_pitch_joint" /> -->
+    <!-- <position class="right_shoulder_roll_motor" name="right_shoulder_roll_joint"
       joint="right_shoulder_roll_joint" />
     <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" /> -->
   </actuator>
@@ -161,15 +163,39 @@
       0.3 0.3 0
       0.3 -0.3 0"
     /> -->
-    <key name="stand"
+    <!-- <key name="stand"
       qpos='
       0 0 0.912521 
       0.998659 -0.0178738 -0.0481535 0.00652783 
-      -0.0244855 -0.470142 1.10722 -0.54191
-      0.00721417 -0.402708 1.05035 -0.551837'
+      0.0 -0.5 0.0 1.0 -0.5 0.0
+      0.0 -0.5 0.0 1.0 -0.5 0.0'
       ctrl="
-      -0.0244855 -0.470142 1.10722 -0.54191 
-      0.00721417 -0.402708 1.05035 -0.551837"
+      0.0 -0.5 0.0 1.0 -0.5 0.0
+      0.0 -0.5 0.0 1.0 -0.5 0.0"
+    /> -->
+    <!-- <key name="stand" 
+    qpos='
+    -0.01982 -0.000884399 0.872425 
+    0.998352 -0.00334328 0.0571046 0.00462698 
+    0.00827499 -0.799713 0.00967793 1.26202 -0.576844 -0.00370657 -0.00980188 -0.776643 0.00764424
+    1.25589 -0.593515 0.00174885 0.0 0.0'
+    ctrl='0.00827499 -0.799713 0.00967793 1.26202 -0.576844 -0.00370657 -0.00980188 -0.776643
+    0.00764424 1.25589 -0.593515 0.00174885 0.0 0.0'
+    /> -->
+    <!-- <key name="stand" 
+    qpos='
+    -0.0145591 -0.0024282 0.866885 
+    0.998388 -0.00153792 0.0563689 0.00649124 
+    0.0118413 -0.798307 0.0103063 1.28414 -0.598659 -0.00729605 -0.00661032 -0.793785 -0.0008216
+    1.28156 -0.600499 0.00398152'
+    ctrl='0.0118413 -0.798307 0.0103063 1.28414 -0.598659 -0.00729605 -0.00661032 -0.793785 -0.0008216
+    1.28156 -0.600499 0.00398152'/> -->
+    <key name="stand"
+      qpos='
+    -0.00786738 -0.000693806 0.867522 
+    0.998409 -0.000810738 0.0563492 -0.00198761 
+    0.00996859 -0.787433 0.00720027 1.28229 -0.607513 -0.00574379 -0.0141146 -0.7859 0.00268089 1.27967 -0.60639 0.00218157'
+      ctrl='0.00996859 -0.787433 0.00720027 1.28229 -0.607513 -0.00574379 -0.0141146 -0.7859 0.00268089 1.27967 -0.60639 0.00218157'
     />
   </keyframe>
 </mujoco>
