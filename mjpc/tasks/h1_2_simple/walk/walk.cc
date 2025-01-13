@@ -1,4 +1,4 @@
-#include "mjpc/tasks/h1_2/walk/walk.h"
+#include "mjpc/tasks/h1_2_simple/walk/walk.h"
 
 #include <iostream>
 #include <string>
@@ -7,13 +7,13 @@
 #include "mjpc/task.h"
 #include "mjpc/utilities.h"
 
-namespace mjpc::h1_2
+namespace mjpc::h1_2_simple
 {
   std::string Walk::XmlPath() const
   {
-    return GetModelPath("h1_2/walk/task.xml");
+    return GetModelPath("h1_2_simple/walk/task.xml");
   }
-  std::string Walk::Name() const { return "H1_2 Walk"; }
+  std::string Walk::Name() const { return "H1_2_simple Walk"; }
 
   // ------------------ Residuals for humanoid walk task ------------
   //   Number of residuals:
@@ -262,18 +262,18 @@ namespace mjpc::h1_2
     // ----- posture ----- //
     double *home = KeyQPosByName(model, data, "stand");
     mju_sub(residual + counter, data->qpos + 7, home + 7, model->nu);
-    double upper_body_posture_scale = parameters_[1]; 
-    mju_scl(residual + counter + 6 + 6 + 1, residual + counter + 6 + 6 + 1, upper_body_posture_scale, 3);
-    mju_scl(residual + counter + 6 + 6 + 4, residual + counter + 6 + 6 + 4, upper_body_posture_scale, 3);
+    // double upper_body_posture_scale = parameters_[1]; 
     double hip_motor_scale = parameters_[2];
-    mju_scl(residual + counter, residual + counter, hip_motor_scale, 3);
-    mju_scl(residual + counter + 6, residual + counter + 6, hip_motor_scale, 3);
+    int n_motor_per_leg = 4;
+    int n_hip_motor = 2;
+    mju_scl(residual + counter, residual + counter, hip_motor_scale, n_hip_motor);
+    mju_scl(residual + counter + n_motor_per_leg, residual + counter + n_motor_per_leg, hip_motor_scale, n_hip_motor);
     double knee_motor_scale = parameters_[3];
-    mju_scl(residual + counter + 3, residual + counter + 3, knee_motor_scale, 1);
-    mju_scl(residual + counter + 6 + 3, residual + counter + 6 + 3, knee_motor_scale, 1);
+    mju_scl(residual + counter + n_hip_motor, residual + counter + n_hip_motor, knee_motor_scale, 1);
+    mju_scl(residual + counter + n_motor_per_leg + n_hip_motor, residual + counter + n_motor_per_leg + n_hip_motor, knee_motor_scale, 1);
     double ankle_motor_scale = parameters_[4];
-    mju_scl(residual + counter + 4, residual + counter + 4, ankle_motor_scale, 2);
-    mju_scl(residual + counter + 6 + 4, residual + counter + 6 + 4, ankle_motor_scale, 2);
+    mju_scl(residual + counter + n_motor_per_leg - 1, residual + counter + n_motor_per_leg - 1, ankle_motor_scale, 1);
+    mju_scl(residual + counter + 2 * n_motor_per_leg - 1, residual + counter + 2 * n_motor_per_leg - 1, ankle_motor_scale, 1);
     counter += model->nu;
 
     // ----- linear velocity ----- //
@@ -303,4 +303,4 @@ namespace mjpc::h1_2
     }
   }
 
-} // namespace mjpc::h1_2
+} // namespace mjpc::h1_2_simple
