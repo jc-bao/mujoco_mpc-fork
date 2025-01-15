@@ -898,6 +898,7 @@ class H1Config:
     gear_real = np.ones(10)
     # mocap
     mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
+    mocap_rpy_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
     vicon_object_name: str = "lecar_h1_mpc"

@@ -43,7 +43,7 @@ from unitree_sdk2py.utils.crc import CRC
 
 class Controller:
     def __init__(self, robot_name="g1", open_loop_mode=False):
-        self.max_delta_ctrl = 0.05
+        self.max_delta_ctrl = 0.1
         self.open_loop_mode = open_loop_mode
         self.act_time = time.time()
         self.firstRun = True
@@ -95,16 +95,17 @@ class Controller:
             exit()
 
         # filter variables
-        self.low_pass_filter_gamma = 1.0
+        self.low_pass_filter_gamma = 0.5
         self.low_pass_filter_window_size = 1
-        self.qd_buffer = np.zeros((self.low_pass_filter_window_size, self.config.nqd_ctrl))
+        self.qd_buffer_lp = np.zeros((self.low_pass_filter_window_size, self.config.nqd_ctrl))
+        self.q_buffer_lp = np.zeros((self.low_pass_filter_window_size, self.config.nq_ctrl-7))
 
         # Initialize state variables
         self.global_ctrl_scale = 0.0
         self.global_kp_scale = 0.0
         self.global_kd_scale = 1.0
         self.global_z_offset = 0.01
-        self.global_rpy_offset = np.array([0.017, -0.008, 0.0])
+        self.global_rpy_offset = self.config.mocap_rpy_offset
         self.q = np.zeros(self.config.nq_real)
         self.qd = np.zeros(self.config.nqd_real)
         # Initialize control variables
@@ -495,9 +496,9 @@ class Controller:
             "ctrl_scale": {"lower": 0, "upper": 1.0, "step": 0.01, "default": 0.0},
             "kp_scale": {"lower": 0.0, "upper": 2.0, "step": 0.01, "default": 1.0},
             "kd_scale": {"lower": 0.5, "upper": 2.0, "step": 0.01, "default": 1.0},
-            "z_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": 0.0},
-            "roll_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": 0.0},
-            "pitch_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": 0.0},
+            "z_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": -0.009},
+            "roll_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": 0.022},
+            "pitch_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": -0.03},
             "yaw_offset": {"lower": -3.14, "upper": 3.14, "step": 0.001, "default": 0.0},
             "calibrate": {"lower": 0, "upper": 1, "step": 1.0, "default": 0.0},
         }
@@ -572,11 +573,16 @@ class Controller:
                         qd_sim = qd_sim[6:]
                     
                     # low pass filter
-                    qd_sim_lp = self.low_pass_filter_gamma * qd_sim + (1 - self.low_pass_filter_gamma) * self.qd_buffer[-1]
-                    self.qd_buffer = np.roll(self.qd_buffer, -1, axis=0)
-                    self.qd_buffer[-1, :] = qd_sim_lp
-                    self.qd_buffer[-1, :] = np.mean(self.qd_buffer, axis=0)
-                    qd_sim = self.qd_buffer[-1, :]
+                    qd_sim_lp = self.low_pass_filter_gamma * qd_sim + (1 - self.low_pass_filter_gamma) * self.qd_buffer_lp[-1]
+                    q_sim_lp = self.low_pass_filter_gamma * q_sim[7:] + (1 - self.low_pass_filter_gamma) * self.q_buffer_lp[-1]
+                    self.qd_buffer_lp = np.roll(self.qd_buffer_lp, -1, axis=0)
+                    self.qd_buffer_lp[-1, :] = qd_sim_lp
+                    self.q_buffer_lp = np.roll(self.q_buffer_lp, -1, axis=0)
+                    self.q_buffer_lp[-1, :] = q_sim_lp
+                    self.qd_buffer_lp[-1, :] = np.mean(self.qd_buffer_lp, axis=0)
+                    self.q_buffer_lp[-1, :] = np.mean(self.q_buffer_lp, axis=0)
+                    qd_sim = self.qd_buffer_lp[-1, :]
+                    q_sim[7:] = self.q_buffer_lp[-1, :]
 
                     # calibration
                     if bars["calibrate"].get() > 0.5:
