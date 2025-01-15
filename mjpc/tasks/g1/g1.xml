@@ -8,55 +8,55 @@
         <joint armature="0.01"/>
         <default class="hip_pitch_motor">
             <joint damping="5.0" />
-            <position kp="100" kv="0.0" ctrlrange="-2.5307 2.8798"/>
+            <position kp="50" kv="0.0" ctrlrange="-2.5307 2.8798"/>
         </default>
         <default class="hip_roll_motor">
             <joint damping="5.0" />
-            <position kp="100" kv="0.0" ctrlrange="-0.5236 2.9671"/>
+            <position kp="50" kv="0.0" ctrlrange="-0.5236 2.9671"/>
         </default>
         <default class="hip_yaw_motor">
             <joint damping="5.0" />
-            <position kp="100" kv="0.0" ctrlrange="-2.7576 2.7576"/>
+            <position kp="50" kv="0.0" ctrlrange="-2.7576 2.7576"/>
         </default>
         <default class="knee_motor">
             <joint damping="10.0" />
-            <position kp="200" kv="0.0" ctrlrange="-0.087267 2.8798"/>
+            <position kp="100" kv="0.0" ctrlrange="-0.087267 2.8798"/>
         </default>
         <default class="ankle_pitch_motor">
             <joint damping="1.0" armature="0.1"/>
-            <position kp="20" kv="0.0" ctrlrange="-0.87267 0.5236"/>
+            <position kp="10" kv="0.0" ctrlrange="-0.87267 0.5236"/>
         </default>
         <default class="ankle_roll_motor">
             <joint damping="1.0" armature="0.1"/>
-            <position kp="20" kv="0.0" ctrlrange="-0.2618 0.2618"/>
+            <position kp="10" kv="0.0" ctrlrange="-0.2618 0.2618"/>
         </default>
         <default class="waist_yaw_motor">
             <joint damping="20.0" />
-            <position kp="400" kv="0.0" ctrlrange="-2.618 2.618"/>
+            <position kp="200" kv="0.0" ctrlrange="-2.618 2.618"/>
         </default>
         <default class="waist_roll_motor">
             <joint damping="5.0" />
-            <position kp="100" kv="0.0" ctrlrange="-0.52 0.52"/>
+            <position kp="50" kv="0.0" ctrlrange="-0.52 0.52"/>
         </default>
         <default class="waist_pitch_motor"> 
             <joint damping="5.0" />
-            <position kp="100" kv="0.0" ctrlrange="-0.52 0.52"/>
+            <position kp="50" kv="0.0" ctrlrange="-0.52 0.52"/>
         </default>
         <default class="shoulder_pitch_motor">
             <joint damping="5.0" />
-            <position kp="100" kv="0.0" ctrlrange="-3.0892 2.6704"/>
+            <position kp="50" kv="0.0" ctrlrange="-3.0892 2.6704"/>
         </default>
         <default class="shoulder_roll_motor">
             <joint damping="3.0" />
-            <position kp="60" kv="0.0" ctrlrange="-1.5882 2.2515"/>
+            <position kp="30" kv="0.0" ctrlrange="-1.5882 2.2515"/>
         </default>
         <default class="shoulder_yaw_motor">
             <joint damping="1.0" />
-            <position kp="20" kv="0.0" ctrlrange="-2.618 2.618"/>
+            <position kp="10" kv="0.0" ctrlrange="-2.618 2.618"/>
         </default>
         <default class="elbow_motor">
             <joint damping="3.0" />
-            <position kp="60" kv="0.0" ctrlrange="-1.0472 2.0944"/>
+            <position kp="30" kv="0.0" ctrlrange="-1.0472 2.0944"/>
         </default>
         <default class="wrist_motor">
             <joint damping="0.2" />

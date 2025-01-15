@@ -8,8 +8,8 @@ from scipy.spatial.transform import Rotation as R
 import matplotlib.pyplot as plt
 import mujoco
 from mujoco_mpc import agent as agent_lib
-
-from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, G1FixedConfig, H1_2PositionConfig, H1_2_simpleConfig
+from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
+from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, G1FixedConfig, H1_2PositionConfig, H1_2_simpleConfig, H1Config
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -17,7 +17,8 @@ from utils import (
     ctrl_sim2real,
     state_real2sim,
     create_bar,
-    minimize_z_difference
+    minimize_z_difference, 
+    h1_joint_remapping
 )
 
 # Unitree SDK2
@@ -34,14 +35,16 @@ from unitree_sdk2py.core.channel import (
 #     unitree_hg_msg_dds__MotorCmd_,
 # )
 # from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowCmd_ 
-# from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowState_
+from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
 
 from unitree_sdk2py.utils.crc import CRC
 
 
 
 class Controller:
-    def __init__(self, robot_name="g1"):
+    def __init__(self, robot_name="g1", open_loop_mode=False):
+        self.max_delta_ctrl = 0.05
+        self.open_loop_mode = open_loop_mode
         self.act_time = time.time()
         self.firstRun = True
         self.robot_name = robot_name
@@ -73,6 +76,13 @@ class Controller:
             from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowCmd_ 
             from unitree_sdk2py.idl.unitree_hg.msg.dds_ import LowState_
             from unitree_sdk2py.idl.default import unitree_hg_msg_dds__LowCmd_
+        elif robot_name == "h1":
+            self.config = H1Config()
+            from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowCmd_
+            from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowState_
+            from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_
+            from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
+            from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
         else:
             raise ValueError(f"Robot {robot_name} not supported")
 
@@ -102,7 +112,7 @@ class Controller:
         self.state = None  # Will be initialized in main_loop
         if robot_name == "g1" or robot_name == "g1_fixed":
             self.low_cmd_msg = unitree_hg_msg_dds__LowCmd_()
-        elif robot_name == "go2":
+        elif robot_name == "go2" or robot_name == "h1":
             self.low_cmd_msg = unitree_go_msg_dds__LowCmd_()
         elif robot_name == "h1_2" or robot_name == "h1_2_simple":
             self.low_cmd_msg = unitree_hg_msg_dds__LowCmd_()
@@ -121,6 +131,10 @@ class Controller:
                 print("[ERROR] service stop sport_mode error. code:", code)
             else:
                 print("[INFO] service stop sport_mode success. code:", code)
+        if robot_name == "h1":
+            self.disable_sport_mode()
+
+        
         # self.InitLowCmd()
         self.low_state_subscriber = ChannelSubscriber("rt/lowstate", LowState_)
         print("init low state subscriber")
@@ -131,15 +145,23 @@ class Controller:
 
         # mujoco 
 
+    def disable_sport_mode(self):
+        self.msc = MotionSwitcherClient()
+        self.msc.SetTimeout(10.0)
+        self.msc.Init()
 
-    def low_state_handler(self, msg):
+        status, result = self.msc.CheckMode()
+        while result['name']:
+            self.msc.ReleaseMode()
+            status, result = self.msc.CheckMode()
+            
+            time.sleep(1)
+
+
+    def low_state_handler(self, msg: LowState_):
         self.low_state = msg
-        for i in range(self.config.nq_real - 7):
-            self.q[7 + i] = msg.motor_state[i].q
-            self.qd[6 + i] = msg.motor_state[i].dq
-        if not self.config.use_mocap_ang_vel:
-            omega = np.array([msg.imu_state.gyroscope]).flatten()
-            self.qd[6:9] = omega
+        
+            
 
     def init_stand_g1(self):
         rate_limiter = RateLimiter(frequency=1 / 0.02)
@@ -262,6 +284,102 @@ class Controller:
             if self.config.control_mode == "position" and np.isclose(self.config.percent_1, 1):
                 break
         print("Stand up complete")
+        
+        
+
+    def init_stand_h1(self):
+        percent = 0
+        start_pos = np.zeros(self.config.nu_real)
+        for i in range(self.config.nu_real):
+            start_pos[i] = self.low_state.motor_state[i].q
+        start_pos_sim = h1_joint_remapping(self.config.motor_order, start_pos, direction="real2sim")
+        print("start_pos_sim", start_pos_sim)
+        self.low_cmd_msg.head[0] = 0xFE
+        self.low_cmd_msg.head[1] = 0xEF
+        self.low_cmd_msg.level_flag = 0xFF
+        self.low_cmd_msg.gpio = 0
+        for i in range(self.config.nu_real):
+            # find which motor index corresponds to the joint index
+            # if i not in the list then just skip
+            if i not in self.config.motor_order:
+                continue
+            else:
+                j = np.where(self.config.motor_order == i)[0][0]
+            if j in self.config.weak_motor_idx:
+                self.low_cmd_msg.motor_cmd[i].mode = 0x01
+            else:
+                self.low_cmd_msg.motor_cmd[i].mode = 0x0A
+        while percent<1:
+            percent += 1.0 / self.config.duration_1
+            percent = min(percent, 1)
+            cur_pos = percent * self.config.q_default + (1 - percent) * start_pos_sim
+            for i in range(self.config.nu_real):
+                if i not in self.config.motor_order:
+                    continue
+                else:
+                    j = np.where(self.config.motor_order == i)[0][0]
+                
+                self.low_cmd_msg.motor_cmd[i].q = cur_pos[j]
+                self.low_cmd_msg.motor_cmd[i].tau = 0.0
+                self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] 
+                self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] 
+                
+            self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
+            self.low_cmd_publisher.Write(self.low_cmd_msg)
+            time.sleep(0.02)
+        print("Stand up complete")
+        
+
+    def set_action_h1(self, ctrl):
+        if self.config.control_mode == "torque":
+            tau = ctrl * self.global_ctrl_scale
+            q_des = np.zeros(self.config.nu_real)
+        elif self.config.control_mode == "position":
+            tau = np.zeros(self.config.nu_real)
+            q_des = ctrl * self.global_ctrl_scale + (1 - self.global_ctrl_scale) * self.config.q_default
+        self.low_cmd_msg.head[0] = 0xFE
+        self.low_cmd_msg.head[1] = 0xEF
+        self.low_cmd_msg.level_flag = 0xFF
+        self.low_cmd_msg.gpio = 0
+        for i in range(self.config.nu_real):
+            # find which motor index corresponds to the joint index
+            # if i not in the list then just skip
+            if i not in self.config.motor_order:
+                continue
+            else:
+                j = np.where(self.config.motor_order == i)[0][0]
+            if j in self.config.weak_motor_idx:
+                self.low_cmd_msg.motor_cmd[i].mode = 0x01
+            else:
+                self.low_cmd_msg.motor_cmd[i].mode = 0x0A
+        if np.allclose(ctrl, np.zeros(self.config.nu_real-1), atol=1e-3):
+            for i in range(self.config.nu_real):
+                if i not in self.config.motor_order:
+                    continue
+                else:
+                    j = np.where(self.config.motor_order == i)[0][0]
+                self.low_cmd_msg.motor_cmd[i].q = self.config.q_default[j]
+                self.low_cmd_msg.motor_cmd[i].tau = 0.0
+                self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j]
+                self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j]
+        else:
+            for i in range(self.config.nu_real):
+                if i not in self.config.motor_order:
+                    continue
+                else:
+                    j = np.where(self.config.motor_order == i)[0][0]
+                if i in self.config.locked_joint_idx:
+                    self.low_cmd_msg.motor_cmd[i].q = self.config.q_default[j]
+                    self.low_cmd_msg.motor_cmd[i].tau = tau[j]
+                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale
+                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale
+                else:
+                    self.low_cmd_msg.motor_cmd[i].q = q_des[j]
+                    self.low_cmd_msg.motor_cmd[i].tau = tau[j]
+                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale
+                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale
+        self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
+        self.low_cmd_publisher.Write(self.low_cmd_msg)
 
     def set_action(self, ctrl):
         if self.config.control_mode == "torque":
@@ -305,21 +423,54 @@ class Controller:
         self.act_time = time.time()
 
     def get_state(self):
+        q = []
+        qd = []
+        for i in range(self.config.nu_real):
+            # print("q[i]", self.low_state.motor_state[i].q, i)
+            q.append(self.low_state.motor_state[i].q)
+            qd.append(self.low_state.motor_state[i].dq)
+        q = np.array(q)
+        qd = np.array(qd)
+        if not self.config.use_mocap_ang_vel:
+            omega = np.array([self.low_state.imu_state.gyroscope]).flatten()
+            self.qd[6:9] = omega
+        # if self.robot_name == "h1":
+        #     q = h1_joint_remapping(self.config.motor_order, q, direction="real2sim")
+        #     qd = h1_joint_remapping(self.config.motor_order, qd, direction="real2sim")
+        self.q[7:] = q
+        self.qd[6:] = qd
         q_mocap, qd_mocap = unpack_mocap_data(self.mocap_buffer)
         self.q[:7] = q_mocap
         if self.config.use_mocap_ang_vel:
             self.qd[:6] = qd_mocap
         else:
             self.qd[:3] = qd_mocap[:3]
-        q_sim, qd_sim = state_real2sim(
-            self.q,
-            self.qd,
-            self.config.locked_joint_idx,
-            self.config.nq_ctrl,
-            self.config.nqd_ctrl,
-            self.config.nq_real,
-            self.config.nqd_real,
-        )
+        if self.robot_name=="h1":
+            q_jnt = h1_joint_remapping(self.config.motor_order, self.q[7:], direction="real2sim")
+            # print("q_jnt", q_jnt)
+            qd_jnt = h1_joint_remapping(self.config.motor_order, self.qd[6:], direction="real2sim")
+            q = np.concatenate([self.q[:7], q_jnt]).flatten()
+            qd = np.concatenate([self.qd[:6], qd_jnt]).flatten()
+            q_sim, qd_sim = state_real2sim(
+                q,
+                qd,
+                self.config.locked_joint_idx,
+                self.config.nq_ctrl,
+                self.config.nqd_ctrl,
+                self.config.nq_real - 1,
+                self.config.nqd_real - 1,
+            )   
+        else:
+
+            q_sim, qd_sim = state_real2sim(
+                self.q,
+                self.qd,
+                self.config.locked_joint_idx,
+                self.config.nq_ctrl,
+                self.config.nqd_ctrl,
+                self.config.nq_real,
+                self.config.nqd_real,
+            )
         # add z offset
         q_sim[2] += self.global_z_offset
         # add rpy offset
@@ -335,6 +486,7 @@ class Controller:
         world_v_marker = qd_sim[:3]
         world_v_body = R_marker_body.inv().as_matrix() @ world_v_marker
         qd_sim[:3] = world_v_body
+
         return q_sim, qd_sim
 
     def main_loop(self):
@@ -358,11 +510,37 @@ class Controller:
             right_foot_geom_names = ["right_heel_left", "right_heel_right", "right_toe_left", "right_toe_right"]
             left_foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in left_foot_geom_names]
             right_foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in right_foot_geom_names]
+        elif self.robot_name == "h1":
+            foot_geom_names = ["left_heel_left", "left_toe_left", "right_heel_left", "right_toe_left"]
+            foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in foot_geom_names]
+            print("======")
+            print("foot_geom_idx", foot_geom_idx)
         elif self.robot_name == "go2":
             foot_geom_names = ["FR", "FL", "HR", "HL"]
             foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in foot_geom_names]
         rate_limiter = RateLimiter(frequency=1 / self.config.dt_ctrl)
         counter = 0
+        # check if open loop mode
+        if self.open_loop_mode:
+            # load dumped data
+            data = np.load(f"{self.robot_name}_data.npz")
+            q_buffer = data["q"]
+            qd_buffer = data["qd"]
+            ctrl_buffer = data["ctrl"]
+            q_real_buffer = np.zeros_like(q_buffer)
+            qd_real_buffer = np.zeros_like(qd_buffer)
+            # create a matplot figure to update in the real time
+            n_ctrl = len(ctrl_buffer)
+            n_plot_per_roll = np.sqrt(n_ctrl).astype(int) + 1
+            fig, axs = plt.subplots(n_plot_per_roll, n_plot_per_roll)
+            axs = axs.flatten()
+            # plot q_real_buffer and qd_real_buffer 
+            plt.ion()
+            lines_real = []
+            for i in range(n_ctrl):
+                line_real, = axs[i].plot(q_real_buffer[:, 7:])
+                axs[i].plot(qd_rq_buffereal_buffer[:, 6:], '--')
+                lines_real.append(line_real)
         try:
             with agent_lib.Agent(
                 server_binary_path=pathlib.Path(agent_lib.__file__).parent
@@ -372,9 +550,12 @@ class Controller:
                 model=model,
             ) as agent:
                 first_ctrl = agent.get_action()
+                last_ctrl = first_ctrl
                 print("first_ctrl", first_ctrl)
                 if self.robot_name == "h1_2" or self.robot_name == "h1_2_simple":
                     self.init_stand_h1_2()
+                elif self.robot_name == "h1":
+                    self.init_stand_h1()
                 while True:
                     update_gui()
                     self.global_ctrl_scale = bars["ctrl_scale"].get()
@@ -382,6 +563,7 @@ class Controller:
                     self.global_kd_scale = bars["kd_scale"].get()
                     self.global_z_offset = bars["z_offset"].get()
                     self.global_rpy_offset = np.array([bars["roll_offset"].get(), bars["pitch_offset"].get(), bars["yaw_offset"].get()])
+                    
                     q_sim, qd_sim = self.get_state()
 
                     # DEBUG: test fixed base mode
@@ -434,7 +616,7 @@ class Controller:
                             bars["roll_offset"].set(self.global_rpy_offset[0])
                             bars["pitch_offset"].set(self.global_rpy_offset[1])
                             bars["yaw_offset"].set(self.global_rpy_offset[2])
-                        elif self.robot_name == "go2":
+                        elif self.robot_name == "go2" or self.robot_name == "h1":
                             q_sim_marker = q_sim.copy()
                             qd_sim_marker = qd_sim.copy()
                             # undo z offset
@@ -457,7 +639,7 @@ class Controller:
                             foot_geom_pos = [data.geom_xpos[idx] - torso_pos for idx in foot_geom_idx]
                             foot_geom_pos = np.array(foot_geom_pos)
                             rot_mat, z_offset = minimize_z_difference(foot_geom_pos)
-                            self.global_z_offset = -(z_offset + torso_pos[2]) + 0.010
+                            self.global_z_offset = -(z_offset + torso_pos[2]) + 0.010 if self.robot_name == "go2" else 0.005
                             # set bars
                             bars["z_offset"].set(self.global_z_offset)
                             global_rot = R.from_matrix(rot_mat)
@@ -470,6 +652,8 @@ class Controller:
 
                     agent.set_state(qpos=q_sim, qvel=qd_sim)
                     ctrl = agent.get_action()
+                    ctrl = np.clip(ctrl, last_ctrl - self.max_delta_ctrl, last_ctrl + self.max_delta_ctrl)
+                    last_ctrl = ctrl
                     # print("ctrl", ctrl)
                     if np.allclose(ctrl, first_ctrl, atol=1e-3):
                         print("Control disabled")
@@ -477,9 +661,12 @@ class Controller:
                     ctrl_real = ctrl_sim2real(
                         ctrl * self.config.gear_real,
                         self.config.locked_joint_idx,
-                        self.config.nu_real,
+                        self.config.nu_real - 1,
                     )
-                    self.set_action(ctrl_real) 
+                    if self.robot_name == "h1":
+                        self.set_action_h1(ctrl_real)
+                    else:
+                        self.set_action(ctrl_real) 
 
                     counter += 1
 
@@ -490,7 +677,8 @@ class Controller:
             root.destroy()
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="h1_2_simple")
+    controller = Controller(robot_name="h1")
     # controller.init_stand_go2() 
     # controller.init_stand_h1_2()
+    # controller.init_stand_h1()
     controller.main_loop()

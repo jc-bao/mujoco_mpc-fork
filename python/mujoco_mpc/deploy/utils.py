@@ -232,3 +232,12 @@ def minimize_z_difference(points):
     z_offset = np.mean(rotated_points[:, 2])
 
     return R, z_offset
+
+def h1_joint_remapping(order_array, motor_array, direction="sim2real"):
+    if direction == "sim2real":
+        new_motor_array = np.zeros(20)
+        new_motor_array[order_array] = motor_array
+    elif direction == "real2sim":
+        new_motor_array = np.zeros(19)
+        new_motor_array = motor_array[order_array]
+    return new_motor_array

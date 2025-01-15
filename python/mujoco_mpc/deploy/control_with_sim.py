@@ -9,7 +9,14 @@ import mujoco
 import mujoco.viewer
 from mujoco_mpc import agent as agent_lib
 
-from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, H1_2PositionConfig, H1_2_simpleConfig  
+from config import (
+    G1PositionConfig,
+    Go2PositionConfig,
+    QuadrupedConfig,
+    H1_2PositionConfig,
+    H1_2_simpleConfig,
+    H1Config,
+)
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -20,7 +27,9 @@ from utils import (
 
 
 class Controller:
-    def __init__(self, robot_name="g1", mujoco_mpc_mode="gui"):
+    def __init__(self, robot_name="g1", mujoco_mpc_mode="gui", dump_data=False):
+        self.max_delta_ctrl = 0.2
+        self.dump_data = dump_data
         self.robot_name = robot_name
         if robot_name == "g1":
             self.config = G1PositionConfig()
@@ -32,6 +41,8 @@ class Controller:
             self.config = H1_2PositionConfig()
         elif robot_name == "h1_2_simple":
             self.config = H1_2_simpleConfig()
+        elif robot_name == "h1":
+            self.config = H1Config()
         else:
             raise ValueError(f"Robot {robot_name} not supported")
         self.mujoco_mpc_mode = mujoco_mpc_mode
@@ -63,9 +74,17 @@ class Controller:
         self.n_sim_frame = int(self.config.dt_ctrl / self.config.dt_sim)
 
         # compute ground truth mocap rotation matrix
-        self.marker_R_robot_gt = R.from_euler('xyz', [self.config.sim_mocap_roll_offset, self.config.sim_mocap_pitch_offset, 0.0], degrees=False)
+        self.marker_R_robot_gt = R.from_euler(
+            "xyz",
+            [
+                self.config.sim_mocap_roll_offset,
+                self.config.sim_mocap_pitch_offset,
+                0.0,
+            ],
+            degrees=False,
+        )
         self.marker_p_robot_gt = np.array([0.0, 0.0, self.config.sim_mocap_z_offset])
-        self.marker_R_robot_est = R.from_euler('xyz', [0.0, 0.0, 0.0], degrees=False)
+        self.marker_R_robot_est = R.from_euler("xyz", [0.0, 0.0, 0.0], degrees=False)
         self.marker_p_robot_est = np.array([0.0, 0.0, 0.0])
 
     def get_action(self, agent, qpos, qvel):
@@ -94,11 +113,18 @@ class Controller:
         # Controller
         # print(self.config.xml_path_ctrl)
         roll_offset = 0.05 * 0
-        pitch_offset = 0.05 *0
-        yaw_offset = 0.05 *0
-        r_offset = np.array([0.01,0.01,0.01]) * 0
+        pitch_offset = 0.05 * 0
+        yaw_offset = 0.05 * 0
+        r_offset = np.array([0.01, 0.01, 0.01]) * 0
         model = mujoco.MjModel.from_xml_path(self.config.xml_path_ctrl)
         rate_limiter = RateLimiter(frequency=1 / self.config.dt_ctrl)
+        last_ctrl = np.zeros(self.config.nu_ctrl)
+        if self.dump_data:
+            data_cnt = 0
+            buffer_size = 1000
+            q_buffer = np.zeros((buffer_size, self.config.nq_ctrl))
+            qd_buffer = np.zeros((buffer_size, self.config.nqd_ctrl))
+            ctrl_buffer = np.zeros((buffer_size, self.config.nu_ctrl))
         with mujoco.viewer.launch_passive(
             self.mj_model, self.mj_data, show_left_ui=True, show_right_ui=False
         ) as viewer:
@@ -149,48 +175,74 @@ class Controller:
                             # q_sim[:3] = robot_pos_est
                             # q_sim[3:7] = robot_R_mocap_est.as_quat()
 
+                            # compute mocap rotation matrix
+                            if self.robot_name == "h1":
+                                q_sim, qd_sim = state_real2sim(
+                                    q_sim,
+                                    qd_sim,
+                                    self.config.locked_joint_idx,
+                                    self.config.nq_ctrl,
+                                    self.config.nqd_ctrl,
+                                    self.config.nq_real-1,
+                                    self.config.nqd_real-1,
+                                )
+                            else:
+                                q_sim, qd_sim = state_real2sim(
+                                    q_sim,
+                                    qd_sim,
+                                    self.config.locked_joint_idx,
+                                    self.config.nq_ctrl,
+                                    self.config.nqd_ctrl,
+                                    self.config.nq_real,
+                                    self.config.nqd_real,
+                                )
+                            
 
-                            # compute mocap rotation matrix 
-                            if self.robot_name == "h1_2":
-                                q_sim, qd_sim = state_real2sim(
-                                    q_sim,
-                                    qd_sim,
-                                    self.config.locked_joint_idx,
-                                    self.config.nq_ctrl,
-                                    self.config.nqd_ctrl,
-                                    self.config.nq_real,
-                                    self.config.nqd_real,
-                                )
-                            elif self.robot_name == "h1_2_simple":
-                                q_sim, qd_sim = state_real2sim(
-                                    q_sim,
-                                    qd_sim,
-                                    self.config.locked_joint_idx,
-                                    self.config.nq_ctrl,
-                                    self.config.nqd_ctrl,
-                                    self.config.nq_real,
-                                    self.config.nqd_real,
-                                )
                             lin_vel = qd_sim[:3]
                             # apply rotation offset to lin_vel
-                            lin_rot_mat = R.from_euler('xyz', [roll_offset, pitch_offset, yaw_offset], degrees=False)
+                            lin_rot_mat = R.from_euler(
+                                "xyz",
+                                [roll_offset, pitch_offset, yaw_offset],
+                                degrees=False,
+                            )
                             lin_vel = lin_rot_mat.apply(lin_vel)
                             # calculate omega * r_offset
                             omega = qd_sim[3:6]
                             omega_r_offset = np.cross(omega, r_offset)
                             qd_sim[:3] = lin_vel + omega_r_offset
-                            
+
                             # set state to agent and get action
                             agent.set_state(qpos=q_sim, qvel=qd_sim)
                             ctrl = agent.get_action()
-                            print(ctrl)
+                            # clip ctrl with last_ctrl
+                            ctrl = np.clip(ctrl, last_ctrl - self.max_delta_ctrl, last_ctrl + self.max_delta_ctrl)
+                            last_ctrl = ctrl
+                            if self.dump_data:
+                                if data_cnt >= buffer_size:
+                                    print("Buffer full, stopping data collection")
+                                    break
+                                print("dump progress: ", data_cnt / buffer_size)
+                                q_buffer[data_cnt] = q_sim
+                                qd_buffer[data_cnt] = qd_sim
+                                ctrl_buffer[data_cnt] = ctrl
+                                data_cnt += 1
                             if self.robot_name == "h1_2_simple":
                                 ctrl_real = ctrl_sim2real(
-                                    ctrl, self.config.locked_joint_idx, self.config.nu_real
+                                    ctrl,
+                                    self.config.locked_joint_idx,
+                                    self.config.nu_real,
+                                )
+                            elif self.robot_name == "h1":
+                                ctrl_real = ctrl_sim2real(
+                                    ctrl,
+                                    self.config.locked_joint_idx,
+                                    self.config.nu_real - 1,
                                 )
                             else:
                                 ctrl_real = ctrl_sim2real(
-                                    ctrl, self.config.locked_joint_idx, self.config.nu_real
+                                    ctrl,
+                                    self.config.locked_joint_idx,
+                                    self.config.nu_real,
                                 )
 
                             # step simulation
@@ -203,11 +255,17 @@ class Controller:
             except KeyboardInterrupt:
                 print("Keyboard interrupt detected. Exiting...")
             finally:
-                pass
+                if self.dump_data:
+                    np.savez(
+                        f"{self.robot_name}_data.npz",
+                        q=q_buffer,
+                        qd=qd_buffer,
+                        ctrl=ctrl_buffer,
+                    )
             # self.state_shm.close()
             # self.ctrl_shm.close()
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="h1_2_simple", mujoco_mpc_mode="gui")
+    controller = Controller(robot_name="h1", mujoco_mpc_mode="gui", dump_data=False)
     controller.main_loop()

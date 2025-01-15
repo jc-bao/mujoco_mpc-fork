@@ -118,7 +118,7 @@ namespace mjpc::h1
     double *toe_left_pos = SensorByName(model, data, "tracking_pos[ltoe]");
     double *heel_left_pos = SensorByName(model, data, "tracking_pos[lheel]");
     // TODO: make this a parameter
-    double amplitude = 0.03;
+    double amplitude = parameters_[11];
     // set amplitude to 0 if torso_pos - goal is smaller than 0.1 
     if (gait_mode == 0)
     {
@@ -149,7 +149,8 @@ namespace mjpc::h1
       if (duty_ratio < 1)
       {
         angle *= 0.5 / (1 - duty_ratio);
-        target_foot_height += amplitude * mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2));
+        // target_foot_height += amplitude * (mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2)) + 1.0);
+        target_foot_height += amplitude * 0.5 * (mju_cos(2.0 * mju_clip(angle, -mjPI / 2, mjPI / 2)) + 1.0);
       }
       // z position of the foot
       double *frame_pos = nullptr;
@@ -265,9 +266,12 @@ namespace mjpc::h1
     int n_motor_per_leg = 5;
     int n_hip_motor = 3;
     int n_upper_body_motor = 0;
-    double hip_motor_scale = parameters_[2];
-    mju_scl(residual + counter, residual + counter, hip_motor_scale, n_hip_motor);
-    mju_scl(residual + counter + n_motor_per_leg, residual + counter + n_motor_per_leg, hip_motor_scale, n_hip_motor);
+    double hip_pitch_motor_scale = parameters_[2];
+    mju_scl(residual + counter + 2, residual + counter + 2, hip_pitch_motor_scale, 1);
+    mju_scl(residual + counter + n_motor_per_leg + 2, residual + counter + n_motor_per_leg + 2, hip_pitch_motor_scale, 1);
+    double hip_yaw_roll_motor_scale = parameters_[12];
+    mju_scl(residual + counter, residual + counter, hip_yaw_roll_motor_scale, n_hip_motor-1);
+    mju_scl(residual + counter + n_motor_per_leg, residual + counter + n_motor_per_leg, hip_yaw_roll_motor_scale, n_hip_motor-1);
     double knee_motor_scale = parameters_[3];
     mju_scl(residual + counter + n_hip_motor, residual + counter + n_hip_motor, knee_motor_scale, 1);
     mju_scl(residual + counter + n_motor_per_leg + n_hip_motor, residual + counter + n_motor_per_leg + n_hip_motor, knee_motor_scale, 1);

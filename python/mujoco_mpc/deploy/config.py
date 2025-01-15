@@ -5,6 +5,7 @@ import os
 
 MUJOCO_MPC_TASK_PATH = pathlib.Path(__file__).parent.parent.parent.parent / "mjpc/tasks"
 
+
 class G1TorqueConfig:
     # model used in controller
     nq_ctrl: int = 28
@@ -19,39 +20,113 @@ class G1TorqueConfig:
     nu_sim: int = 29
     nu_plan: int = 21
     dt_real: float = 0.005
-    gear_array = np.array([
-        80.0, 80.0,80.0,
-        100.0,50.0,50.0,
-        80.0, 80.0,80.0,
-        100.0,50.0,50.0,
-        80,50,50,
-        20,20,1,20,1,1,1,
-        20,20,1,20,1,1,1,
-       
-    ])
+    gear_array = np.array(
+        [
+            80.0,
+            80.0,
+            80.0,
+            100.0,
+            50.0,
+            50.0,
+            80.0,
+            80.0,
+            80.0,
+            100.0,
+            50.0,
+            50.0,
+            80,
+            50,
+            50,
+            20,
+            20,
+            1,
+            20,
+            1,
+            1,
+            1,
+            20,
+            20,
+            1,
+            20,
+            1,
+            1,
+            1,
+        ]
+    )
     duration_1 = 100
-    _targetPos_1 = np.array([ 
-    -0.589255, -0.00637053, -0.0617263, 1.26429, -0.727269, -0.033994, 
-    -0.613536, -0.0257312, 0.0270589, 1.26707, -0.70565, 0.0334864, 
-    0.00208437, 0.00127694, 0.0327588, 
-    0.371187, 0.511203, 0.0, 0.0543319, 0.0,0.0,0.0,
-    0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
-    ])
+    _targetPos_1 = np.array(
+        [
+            -0.589255,
+            -0.00637053,
+            -0.0617263,
+            1.26429,
+            -0.727269,
+            -0.033994,
+            -0.613536,
+            -0.0257312,
+            0.0270589,
+            1.26707,
+            -0.70565,
+            0.0334864,
+            0.00208437,
+            0.00127694,
+            0.0327588,
+            0.371187,
+            0.511203,
+            0.0,
+            0.0543319,
+            0.0,
+            0.0,
+            0.0,
+            0.371194,
+            -0.511237,
+            0.0,
+            0.0542188,
+            0.0,
+            0.0,
+            0.0,
+        ]
+    )
     locked_joint_idx: np.ndarray = (
         np.array([2, 4, 5, 6, 9, 11, 12, 13]) + 12 + 3
     )  # locked joints in real robot
     kp_real: np.ndarray = np.ones(29)
-    kd_real: np.ndarray = np.array(
-        [
-            10.0,10.0,10.0,20.0,2.0,2.0,
-            10.0,10.0,10.0,20.0,2.0,2.0,
-            40.0,10.0,10.0,
-            10.0,6.0,2.0,
-            6.0,0.4,0.4,0.4,
-            10.0,6.0,2.0,
-            6.0,0.4,0.4,0.4,
-        ]
-    ) * 0.5
+    kd_real: np.ndarray = (
+        np.array(
+            [
+                10.0,
+                10.0,
+                10.0,
+                20.0,
+                2.0,
+                2.0,
+                10.0,
+                10.0,
+                10.0,
+                20.0,
+                2.0,
+                2.0,
+                40.0,
+                10.0,
+                10.0,
+                10.0,
+                6.0,
+                2.0,
+                6.0,
+                0.4,
+                0.4,
+                0.4,
+                10.0,
+                6.0,
+                2.0,
+                6.0,
+                0.4,
+                0.4,
+                0.4,
+            ]
+        )
+        * 0.5
+    )
     gear_real: np.ndarray = np.array(
         [80] * 3
         + [100]
@@ -64,7 +139,7 @@ class G1TorqueConfig:
         + [20] * 6
     )
     # mocap
-    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.078])
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
     vicon_object_name: str = "g1"
@@ -93,53 +168,79 @@ class G1TorqueConfig:
     auto_reset: bool = True
 
     control_mode = "torque"
-    q_default = np.array([ 
-    -0.589255, -0.00637053, -0.0617263, 1.26429, -0.727269, -0.033994, 
-    -0.613536, -0.0257312, 0.0270589, 1.26707, -0.70565, 0.0334864, 
-    0.00208437, 0.00127694, 0.0327588, 
-    0.371187, 0.511203, 0.0, 0.0543319, 0.0,0.0,0.0,
-    0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
-    ])
+    q_default = np.array(
+        [
+            -0.589255,
+            -0.00637053,
+            -0.0617263,
+            1.26429,
+            -0.727269,
+            -0.033994,
+            -0.613536,
+            -0.0257312,
+            0.0270589,
+            1.26707,
+            -0.70565,
+            0.0334864,
+            0.00208437,
+            0.00127694,
+            0.0327588,
+            0.371187,
+            0.511203,
+            0.0,
+            0.0543319,
+            0.0,
+            0.0,
+            0.0,
+            0.371194,
+            -0.511237,
+            0.0,
+            0.0542188,
+            0.0,
+            0.0,
+            0.0,
+        ]
+    )
+
 
 class G1PositionConfig(G1TorqueConfig):
-    kp_real: np.ndarray = (
-        np.array(
-            [
-                100,
-                100,
-                100,
-                200,
-                20,
-                20,
-                100,
-                100,
-                100,
-                200,
-                20,
-                20,
-                400,
-                400,
-                400,
-                90,
-                60,
-                20,
-                60,
-                4,
-                4,
-                4,
-                90,
-                60,
-                20,
-                60,
-                4,
-                4,
-                4,
-            ]
-        )
+    kp_real: np.ndarray = np.array(
+        [
+            100,
+            100,
+            100,
+            200,
+            20,
+            20,
+            100,
+            100,
+            100,
+            200,
+            20,
+            20,
+            400,
+            400,
+            400,
+            90,
+            60,
+            20,
+            60,
+            4,
+            4,
+            4,
+            90,
+            60,
+            20,
+            60,
+            4,
+            4,
+            4,
+        ]
     )
     gear_real = np.ones(21)
     xml_path_sim = "./model/g1/g1_position.xml"
     control_mode = "position"
+
 
 class Go2TorqueConfig:
     # model used in controller
@@ -169,7 +270,7 @@ class Go2TorqueConfig:
     )
 
     # mocap
-    mocap_offset: np.ndarray = np.array([0.0, 0.0, -0.060])
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
     vicon_object_name: str = "lecar_go2"
@@ -193,9 +294,35 @@ class Go2TorqueConfig:
     dt_sim: float = 0.005
     real_time_factor: float = 1.0
     auto_reset: bool = True
-    _targetPos_1 = [0.0, 1.36, -2.65, 0.0, 1.36, -2.65,-0.2, 1.36, -2.65, 0.2, 1.36, -2.65]
-    _targetPos_2 = [0.0, 0.67, -1.3, 0.0, 0.67, -1.3,0.0, 0.67, -1.3, 0.0, 0.67, -1.3]
-    _targetPos_3 = [-0.35, 1.36, -2.65, 0.35, 1.36, -2.65,-0.5, 1.36, -2.65, 0.5, 1.36, -2.65]
+    _targetPos_1 = [
+        0.0,
+        1.36,
+        -2.65,
+        0.0,
+        1.36,
+        -2.65,
+        -0.2,
+        1.36,
+        -2.65,
+        0.2,
+        1.36,
+        -2.65,
+    ]
+    _targetPos_2 = [0.0, 0.67, -1.3, 0.0, 0.67, -1.3, 0.0, 0.67, -1.3, 0.0, 0.67, -1.3]
+    _targetPos_3 = [
+        -0.35,
+        1.36,
+        -2.65,
+        0.35,
+        1.36,
+        -2.65,
+        -0.5,
+        1.36,
+        -2.65,
+        0.5,
+        1.36,
+        -2.65,
+    ]
     startPos = [0.0] * 12
     duration_1 = 500
     duration_2 = 500
@@ -209,6 +336,7 @@ class Go2TorqueConfig:
     control_mode = "torque"
     q_default = np.array([0, 0.9, -1.8, 0, 0.9, -1.8, 0, 0.9, -1.8, 0, 0.9, -1.8])
 
+
 class Go2PositionConfig(Go2TorqueConfig):
     gear_real = np.ones(12)
     kp_real = np.array([30.0] * 12)
@@ -220,7 +348,6 @@ class Go2PositionConfig(Go2TorqueConfig):
     sim_mocap_pitch_offset = -0.00
 
 
-
 class QuadrupedConfig(Go2TorqueConfig):
     dt_ctrl: float = 0.005
     dt_sim: float = 0.005
@@ -229,8 +356,7 @@ class QuadrupedConfig(Go2TorqueConfig):
         # "/home/pcy/Research/code/mjpc_sim2real_john/mjpc_john/mjpc/tasks/quadruped/task_flat.xml"
     )
     task_id: str = "Quadruped Flat"
-    xml_path_sim: str = (
-        str(MUJOCO_MPC_TASK_PATH / "quadruped/task_flat.xml"))
+    xml_path_sim: str = str(MUJOCO_MPC_TASK_PATH / "quadruped/task_flat.xml")
 
 
 class G1FixedConfig:
@@ -247,24 +373,65 @@ class G1FixedConfig:
     nu_sim: int = 29
     nu_plan: int = 21
     dt_real: float = 0.005
-    gear_real = np.array([
-        80.0, 80.0,80.0,
-        100.0,50.0,50.0,
-        80.0, 80.0,80.0,
-        100.0,50.0,50.0,
-        80,50,50,
-        20,20,20,
-        20,20,20,
-       
-    ])
+    gear_real = np.array(
+        [
+            80.0,
+            80.0,
+            80.0,
+            100.0,
+            50.0,
+            50.0,
+            80.0,
+            80.0,
+            80.0,
+            100.0,
+            50.0,
+            50.0,
+            80,
+            50,
+            50,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+        ]
+    )
     duration_1 = 500
-    _targetPos_1 = np.array([ 
-    -0.589255, -0.00637053, -0.0617263, 1.26429, -0.727269, -0.033994, 
-    -0.613536, -0.0257312, 0.0270589, 1.26707, -0.70565, 0.0334864, 
-    0.00208437, 0.00127694, 0.0327588, 
-    0.371187, 0.511203, 0.0, 0.0543319, 0.0,0.0,0.0,
-    0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
-    ])
+    _targetPos_1 = np.array(
+        [
+            -0.589255,
+            -0.00637053,
+            -0.0617263,
+            1.26429,
+            -0.727269,
+            -0.033994,
+            -0.613536,
+            -0.0257312,
+            0.0270589,
+            1.26707,
+            -0.70565,
+            0.0334864,
+            0.00208437,
+            0.00127694,
+            0.0327588,
+            0.371187,
+            0.511203,
+            0.0,
+            0.0543319,
+            0.0,
+            0.0,
+            0.0,
+            0.371194,
+            -0.511237,
+            0.0,
+            0.0542188,
+            0.0,
+            0.0,
+            0.0,
+        ]
+    )
     locked_joint_idx: np.ndarray = (
         np.array([2, 4, 5, 6, 9, 11, 12, 13]) + 12 + 3
     )  # locked joints in real robot
@@ -301,20 +468,45 @@ class G1FixedConfig:
             4,
         ]
     )
-    kd_real: np.ndarray = np.array(
-        [
-            10.0,10.0,10.0,20.0,2.0,2.0,
-            10.0,10.0,10.0,20.0,2.0,2.0,
-            40.0,10.0,10.0,
-            10.0,6.0,2.0,
-            6.0,0.4,0.4,0.4,
-            10.0,6.0,2.0,
-            6.0,0.4,0.4,0.4,
-        ]
-    ) * 0.5
+    kd_real: np.ndarray = (
+        np.array(
+            [
+                10.0,
+                10.0,
+                10.0,
+                20.0,
+                2.0,
+                2.0,
+                10.0,
+                10.0,
+                10.0,
+                20.0,
+                2.0,
+                2.0,
+                40.0,
+                10.0,
+                10.0,
+                10.0,
+                6.0,
+                2.0,
+                6.0,
+                0.4,
+                0.4,
+                0.4,
+                10.0,
+                6.0,
+                2.0,
+                6.0,
+                0.4,
+                0.4,
+                0.4,
+            ]
+        )
+        * 0.5
+    )
 
     # mocap
-    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.078])
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
     vicon_object_name: str = "g1"
@@ -341,7 +533,8 @@ class G1FixedConfig:
     ctrl_dt: float = 0.005
     real_time_factor: float = 1.0
     auto_reset: bool = False
-    
+
+
 class H1_2PositionConfig:
     # model used in controller
     nq_ctrl: int = 26
@@ -354,45 +547,112 @@ class H1_2PositionConfig:
     nqd_real: int = 33
     nu_real: int = 27
     nu_sim: int = 27
-   
+
     dt_real: float = 0.005
-   
+
     duration_1 = 100
-    _targetPos_1 = np.array([ 
-   0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
-    0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 
-    0.0,
-    0.371187, 0.511203, 0.0, 0.0543319, 0.0,0.0,0.0,
-    0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
-    ])
+    _targetPos_1 = np.array(
+        [
+            0.0,
+            -0.6,
+            0.0,
+            1.26429,
+            -0.727269,
+            -0.033994,
+            0.0,
+            -0.6,
+            0.0,
+            1.26707,
+            -0.70565,
+            0.0334864,
+            0.0,
+            0.371187,
+            0.511203,
+            0.0,
+            0.0543319,
+            0.0,
+            0.0,
+            0.0,
+            0.371194,
+            -0.511237,
+            0.0,
+            0.0542188,
+            0.0,
+            0.0,
+            0.0,
+        ]
+    )
     locked_joint_idx: np.ndarray = (
         np.array([2, 4, 5, 6, 9, 11, 12, 13]) + 12 + 1
     )  # locked joints in real robot
-    kp_real: np.array = np.array(
-        [
-            200.0,200.0,200.0,300.0,40.0,40.0,
-            200.0,200.0,200.0,300.0,40.0,40.0,
-            500.0,
-            250.0,250.0,250.0,
-            160.0,80.0,80.0,80.0,
-            250.0,250.0,250.0,
-            160.0,80.0,80.0,80.0
-        ]
-    )*0.5
+    kp_real: np.array = (
+        np.array(
+            [
+                200.0,
+                200.0,
+                200.0,
+                300.0,
+                40.0,
+                40.0,
+                200.0,
+                200.0,
+                200.0,
+                300.0,
+                40.0,
+                40.0,
+                500.0,
+                250.0,
+                250.0,
+                250.0,
+                160.0,
+                80.0,
+                80.0,
+                80.0,
+                250.0,
+                250.0,
+                250.0,
+                160.0,
+                80.0,
+                80.0,
+                80.0,
+            ]
+        )
+        * 0.5
+    )
     kd_real: np.ndarray = np.array(
         [
-           2.5,2.5,2.5,4.0,3.0,3.0,
-           2.5,2.5,2.5,4.0,3.0,3.0,
-           5.0,
-           4.0,4.0,4.0,
-           2.0,1.0,1.0,1.0,
-           4.0,4.0,4.0,
-           2.0,1.0,1.0,1.0,
+            2.5,
+            2.5,
+            2.5,
+            4.0,
+            3.0,
+            3.0,
+            2.5,
+            2.5,
+            2.5,
+            4.0,
+            3.0,
+            3.0,
+            5.0,
+            4.0,
+            4.0,
+            4.0,
+            2.0,
+            1.0,
+            1.0,
+            1.0,
+            4.0,
+            4.0,
+            4.0,
+            2.0,
+            1.0,
+            1.0,
+            1.0,
         ]
-    ) 
+    )
     gear_real = np.ones(19)
     # mocap
-    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.078])
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
     use_mocap_ang_vel: bool = False
     vicon_tracker_ip: str = "128.2.184.3"
     vicon_object_name: str = "lecar_h1-2"
@@ -425,13 +685,38 @@ class H1_2PositionConfig:
     auto_reset = True
 
     control_mode = "position"
-    q_default = np.array([ 
-    0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
-    0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 
-    0.0,
-    0.371187, 0.511203, 0.0, 0.0543319, 0.0,0.0,0.0,
-    0.371194, -0.511237, 0.0,0.0542188,0.0,0.0,0.0
-    ])
+    q_default = np.array(
+        [
+            0.0,
+            -0.6,
+            0.0,
+            1.26429,
+            -0.727269,
+            -0.033994,
+            0.0,
+            -0.6,
+            0.0,
+            1.26707,
+            -0.70565,
+            0.0334864,
+            0.0,
+            0.371187,
+            0.511203,
+            0.0,
+            0.0543319,
+            0.0,
+            0.0,
+            0.0,
+            0.371194,
+            -0.511237,
+            0.0,
+            0.0542188,
+            0.0,
+            0.0,
+            0.0,
+        ]
+    )
+
 
 class H1_2_simpleConfig(H1_2PositionConfig):
     gear_real = np.ones(12)
@@ -444,27 +729,215 @@ class H1_2_simpleConfig(H1_2PositionConfig):
     nqd_ctrl: int = 18
     nu_ctrl: int = 12
     dt_ctrl: float = 0.02
-    locked_joint_idx: np.ndarray = (
-        np.array([12,13,14,15,16,17,18,19,20,21,22,23,24,25,26])
-    )  
-    _targetPos_1 = np.array([ 
-    0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
-    0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 
-    0.0,
-    0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-    0.0,0.0,0.0,0.0,0.0,0.0,0.0
-    ])
-    q_default = np.array([ 
-    0.0,-0.6, 0.0, 1.26429, -0.727269, -0.033994, 
-    0.0,-0.6, 0.0, 1.26707, -0.70565, 0.0334864, 
-    0.0,
-    0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-    0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-    ])
-    
+    locked_joint_idx: np.ndarray = np.array(
+        [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+    )
+    _targetPos_1 = np.array(
+        [
+            0.0,
+            -0.6,
+            0.0,
+            1.26429,
+            -0.727269,
+            -0.033994,
+            0.0,
+            -0.6,
+            0.0,
+            1.26707,
+            -0.70565,
+            0.0334864,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ]
+    )
+    q_default = np.array(
+        [
+            0.0,
+            -0.6,
+            0.0,
+            1.26429,
+            -0.727269,
+            -0.033994,
+            0.0,
+            -0.6,
+            0.0,
+            1.26707,
+            -0.70565,
+            0.0334864,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ]
+    )
+
     # model used in real robot
     nq_real: int = 34
     nqd_real: int = 33
     nu_real: int = 27
     nu_sim: int = 27
-    
+
+
+class H1Config:
+    # model used in controller
+    nq_ctrl: int = 7 + 10
+    nqd_ctrl: int = 6 + 10
+    nu_ctrl: int = 10
+    dt_ctrl: float = 0.02
+
+    # model used in real robot
+    nq_real: int = 7 + 10 + 9 + 1
+    nqd_real: int = 6 + 10 + 9 + 1
+    nu_real: int = 10 + 9 + 1
+    nu_sim: int = 10 + 9
+
+    dt_real: float = 0.005
+
+    duration_1 = 100
+    q_default = np.array(
+        [
+            0.0,-0.047,-0.743,1.388,-0.746,
+            0.0,0.047,-0.743,1.388,-0.746,
+            0.0,
+            0.0,0.0,0.0,0.0,
+            0.0,0.0,0.0,0.0
+        ]
+    )
+    _targetPos_1 = np.array(
+        [
+            0.0,-0.047,-0.743,1.388,-0.746,
+            0.0,0.047,-0.743,1.388,-0.746,
+            0.0,
+            0.0,0.0,0.0,0.0,
+            0.0,0.0,0.0,0.0
+        ]
+    )
+    locked_joint_idx: np.ndarray = (
+        np.array([0, 1, 2, 3, 4, 5, 6, 7, 8]) + 10
+    )  # locked joints in real robot
+    kp_real: np.array = np.array(
+        [
+            # left leg
+            200.0,
+            200.0,
+            200.0,
+            300.0,
+            40.0,
+            # right leg
+            200.0,
+            200.0,
+            200.0,
+            300.0,
+            40.0,
+            # torso
+            400.0,
+            # left arm
+            100.0,
+            100.0,
+            100.0,
+            60.0,
+            # right arm
+            100.0,
+            100.0,
+            100.0,
+            60.0,
+        ]
+    )
+    kd_real: np.ndarray = np.array(
+        [
+            # left leg
+            5.0,
+            5.0,
+            5.0,
+            6.0,
+            2.0,
+            # right leg
+            5.0,
+            5.0,
+            5.0,
+            6.0,
+            2.0,
+            # torso
+            3.0,
+            # left arm
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            # right arm
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+        ]
+    )
+    gear_real = np.ones(10)
+    # mocap
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
+    use_mocap_ang_vel: bool = False
+    vicon_tracker_ip: str = "128.2.184.3"
+    vicon_object_name: str = "lecar_h1_mpc"
+
+    # controller
+    xml_path_ctrl: str = str(MUJOCO_MPC_TASK_PATH / "h1/walk/task.xml")
+    num_opt_steps: int = 1
+    task_id: str = "H1 Walk"
+
+    # sim
+    xml_path_sim: str = "./model/h1/h1.xml"
+    dt_sim: float = 0.005
+    ctrl_dt: float = 0.005
+    real_time_factor: float = 1.0
+    auto_reset: bool = True
+    sim_mocap_z_offset = -0.00
+    sim_mocap_roll_offset = 0.00
+    sim_mocap_pitch_offset = -0.00
+    auto_reset = True
+    motor_order = np.array([7,3,4,5,10,8,0,1,2,11,6,16,17,18,19,12,13,14,15])
+    weak_motor_idx = np.array([4,9,11,12,13,14,15,16,17,18])
+    control_mode = "position"
+    # q_default = np.array(
+    #     [
+    #         0.000602607,
+    #         -0.0470198,
+    #         -0.742864,
+    #         1.38758,
+    #         -0.745571,
+    #         -0.000145728,
+    #         0.0470486,
+    #         -0.743627,
+    #         1.38917,
+    #         -0.746403,
+    #         0.0,
+    #         0.0,
+    #         0.0,
+    #         0.0,
+    #         0.0,
+    #         0.0,
+    #         0.0,
+    #     ]
+    # )
