@@ -48,10 +48,18 @@ namespace mjpc::h1
     residual[counter++] = torso_up[2] - 1.0;
     // pelvis
     residual[counter++] = 0.3 * (pelvis_up[2] - 1.0);
-    // right foot
+    // foot
     residual[counter++] = 1.0 * (foot_right_up[2] - 1.0);
-    // left foot
     residual[counter++] = 1.0 * (foot_left_up[2] - 1.0);
+    // ankle joint angle
+    double *hip_y_right = SensorByName(model, data, "hip_y_right");
+    double *hip_y_left = SensorByName(model, data, "hip_y_left");
+    double *knee_right = SensorByName(model, data, "knee_right");
+    double *knee_left = SensorByName(model, data, "knee_left");
+    double *ankle_y_right = SensorByName(model, data, "ankle_y_right");
+    double *ankle_y_left = SensorByName(model, data, "ankle_y_left");
+    residual[counter++] = hip_y_right[0] + knee_right[0] + ankle_y_right[0];
+    residual[counter++] = hip_y_left[0] + knee_left[0] + ankle_y_left[0];
 
     // ----- torso height ----- //
     double height_goal = parameters_[0];
@@ -149,7 +157,7 @@ namespace mjpc::h1
       if (duty_ratio < 1)
       {
         angle *= 0.5 / (1 - duty_ratio);
-        // target_foot_height += amplitude * (mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2)) + 1.0);
+        // target_foot_height += amplitude * mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2));
         target_foot_height += amplitude * 0.5 * (mju_cos(2.0 * mju_clip(angle, -mjPI / 2, mjPI / 2)) + 1.0);
       }
       // z position of the foot
