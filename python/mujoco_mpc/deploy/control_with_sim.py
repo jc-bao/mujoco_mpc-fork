@@ -28,7 +28,7 @@ from utils import (
 
 class Controller:
     def __init__(self, robot_name="g1", mujoco_mpc_mode="gui", dump_data=False):
-        self.max_delta_ctrl = 0.2
+        self.max_delta_ctrl = 0.5
         self.control_gamma = 0.5
         self.dump_data = dump_data
         self.robot_name = robot_name
@@ -114,12 +114,13 @@ class Controller:
         # Controller
         # print(self.config.xml_path_ctrl)
         ctrl_buffer_delay = np.zeros((self.config.sim_delay_frames+1, self.config.nu_real-1))
-        mocap_delay_frames = np.zeros((self.config.mocap_delay_frames+1, 7))
-        mocap_delay_frames[:, 3] = 1.0
-        roll_offset = 0.01
-        pitch_offset = 0.01 
-        yaw_offset = 0.01
-        r_offset = np.array([0.001, 0.001, 0.001])
+        mocap_delay_frames_q = np.zeros((self.config.mocap_delay_frames+1, 7))
+        mocap_delay_frames_q[:, 3] = 1.0
+        mocap_delay_frames_qd = np.zeros((self.config.mocap_delay_frames+1, 6))
+        roll_offset = 0.00
+        pitch_offset = 0.00 
+        yaw_offset = 0.00
+        r_offset = np.array([0.00, 0.00, 0.00])
         model = mujoco.MjModel.from_xml_path(self.config.xml_path_ctrl)
         rate_limiter = RateLimiter(frequency=1 / self.config.dt_ctrl)
         last_ctrl = np.zeros(self.config.nu_ctrl)
@@ -169,10 +170,13 @@ class Controller:
                             # get state from simulator
                             q_sim = self.mj_data.qpos.copy()
                             qd_sim = self.mj_data.qvel.copy()
-                            mocap_delay_frames = np.roll(mocap_delay_frames, -1, axis=0)
-                            mocap_delay_frames[-1] = q_sim[:7]
+                            mocap_delay_frames_q = np.roll(mocap_delay_frames_q, -1, axis=0)
+                            mocap_delay_frames_q[-1] = q_sim[:7]
+                            mocap_delay_frames_qd = np.roll(mocap_delay_frames_qd, -1, axis=0)
+                            mocap_delay_frames_qd[-1] = qd_sim[:6]
                             if cnt % self.config.mocap_delay_interval == 0:
-                                q_sim[:7] = mocap_delay_frames[0]
+                                q_sim[:7] = mocap_delay_frames_q[0]
+                                qd_sim[:6] = mocap_delay_frames_qd[0]
 
                             # get marker position
                             marker_pos_sim = q_sim[:3] + self.marker_p_robot_est
@@ -220,7 +224,7 @@ class Controller:
                             omega = qd_sim[3:6]
                             omega_r_offset = np.cross(omega, r_offset)
                             qd_sim[:3] = lin_vel + omega_r_offset
-                            qd_sim[:3] *= 0.9
+                            # qd_sim[:3] *= 0.0
                             # set state to agent and get action
                             agent.set_state(qpos=q_sim, qvel=qd_sim)
                             ctrl = agent.get_action()
@@ -268,7 +272,7 @@ class Controller:
                                         pos_tar = ctrl_real
                                     force = self.config.kp_real*(1.0) * (pos_tar - self.mj_data.qpos[7:]) - self.config.kd_real * self.mj_data.qvel[6:]
                                     # add random noise to force 
-                                    force_ratio = np.random.normal(1, 0.0)
+                                    force_ratio = np.random.normal(1, 0.001)
                                     force = force * force_ratio
                                     self.mj_data.ctrl = force
                                 else:

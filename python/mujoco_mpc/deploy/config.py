@@ -917,10 +917,10 @@ class H1Config:
     real_time_factor: float = 1.0
     auto_reset: bool = True
     mocap_delay_interval = 50
-    mocap_delay_frames = 5
+    mocap_delay_frames = 1
     sim_delay_frames = 1
-    sim_mocap_z_offset = -0.002
-    sim_mocap_z_offset_noise = 0.002
+    sim_mocap_z_offset = -0.00
+    sim_mocap_z_offset_noise = 0.00
     sim_mocap_roll_offset = 0.00
     sim_mocap_pitch_offset = -0.00
     auto_reset = True
