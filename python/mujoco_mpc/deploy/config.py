@@ -820,8 +820,8 @@ class H1Config:
     duration_1 = 100
     q_default = np.array(
         [
-            0.0, 0.0, -0.742864, 1.38758, -0.745571,
-            0.0, 0.0, -0.743627, 1.38917, -0.746403,
+            -0.00254889, -0.00471229, -0.605815, 1.39636, -0.79082, 
+            0.00380782, 0.00543479, -0.606091, 1.39799, -0.792157,
             0.0,
             0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0
@@ -829,8 +829,8 @@ class H1Config:
     )
     _targetPos_1 = np.array(
         [
-            0.0, 0.0, -0.742864, 1.38758, -0.745571,
-            0.0, 0.0, -0.743627, 1.38917, -0.746403,
+            -0.00254889, -0.00471229, -0.605815, 1.39636, -0.79082, 
+            0.00380782, 0.00543479, -0.606091, 1.39799, -0.792157,
             0.0,
             0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0
@@ -909,12 +909,18 @@ class H1Config:
     task_id: str = "H1 Walk"
 
     # sim
-    xml_path_sim: str = "./model/h1/h1.xml"
-    dt_sim: float = 0.005
+    # xml_path_sim: str = "./model/h1/h1.xml"
+    force_in_sim = True
+    xml_path_sim: str = "./model/h1/h1_force.xml"
+    dt_sim: float = 0.001
     ctrl_dt: float = 0.005
     real_time_factor: float = 1.0
     auto_reset: bool = True
-    sim_mocap_z_offset = -0.00
+    mocap_delay_interval = 50
+    mocap_delay_frames = 5
+    sim_delay_frames = 1
+    sim_mocap_z_offset = -0.002
+    sim_mocap_z_offset_noise = 0.002
     sim_mocap_roll_offset = 0.00
     sim_mocap_pitch_offset = -0.00
     auto_reset = True

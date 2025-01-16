@@ -29,6 +29,7 @@ from utils import (
 class Controller:
     def __init__(self, robot_name="g1", mujoco_mpc_mode="gui", dump_data=False):
         self.max_delta_ctrl = 0.2
+        self.control_gamma = 0.5
         self.dump_data = dump_data
         self.robot_name = robot_name
         if robot_name == "g1":
@@ -112,13 +113,17 @@ class Controller:
     def main_loop(self):
         # Controller
         # print(self.config.xml_path_ctrl)
-        roll_offset = 0.05 * 0
-        pitch_offset = 0.05 * 0
-        yaw_offset = 0.05 * 0
-        r_offset = np.array([0.01, 0.01, 0.01]) * 0
+        ctrl_buffer_delay = np.zeros((self.config.sim_delay_frames+1, self.config.nu_real-1))
+        mocap_delay_frames = np.zeros((self.config.mocap_delay_frames+1, 7))
+        mocap_delay_frames[:, 3] = 1.0
+        roll_offset = 0.01
+        pitch_offset = 0.01 
+        yaw_offset = 0.01
+        r_offset = np.array([0.001, 0.001, 0.001])
         model = mujoco.MjModel.from_xml_path(self.config.xml_path_ctrl)
         rate_limiter = RateLimiter(frequency=1 / self.config.dt_ctrl)
         last_ctrl = np.zeros(self.config.nu_ctrl)
+        cnt = 0
         if self.dump_data:
             data_cnt = 0
             buffer_size = 1000
@@ -126,7 +131,7 @@ class Controller:
             qd_buffer = np.zeros((buffer_size, self.config.nqd_ctrl))
             ctrl_buffer = np.zeros((buffer_size, self.config.nu_ctrl))
         with mujoco.viewer.launch_passive(
-            self.mj_model, self.mj_data, show_left_ui=True, show_right_ui=False
+            self.mj_model, self.mj_data, show_left_ui=True, show_right_ui=True
         ) as viewer:
             try:
                 if self.mujoco_mpc_mode == "headless":
@@ -164,16 +169,21 @@ class Controller:
                             # get state from simulator
                             q_sim = self.mj_data.qpos.copy()
                             qd_sim = self.mj_data.qvel.copy()
+                            mocap_delay_frames = np.roll(mocap_delay_frames, -1, axis=0)
+                            mocap_delay_frames[-1] = q_sim[:7]
+                            if cnt % self.config.mocap_delay_interval == 0:
+                                q_sim[:7] = mocap_delay_frames[0]
 
-                            # # get marker position
-                            # marker_pos_sim = q_sim[:3] + self.marker_p_robot_est
-                            # robot_R_mocap = R.from_quat(q_sim[3:7])
-                            # marker_R_mocap = self.marker_R_robot_gt * robot_R_mocap
-                            # # convert it back to robot position with estimated marker position
-                            # robot_pos_est = marker_pos_sim - self.marker_p_robot_est
-                            # robot_R_mocap_est = self.marker_R_robot_est.inv() * marker_R_mocap
-                            # q_sim[:3] = robot_pos_est
-                            # q_sim[3:7] = robot_R_mocap_est.as_quat()
+                            # get marker position
+                            marker_pos_sim = q_sim[:3] + self.marker_p_robot_est
+                            robot_R_mocap = R.from_quat(q_sim[3:7])
+                            marker_R_mocap = self.marker_R_robot_gt * robot_R_mocap
+                            # convert it back to robot position with estimated marker position
+                            robot_pos_est = marker_pos_sim - self.marker_p_robot_est
+                            robot_R_mocap_est = self.marker_R_robot_est.inv() * marker_R_mocap
+                            q_sim[:3] = robot_pos_est
+                            q_sim[2] += np.random.normal(0, self.config.sim_mocap_z_offset_noise)
+                            q_sim[3:7] = robot_R_mocap_est.as_quat()
 
                             # compute mocap rotation matrix
                             if self.robot_name == "h1":
@@ -210,13 +220,13 @@ class Controller:
                             omega = qd_sim[3:6]
                             omega_r_offset = np.cross(omega, r_offset)
                             qd_sim[:3] = lin_vel + omega_r_offset
-
+                            qd_sim[:3] *= 0.9
                             # set state to agent and get action
                             agent.set_state(qpos=q_sim, qvel=qd_sim)
                             ctrl = agent.get_action()
                             # clip ctrl with last_ctrl
                             ctrl = np.clip(ctrl, last_ctrl - self.max_delta_ctrl, last_ctrl + self.max_delta_ctrl)
-                            last_ctrl = ctrl
+                            ctrl = self.control_gamma * ctrl + (1 - self.control_gamma) * last_ctrl
                             if self.dump_data:
                                 if data_cnt >= buffer_size:
                                     print("Buffer full, stopping data collection")
@@ -238,17 +248,35 @@ class Controller:
                                     self.config.locked_joint_idx,
                                     self.config.nu_real - 1,
                                 )
+                                ctrl_delay = ctrl_sim2real(last_ctrl, self.config.locked_joint_idx, self.config.nu_real-1)
                             else:
                                 ctrl_real = ctrl_sim2real(
                                     ctrl,
                                     self.config.locked_joint_idx,
                                     self.config.nu_real,
                                 )
+                            ctrl_buffer_delay = np.roll(ctrl_buffer_delay, -1, axis=0)
+                            ctrl_buffer_delay[-1] = ctrl_real
 
                             # step simulation
-                            for _ in range(self.n_sim_frame):
-                                self.mj_data.ctrl = ctrl_real
+                            for k in range(self.n_sim_frame):
+                                if self.config.force_in_sim:
+                                    # ctrl_delay = ctrl_buffer_delay[-2]
+                                    if k < self.config.sim_delay_frames:
+                                        pos_tar = ctrl_delay
+                                    else:
+                                        pos_tar = ctrl_real
+                                    force = self.config.kp_real*(1.0) * (pos_tar - self.mj_data.qpos[7:]) - self.config.kd_real * self.mj_data.qvel[6:]
+                                    # add random noise to force 
+                                    force_ratio = np.random.normal(1, 0.0)
+                                    force = force * force_ratio
+                                    self.mj_data.ctrl = force
+                                else:
+                                    self.mj_data.ctrl = ctrl_real
                                 mujoco.mj_step(self.mj_model, self.mj_data)
+
+                            last_ctrl = ctrl
+                            cnt += 1
                             viewer.sync()
                             rate_limiter.sleep()
 

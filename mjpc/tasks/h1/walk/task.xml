@@ -2,28 +2,28 @@
   <include file="../../common.xml" />
   <include file="../h1.xml" />
   <size memory="400K" />
-  <option timestep="0.005" cone="elliptic" />
+  <option timestep="0.001" cone="elliptic" />
   <compiler angle="radian" meshdir=".." autolimits="true" />
   <custom>
     <!-- agent -->
     <numeric name="agent_planner" data="2" />
-    <numeric name="agent_horizon" data="0.50" />
+    <numeric name="agent_horizon" data="0.35" />
     <numeric name="agent_timestep" data="0.02" />
     <numeric name="sampling_spline_points" data="5" />
     <numeric name="sampling_exploration" data="0.05" />
     <numeric name="gradient_spline_points" data="5" />
     <numeric name="residual_Torso" data="1.05 0.7 1.2" />
     <numeric name="residual_UpperBodyPosture" data="0.0 0.0 1.0" />
-    <numeric name="residual_HipPitchPosture" data="0.0 0.0 1.0" />
-    <numeric name="residual_KneePosture" data="0.0 0.0 1.0" />
+    <numeric name="residual_HipPitchPosture" data="0.5 0.0 1.0" />
+    <numeric name="residual_KneePosture" data="0.5 0.0 1.0" />
     <numeric name="residual_AnklePosture" data="0.0 0.0 1.0" />
     <numeric name="residual_select_Gait" data="0" />
     <text name="residual_list_Gait" data="Stand|Walk" />
-    <numeric name="residual_foot_y_distance" data="0.190 0.1 0.2" />
+    <numeric name="residual_foot_y_distance" data="0.162 0.1 0.2" />
     <numeric name="residual_foot_x_distance" data="0.00 -0.05 0.05" />
     <numeric name="residual_heading" data="0.0 -3.14 3.14" />
     <numeric name="residual_duty_ratio" data="0.5 0.0 1.0" />
-    <numeric name="residual_frequency" data="2.0 0.0 5.0" />
+    <numeric name="residual_frequency" data="2.4 0.0 5.0" />
     <numeric name="residual_amplitude" data="0.05 0.0 0.1" />
     <numeric name="residual_HipYawRollPosture" data="10.0 0.0 10.0" />
     <!-- estimator -->
@@ -40,18 +40,21 @@
     <user name="Torso Upright" dim="1" user="6 1.0 0 20.0 0.05" />
     <user name="Pelvis Upright" dim="1" user="6 0.0 0 20.0 0.05" />
     <user name="Foot Upright" dim="2" user="6 20.0 0 30.0 0.05" />
-    <user name="Ankle Joint Angle" dim="2" user="6 0.0 0 100.0 0.05" />
+    <user name="Ankle Joint Angle" dim="2" user="6 0.3 0 1.0 0.05" />
     <user name="Height" dim="1" user="6 1 0 3 0.04" />
+    <user name="Torso XY Velocity" dim="2" user="6 0.01 0 0.1 0.04" />
+    <user name="Torso Z Velocity" dim="1" user="6 0.05 0 0.1 0.04" />
     <user name="Position" dim="3" user="2 0.6 0 3.0 0.1" />
     <user name="Orientation" dim="4" user="0 0.1 0 0.2" />
     <user name="Gait X" dim="4" user="6 0.3 0 10 0.03" />
-    <user name="Gait Y" dim="4" user="6 0 0 10 0.03" />
-    <user name="Gait Z" dim="4" user="6 8 0 30 0.03" />
+    <user name="Gait Y" dim="4" user="6 1.0 0 10 0.03" />
+    <user name="Gait Z" dim="4" user="6 16 0 30 0.03" />
     <user name="Balance" dim="2" user="2 0.5 0 1.0 0.1" />
     <user name="Effort" dim="10" user="0 0.03 0.0 0.1" />
-    <user name="Posture" dim="10" user="0 0.1 0.0 1.0" />
-    <user name="Linear Velocity" dim="3" user="0 0.015 0 0.1" />
-    <user name="Angular Momentum" dim="3" user="0 0.015 0 0.1" />
+    <user name="Joint Velocity" dim="10" user="0 0.5 0.0 1.0" />
+    <user name="Posture" dim="10" user="0 0.2 0.0 1.0" />
+    <user name="Linear Velocity" dim="3" user="0 0.0 0 0.1" />
+    <user name="Angular Momentum" dim="3" user="0 0.1 0 0.1" />
     <framepos name="pelvis" objtype="site" objname="tracking[pelvis]" />
     <framepos name="right_foot_position" objtype="site" objname="foot_right" />
     <framepos name="left_foot_position" objtype="site" objname="foot_left" />
@@ -147,7 +150,28 @@
   </actuator>
 
   <keyframe>
-    <key name="stand"
+    <!-- <key name="stand" 
+    qpos='
+    0.0800568 0.0421512 0.94443 
+    0.997368 0.00254482 0.0642454 -0.0335271 
+    -0.00343928 0.0262485 -0.5836 1.00022 -0.54528 0.00410654 -0.0256452 -0.584663 1.00248 -0.546446'/> -->
+    <!-- <key name="stand" qpos='
+    -0.00242347 0.0289138 0.949207 
+    0.999831 0.00040244 2.6011e-05 -0.0183544 
+    -0.00421297 -0.0305558 -0.404159 0.979807 -0.575583 0.00552934 0.0312085 -0.400403 0.98037 -0.579737'/> -->
+    <!-- <key name="stand" qpos='
+    0.0495895 -0.000427701 0.817426 
+    0.999949 0.000474665 2.38768e-05 0.0101176 
+    -0.00371826 -0.0216493 -0.668426 1.53673 -0.867904 
+    0.00496321 0.0223468 -0.669612 1.53835 -0.868364'/> -->
+    <key name = "stand" 
+    qpos='0.0362762 -0.0090843 0.853423 
+    0.999919 0.000462776 0.000266826 -0.0127488 
+    -0.00254889 -0.00471229 -0.605815 1.39636 -0.79082 
+    0.00380782 0.00543479 -0.606091 1.39799 -0.792157'
+    ctrl ='-0.00254889 -0.00471229 -0.605815 1.39636 -0.79082 
+    0.00380782 0.00543479 -0.606091 1.39799 -0.792157'/>
+    <!-- <key name="stand"
       qpos='
     0.0420873 0.0208739 0.856
     0.998476 0.00171814 0.0503745 -0.0224545 
@@ -155,7 +179,7 @@
     0.0 0.0 -0.743627 1.38917 -0.746403'
       ctrl='
     0.0 0.0 -0.742864 1.38758 -0.745571 
-    0.0 0.0 -0.743627 1.38917 -0.746403' />
+    0.0 0.0 -0.743627 1.38917 -0.746403' /> -->
     <!-- <key name="stand"
       qpos='
     0.0420873 0.0208739 0.856

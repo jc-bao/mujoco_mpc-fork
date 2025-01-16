@@ -66,6 +66,12 @@ namespace mjpc::h1
     double torso_height = SensorByName(model, data, "torso_position")[2];
     residual[counter++] = torso_height - height_goal;
 
+    // torso velocity
+    double* torso_vel = SensorByName(model, data, "torso_velocity");
+    residual[counter++] = torso_vel[0];
+    residual[counter++] = torso_vel[1];
+    residual[counter++] = torso_vel[2];
+
     // ----- position ----- //
     int goal_id = mj_name2id(model, mjOBJ_XBODY, "goal");
     int goal_mocap_id = model->body_mocapid[goal_id];
@@ -157,8 +163,8 @@ namespace mjpc::h1
       if (duty_ratio < 1)
       {
         angle *= 0.5 / (1 - duty_ratio);
-        // target_foot_height += amplitude * mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2));
-        target_foot_height += amplitude * 0.5 * (mju_cos(2.0 * mju_clip(angle, -mjPI / 2, mjPI / 2)) + 1.0);
+        target_foot_height += amplitude * mju_cos(mju_clip(angle, -mjPI / 2, mjPI / 2));
+        // target_foot_height += amplitude * 0.5 * (mju_cos(2.0 * mju_clip(angle, -mjPI / 2, mjPI / 2)) + 1.0);
       }
       // z position of the foot
       double *frame_pos = nullptr;
@@ -265,7 +271,14 @@ namespace mjpc::h1
 
     // ----- effort ----- //
     mju_scl(residual + counter, data->actuator_force, 2e-2, model->nu);
+    // make pitch motor effort scale to 0.3
+    // mju_scl(residual + counter + 2, residual + counter + 2, 0.3, 3);
+    // mju_scl(residual + counter + 5 + 2, residual + counter + 5 + 2, 0.3, 3);
     counter += model->nu;
+
+    // joint velocity
+    mju_scl(residual + counter, data->qvel + 6, 1e-2, model->nv - 6);
+    counter += model->nv - 6;
 
     // ----- posture ----- //
     double *home = KeyQPosByName(model, data, "stand");

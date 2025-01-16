@@ -95,10 +95,10 @@ class Controller:
             exit()
 
         # filter variables
-        self.low_pass_filter_gamma = 0.5
+        self.low_pass_filter_gamma = 1.0
         self.low_pass_filter_window_size = 1
         self.qd_buffer_lp = np.zeros((self.low_pass_filter_window_size, self.config.nqd_ctrl))
-        self.q_buffer_lp = np.zeros((self.low_pass_filter_window_size, self.config.nq_ctrl-7))
+        self.q_buffer_lp = np.zeros((self.low_pass_filter_window_size, self.config.nq_ctrl))
 
         # Initialize state variables
         self.global_ctrl_scale = 0.0
@@ -477,8 +477,8 @@ class Controller:
         # add rpy offset
         # check if q_sim is zero norm, if so, set it to identity
         if np.linalg.norm(q_sim[3:7]) < 1e-6:
-            q_sim[3:7] = np.array([1.0, 0.0, 0.0, 0.0])
-            print("[WARNING] q_sim is zero norm, setting it to identity")
+            q_sim[3:7] = self.q_buffer_lp[-1, 3:7]
+            print("[WARNING] q_sim is zero norm, setting it to last value")
         R_world_marker = R.from_quat(q_sim[3:7], scalar_first=True)
         R_marker_body = R.from_euler("xyz", self.global_rpy_offset, degrees=False)
         R_world_body = R_world_marker * R_marker_body
@@ -574,7 +574,7 @@ class Controller:
                     
                     # low pass filter
                     qd_sim_lp = self.low_pass_filter_gamma * qd_sim + (1 - self.low_pass_filter_gamma) * self.qd_buffer_lp[-1]
-                    q_sim_lp = self.low_pass_filter_gamma * q_sim[7:] + (1 - self.low_pass_filter_gamma) * self.q_buffer_lp[-1]
+                    q_sim_lp = self.low_pass_filter_gamma * q_sim + (1 - self.low_pass_filter_gamma) * self.q_buffer_lp[-1]
                     self.qd_buffer_lp = np.roll(self.qd_buffer_lp, -1, axis=0)
                     self.qd_buffer_lp[-1, :] = qd_sim_lp
                     self.q_buffer_lp = np.roll(self.q_buffer_lp, -1, axis=0)
@@ -582,7 +582,7 @@ class Controller:
                     self.qd_buffer_lp[-1, :] = np.mean(self.qd_buffer_lp, axis=0)
                     self.q_buffer_lp[-1, :] = np.mean(self.q_buffer_lp, axis=0)
                     qd_sim = self.qd_buffer_lp[-1, :]
-                    q_sim[7:] = self.q_buffer_lp[-1, :]
+                    q_sim = self.q_buffer_lp[-1, :]
 
                     # calibration
                     if bars["calibrate"].get() > 0.5:
