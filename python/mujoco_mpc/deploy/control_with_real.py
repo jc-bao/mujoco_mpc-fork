@@ -42,7 +42,8 @@ from unitree_sdk2py.utils.crc import CRC
 
 
 class Controller:
-    def __init__(self, robot_name="g1", open_loop_mode=False):
+    def __init__(self, robot_name="g1", open_loop_mode=False, dump_data=False):
+        self.dump_data = dump_data
         self.max_delta_ctrl = 0.1
         self.open_loop_mode = open_loop_mode
         self.act_time = time.time()
@@ -491,6 +492,12 @@ class Controller:
         return q_sim, qd_sim
 
     def main_loop(self):
+        if self.dump_data:
+            data_cnt = 0
+            buffer_size = 1000
+            q_data_buffer = np.zeros((buffer_size, self.config.nq_ctrl))
+            qd_data_buffer = np.zeros((buffer_size, self.config.nqd_ctrl))
+            ctrl_data_buffer = np.zeros((buffer_size, self.config.nu_ctrl))
         # Create the GUI elements
         params_dict = {
             "ctrl_scale": {"lower": 0, "upper": 1.0, "step": 0.01, "default": 0.0},
@@ -658,6 +665,13 @@ class Controller:
 
                     agent.set_state(qpos=q_sim, qvel=qd_sim)
                     ctrl = agent.get_action()
+                    if self.dump_data:
+                        q_data_buffer = np.roll(q_data_buffer, -1, axis=0)
+                        q_data_buffer[-1] = q_sim
+                        qd_data_buffer = np.roll(qd_data_buffer, -1, axis=0)
+                        qd_data_buffer[-1] = qd_sim
+                        ctrl_data_buffer = np.roll(ctrl_data_buffer, -1, axis=0)
+                        ctrl_data_buffer[-1] = ctrl
                     ctrl = np.clip(ctrl, last_ctrl - self.max_delta_ctrl, last_ctrl + self.max_delta_ctrl)
                     last_ctrl = ctrl
                     # print("ctrl", ctrl)
@@ -681,6 +695,8 @@ class Controller:
         finally:
             self.mocap_shm.close()
             root.destroy()
+            if self.dump_data:
+                np.savez(f"{self.robot_name}_real_data.npz", q=q_data_buffer, qd=qd_data_buffer, ctrl=ctrl_data_buffer)
 
 if __name__ == "__main__":
     controller = Controller(robot_name="h1")

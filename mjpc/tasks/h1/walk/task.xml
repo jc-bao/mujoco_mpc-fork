@@ -37,10 +37,10 @@
 
   <sensor>
     <!-- user="[norm_type] [weight] [weight_lower_bound] [weight_upper_bound] [norm_parameters...]" -->
-    <user name="Torso Upright" dim="1" user="6 1.0 0 20.0 0.05" />
+    <user name="Torso Upright" dim="1" user="6 0.1 0 3.0 0.05" />
     <user name="Pelvis Upright" dim="1" user="6 0.0 0 20.0 0.05" />
     <user name="Foot Upright" dim="2" user="6 20.0 0 30.0 0.05" />
-    <user name="Ankle Joint Angle" dim="2" user="6 0.3 0 1.0 0.05" />
+    <user name="Ankle Joint Angle" dim="2" user="6 0.0 0 1.0 0.05" />
     <user name="Height" dim="1" user="6 1 0 3 0.04" />
     <user name="Torso XY Velocity" dim="2" user="6 0.01 0 0.1 0.04" />
     <user name="Torso Z Velocity" dim="1" user="6 0.05 0 0.1 0.04" />
