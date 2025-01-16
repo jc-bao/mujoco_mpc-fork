@@ -2,13 +2,13 @@
   <include file="../../common.xml" />
   <include file="../h1.xml" />
   <size memory="400K" />
-  <option timestep="0.001" cone="elliptic" />
+  <option timestep="0.002" cone="elliptic" />
   <compiler angle="radian" meshdir=".." autolimits="true" />
   <custom>
     <!-- agent -->
     <numeric name="agent_planner" data="2" />
     <numeric name="agent_horizon" data="0.35" />
-    <numeric name="agent_timestep" data="0.02" />
+    <numeric name="agent_timestep" data="0.01" />
     <numeric name="sampling_spline_points" data="5" />
     <numeric name="sampling_exploration" data="0.05" />
     <numeric name="gradient_spline_points" data="5" />
