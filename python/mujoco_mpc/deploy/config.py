@@ -948,3 +948,9 @@ class H1Config:
     #         0.0,
     #     ]
     # )
+
+class ObjectConfig:
+    dt_real: float = 0.005
+    vicon_tracker_ip: str = "128.2.184.3"
+    vicon_object_name: str = "h1_object"
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])

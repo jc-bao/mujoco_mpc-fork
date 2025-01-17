@@ -52,7 +52,7 @@
     <user name="Balance" dim="2" user="2 0.5 0 1.0 0.1" />
     <user name="Effort" dim="19" user="0 0.03 0.0 0.1" />
     <user name="Joint Velocity" dim="19" user="0 6.0 0.0 10.0" />
-    <user name="Posture" dim="19" user="0 0.12 0.0 0.3" />
+    <user name="Posture" dim="19" user="0 0.20 0.0 0.3" />
     <user name="Linear Velocity" dim="3" user="0 0.0 0 0.1" />
     <user name="Angular Momentum" dim="3" user="0 0.0 0 0.1" />
     <user name="Hand Reach" dim="12" user="2 0.0 0 0.1 0.01" />
@@ -145,11 +145,11 @@
 
     <body name="box" mocap="true" pos="0.4 0.0 0.9">
       <!-- <freejoint /> -->
-      <geom name="box" type="box" size="0.1 0.25 0.05" condim="3" friction="3.0 .01 .003" density="0"  contype="0" conaffinity="0" />
-      <site name="box1" type="box" pos="0.075  0.25 0.0" size="0.021 0.005 0.021" rgba="1 .1 .1 .1" />
-      <site name="box2" type="box" pos="0.075 -0.25 0.0" size="0.021 0.005 0.021" rgba=".1 .1 1 .1" />
-      <site name="box3" type="box" pos="-0.075  0.25 0.0" size="0.021 0.005 0.021" rgba="1 .1 .1 .1" />
-      <site name="box4" type="box" pos="-0.075 -0.25 0.0" size="0.021 0.005 0.021" rgba=".1 .1 1 .1" />
+      <geom name="box" type="box" size="0.1 0.30 0.05" condim="3" friction="3.0 .01 .003" density="0"  contype="0" conaffinity="0" />
+      <site name="box1" type="box" pos="0.075  0.30 0.0" size="0.021 0.005 0.021" rgba="1 .1 .1 .1" />
+      <site name="box2" type="box" pos="0.075 -0.30 0.0" size="0.021 0.005 0.021" rgba=".1 .1 1 .1" />
+      <site name="box3" type="box" pos="-0.075  0.30 0.0" size="0.021 0.005 0.021" rgba="1 .1 .1 .1" />
+      <site name="box4" type="box" pos="-0.075 -0.30 0.0" size="0.021 0.005 0.021" rgba=".1 .1 1 .1" />
     </body>
   </worldbody>
 

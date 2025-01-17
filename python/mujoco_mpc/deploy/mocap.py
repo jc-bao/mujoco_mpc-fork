@@ -6,9 +6,15 @@ from multiprocessing import shared_memory
 from pyvicon_datastream import tools
 import struct
 from loop_rate_limiters import RateLimiter
+import tyro
+from dataclasses import dataclass
 
 from utils import pack_mocap_data
-from config import G1PositionConfig, Go2PositionConfig, H1_2PositionConfig, H1_2_simpleConfig, H1Config
+from config import G1PositionConfig, Go2PositionConfig, H1_2PositionConfig, H1_2_simpleConfig, H1Config, ObjectConfig
+
+@dataclass
+class Args:
+    robot_name: str = "h1"
 class ViconDemo:
     """
     Vicon data acquisition and filtering
@@ -28,6 +34,8 @@ class ViconDemo:
             self.config = H1_2_simpleConfig()
         elif robot_name == "h1":
             self.config = H1Config()
+        elif robot_name == "object":
+            self.config = ObjectConfig()
         else:
             raise ValueError(f"Robot {robot_name} not supported")
 
@@ -62,8 +70,12 @@ class ViconDemo:
 
         
         # Initialize shared memory
-        self.shared_mem_name = "mocap_state_shm"
-        self.shared_mem_size = 8 + 13 * 8  # 8 bytes for utime (int64), 13 float64s (13*8 bytes)
+        if robot_name == "object":
+            self.shared_mem_name = "object_state_shm"
+            self.shared_mem_size = 8 + 13 * 8  # 8 bytes for utime (int64), 13 float64s (13*8 bytes)
+        else:
+            self.shared_mem_name = "mocap_state_shm"
+            self.shared_mem_size = 8 + 13 * 8  # 8 bytes for utime (int64), 13 float64s (13*8 bytes)
         try:
             self.state_shm = shared_memory.SharedMemory(name=self.shared_mem_name, create=True, size=self.shared_mem_size)
             print(f"Attach to shared memory '{self.shared_mem_name}' of size {self.shared_mem_size} bytes.")
@@ -188,5 +200,6 @@ class ViconDemo:
 
 
 if __name__ == "__main__":
-    vicon_demo = ViconDemo(robot_name="h1")
+    args = tyro.cli(Args)
+    vicon_demo = ViconDemo(robot_name=args.robot_name)
     vicon_demo.main_loop()
