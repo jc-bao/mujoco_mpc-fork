@@ -312,15 +312,47 @@ namespace mjpc::h1_mani
     // ----- angular momentum ----- //
     mju_copy3(residual + counter, SensorByName(model, data, "torso_angmom"));
     counter += 3;
+
     // ----- hand reach ----- //
+    // get mode
+    double hand_reach_mode_selection = parameters_[13];
+    // mode=0 1 2
+    int hand_reach_mode = ReinterpretAsInt(hand_reach_mode_selection);
     double *left_hand_front = SensorByName(model, data, "left_hand_front");
     double *left_hand_back = SensorByName(model, data, "left_hand_back");
     double *right_hand_front = SensorByName(model, data, "right_hand_front");
     double *right_hand_back = SensorByName(model, data, "right_hand_back");
-    double *left_box_front = SensorByName(model, data, "left_box_front");
-    double *left_box_back = SensorByName(model, data, "left_box_back");
-    double *right_box_front = SensorByName(model, data, "right_box_front");
-    double *right_box_back = SensorByName(model, data, "right_box_back");
+    double *left_box_front = nullptr;
+    double *right_box_front = nullptr;
+    double *left_box_back = nullptr;
+    double *right_box_back = nullptr;
+    if (hand_reach_mode == 0) {
+      left_box_front = SensorByName(model, data, "box1-1");
+      right_box_front = SensorByName(model, data, "box1-2");
+      left_box_back = SensorByName(model, data, "box1-3");
+      right_box_back = SensorByName(model, data, "box1-4");
+    }
+    else if (hand_reach_mode == 1) {
+      left_box_front = SensorByName(model, data, "box2-1");
+      right_box_front = SensorByName(model, data, "box2-2");
+      left_box_back = SensorByName(model, data, "box2-3");
+      right_box_back = SensorByName(model, data, "box2-4");
+    }
+    else if (hand_reach_mode == 2) {
+      left_box_front = SensorByName(model, data, "box3-1");
+      right_box_front = SensorByName(model, data, "box3-2");
+      left_box_back = SensorByName(model, data, "box3-3");
+      right_box_back = SensorByName(model, data, "box3-4");
+    }
+    else if (hand_reach_mode == 3) {
+      left_box_front = SensorByName(model, data, "box4-1");
+      right_box_front = SensorByName(model, data, "box4-2");
+      left_box_back = SensorByName(model, data, "box4-3");
+      right_box_back = SensorByName(model, data, "box4-4");
+    }
+    else {
+      mju_error("Invalid hand reach mode: %d", hand_reach_mode);
+    }
     mju_sub3(residual + counter, left_hand_front, left_box_front);
     counter += 3;
     mju_sub3(residual + counter, left_hand_back, left_box_back);
@@ -355,6 +387,79 @@ namespace mjpc::h1_mani
           "and actual length of residual %d",
           counter);
     }
+  }
+
+  // ----- Transition for quadrotor task -----
+  void PNP::TransitionLocked(mjModel* model, mjData* data) {
+    // set mode to GUI selection
+    if (mode > 0) {
+      current_mode_ = mode - 1;
+    } else {
+      // goal position
+      const double* left_front_target = data->mocap_pos;
+      const double* right_front_target = data->mocap_pos + 3;
+      const double* left_back_target = data->mocap_pos + 6;
+      const double* right_back_target = data->mocap_pos + 9;
+
+      // system's position
+      double* left_front_pos = SensorByName(model, data, "left_hand_front");
+      double* right_front_pos = SensorByName(model, data, "right_hand_front");
+      double* left_back_pos = SensorByName(model, data, "left_hand_back");
+      double* right_back_pos = SensorByName(model, data, "right_hand_back");
+
+      // position error
+      double left_front_position_error[3];
+      mju_sub3(left_front_position_error, left_front_pos, left_front_target);
+      double left_front_position_error_norm = mju_norm3(left_front_position_error);
+      double right_front_position_error[3];
+      mju_sub3(right_front_position_error, right_front_pos, right_front_target);
+      double right_front_position_error_norm = mju_norm3(right_front_position_error);
+      double left_back_position_error[3];
+      mju_sub3(left_back_position_error, left_back_pos, left_back_target);
+      double left_back_position_error_norm = mju_norm3(left_back_position_error);
+      double right_back_position_error[3];
+      mju_sub3(right_back_position_error, right_back_pos, right_back_target);
+      double right_back_position_error_norm = mju_norm3(right_back_position_error);
+
+      if (left_front_position_error_norm <= 2.0e-1 && right_front_position_error_norm <= 2.0e-1 && left_back_position_error_norm <= 2.0e-1 && right_back_position_error_norm <= 2.0e-1) {
+        // update task state
+        current_mode_ += 1;
+        if (current_mode_ >= 2) {
+          current_mode_ = 2;
+        }
+      }
+    }
+
+    // set goal
+    double* left_front_target_site = nullptr;
+    double* right_front_target_site = nullptr;
+    double* left_back_target_site = nullptr;
+    double* right_back_target_site = nullptr;
+    if (current_mode_ == 0) {
+      left_front_target_site = SensorByName(model, data, "box1-1");
+      right_front_target_site = SensorByName(model, data, "box1-2");
+      left_back_target_site = SensorByName(model, data, "box1-3");
+      right_back_target_site = SensorByName(model, data, "box1-4");
+    }
+    else if (current_mode_ == 1) {
+      left_front_target_site = SensorByName(model, data, "box2-1");
+      right_front_target_site = SensorByName(model, data, "box2-2");
+      left_back_target_site = SensorByName(model, data, "box2-3");
+      right_back_target_site = SensorByName(model, data, "box2-4");
+    }
+    else if (current_mode_ == 2) {
+      left_front_target_site = SensorByName(model, data, "box3-1");
+      right_front_target_site = SensorByName(model, data, "box3-2");
+      left_back_target_site = SensorByName(model, data, "box3-3");
+      right_back_target_site = SensorByName(model, data, "box3-4");
+    }
+    else{
+      mju_error("Invalid hand reach mode: %d", current_mode_);
+    }
+    mju_copy3(data->mocap_pos, left_front_target_site);
+    mju_copy3(data->mocap_pos + 3, right_front_target_site);
+    mju_copy3(data->mocap_pos + 6, left_back_target_site);
+    mju_copy3(data->mocap_pos + 9, right_back_target_site);
   }
 
 } // namespace mjpc::h1_mani

@@ -32,6 +32,7 @@ class PNP : public Task {
   };
 
   PNP() : residual_(this) {}
+  void TransitionLocked(mjModel* model, mjData* data) override;
 
   std::string Name() const override;
   std::string XmlPath() const override;
@@ -44,6 +45,7 @@ class PNP : public Task {
 
  private:
   ResidualFn residual_;
+  int current_mode_ = 0;
 };
 
 }  // namespace h1_mani
