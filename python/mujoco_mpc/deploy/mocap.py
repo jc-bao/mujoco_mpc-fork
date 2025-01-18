@@ -10,11 +10,11 @@ import tyro
 from dataclasses import dataclass
 
 from utils import pack_mocap_data
-from config import G1PositionConfig, Go2PositionConfig, H1_2PositionConfig, H1_2_simpleConfig, H1Config, ObjectConfig
+from config import G1PositionConfig, Go2PositionConfig, H1_2PositionConfig, H1_2_simpleConfig, H1Config, ObjectConfig, H1_maniConfig
 
 @dataclass
 class Args:
-    robot_name: str = "h1"
+    robot_name: str = "h1_mani"
 class ViconDemo:
     """
     Vicon data acquisition and filtering
@@ -34,6 +34,8 @@ class ViconDemo:
             self.config = H1_2_simpleConfig()
         elif robot_name == "h1":
             self.config = H1Config()
+        elif robot_name == "h1_mani":
+            self.config = H1_maniConfig()
         elif robot_name == "object":
             self.config = ObjectConfig()
         else:

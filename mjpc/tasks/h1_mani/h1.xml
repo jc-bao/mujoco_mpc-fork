@@ -34,28 +34,28 @@
       <position kp="150" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="shoulder_pitch_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-2.87 2.87" forcelimited="true" forcerange="-40 40" />
+      <joint damping="1.5" />
+      <position kp="40" ctrlrange="-2.87 2.87" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="left_shoulder_roll_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
+      <joint damping="1.5" />
+      <position kp="40" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="right_shoulder_roll_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-3.11 0.34" forcelimited="true" forcerange="-40 40" />
+      <joint damping="1.5" />
+      <position kp="40" ctrlrange="-3.11 0.34" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="left_shoulder_yaw_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-1.3 4.45" forcelimited="true" forcerange="-18 18" />
+      <joint damping="0.75" />
+      <position kp="15" ctrlrange="-1.3 4.45" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="right_shoulder_yaw_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-4.45 1.3" forcelimited="true" forcerange="-18 18" />
+      <joint damping="0.75" />
+      <position kp="15" ctrlrange="-4.45 1.3" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
-      <joint damping="1.0" />
-      <position kp="40" ctrlrange="-1.25 2.61" forcelimited="true" forcerange="-18 18" />
+      <joint damping="0.75" />
+      <position kp="30" ctrlrange="-1.25 2.61" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
       <joint damping="0.5" />

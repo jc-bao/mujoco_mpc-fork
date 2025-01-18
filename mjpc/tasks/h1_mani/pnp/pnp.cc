@@ -331,12 +331,12 @@ namespace mjpc::h1_mani
     counter += 3;
 
     // ----- target reach ----- //
-    double *left_target = SensorByName(model, data, "left_target");
-    double *right_target = SensorByName(model, data, "right_target");
-    mju_sub3(residual + counter, left_box_front, left_target);
-    counter += 3;
-    mju_sub3(residual + counter, right_box_front, right_target);
-    counter += 3;
+    // double *left_target = SensorByName(model, data, "left_target");
+    // double *right_target = SensorByName(model, data, "right_target");
+    // mju_sub3(residual + counter, left_box_front, left_target);
+    // counter += 3;
+    // mju_sub3(residual + counter, right_box_front, right_target);
+    // counter += 3;
 
     // sensor dim sanity check
     // TODO: use this pattern everywhere and make this a utility function

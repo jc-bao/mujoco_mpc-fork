@@ -6,6 +6,7 @@ import pathlib
 import time
 from scipy.spatial.transform import Rotation as R
 import matplotlib.pyplot as plt
+import pygame
 import mujoco
 from mujoco_mpc import agent as agent_lib
 from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
@@ -48,11 +49,27 @@ from unitree_sdk2py.core.channel import (
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
 
 from unitree_sdk2py.utils.crc import CRC
+    
+def initialize_joystick():
+    pygame.init()
+    pygame.joystick.init()
 
+    if pygame.joystick.get_count() == 0:
+        print("No joystick detected!")
+        pygame.quit()
+        exit()
 
+    joystick = pygame.joystick.Joystick(0)
+    joystick.init()
+    print(f"Joystick initialized: {joystick.get_name()}")
+    return joystick
 
 class Controller:
-    def __init__(self, robot_name="g1", open_loop_mode=False, dump_data=False):
+    def __init__(self, robot_name="g1", open_loop_mode=False, dump_data=False, use_joystick=False, enable_object_mocap=False):
+        self.enable_object_mocap = enable_object_mocap 
+        self.use_joystick = use_joystick
+        if self.use_joystick:
+            self.joystick = initialize_joystick()
         self.dump_data = dump_data
         self.max_delta_ctrl = 0.1
         self.open_loop_mode = open_loop_mode
@@ -112,6 +129,13 @@ class Controller:
         except FileNotFoundError:
             print("Could not create mocap shared memory 'mocap_state_shm'.")
             exit()
+        if self.robot_name == "h1_mani" and self.enable_object_mocap:
+            try: 
+                self.object_shm = shared_memory.SharedMemory(name="object_state_shm")
+                self.object_buffer = self.object_shm.buf
+            except FileNotFoundError:
+                print("Could not create mocap shared memory 'object_state_shm'.")
+                exit()
 
         # filter variables
         self.low_pass_filter_gamma = 1.0
@@ -121,8 +145,10 @@ class Controller:
 
         # Initialize state variables
         self.global_ctrl_scale = 0.0
-        self.global_kp_scale = 0.0
-        self.global_kd_scale = 1.0
+        self.global_kp_scale_upper = 0.0
+        self.global_kp_scale_lower = 0.0
+        self.global_kd_scale_upper = 1.0
+        self.global_kd_scale_lower = 0.0
         self.global_z_offset = 0.01
         self.global_rpy_offset = self.config.mocap_rpy_offset
         self.q = np.zeros(self.config.nq_real)
@@ -386,13 +412,21 @@ class Controller:
                 if i in self.config.locked_joint_idx:
                     self.low_cmd_msg.motor_cmd[i].q = self.config.q_default[j]
                     self.low_cmd_msg.motor_cmd[i].tau = tau[j]
-                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale
-                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale
+                    if j >= 9:
+                        self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale_upper
+                        self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale_upper
+                    else:
+                        self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale_lower
+                        self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale_lower
                 else:
                     self.low_cmd_msg.motor_cmd[i].q = q_des[j]
                     self.low_cmd_msg.motor_cmd[i].tau = tau[j]
-                    self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale
-                    self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale
+                    if j >= 9:
+                        self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale_upper
+                        self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale_upper
+                    else:
+                        self.low_cmd_msg.motor_cmd[i].kp = self.config.kp_real[j] * self.global_kp_scale_lower
+                        self.low_cmd_msg.motor_cmd[i].kd = self.config.kd_real[j] * self.global_kd_scale_lower
         self.low_cmd_msg.crc = self.crc.Crc(self.low_cmd_msg)
         self.low_cmd_publisher.Write(self.low_cmd_msg)
 
@@ -460,7 +494,7 @@ class Controller:
             self.qd[:6] = qd_mocap
         else:
             self.qd[:3] = qd_mocap[:3]
-        if self.robot_name=="h1":
+        if self.robot_name=="h1" or self.robot_name=="h1_mani":
             q_jnt = h1_joint_remapping(self.config.motor_order, self.q[7:], direction="real2sim")
             # print("q_jnt", q_jnt)
             qd_jnt = h1_joint_remapping(self.config.motor_order, self.qd[6:], direction="real2sim")
@@ -493,6 +527,16 @@ class Controller:
         if np.linalg.norm(q_sim[3:7]) < 1e-6:
             q_sim[3:7] = self.q_buffer_lp[-1, 3:7]
             print("[WARNING] q_sim is zero norm, setting it to last value")
+        if "torso" in self.config.vicon_object_name:
+            # rotate to get the pelvis orientation
+            R_torso = R.from_quat(q_sim[3:7], scalar_first=True)
+            if self.robot_name == "h1_mani":
+                torso_joint_angle = q_sim[7+10]
+            else:
+                torso_joint_angle = 0.0
+            R_pelvis_torso = R.from_euler("xyz", [0.0, 0.0, torso_joint_angle], degrees=False)
+            R_pelvis = R_torso * R_pelvis_torso.inv()
+            q_sim[3:7] = R_pelvis.as_quat(scalar_first=True)
         R_world_marker = R.from_quat(q_sim[3:7], scalar_first=True)
         R_marker_body = R.from_euler("xyz", self.global_rpy_offset, degrees=False)
         R_world_body = R_world_marker * R_marker_body
@@ -514,8 +558,10 @@ class Controller:
         # Create the GUI elements
         params_dict = {
             "ctrl_scale": {"lower": 0, "upper": 1.0, "step": 0.01, "default": 0.0},
-            "kp_scale": {"lower": 0.0, "upper": 2.0, "step": 0.01, "default": 1.0},
-            "kd_scale": {"lower": 0.5, "upper": 2.0, "step": 0.01, "default": 1.0},
+            "kp_scale_upper": {"lower": 0.0, "upper": 2.0, "step": 0.01, "default": 1.0},
+            "kp_scale_lower": {"lower": 0.0, "upper": 2.0, "step": 0.01, "default": 1.0},
+            "kd_scale_upper": {"lower": 0.5, "upper": 2.0, "step": 0.01, "default": 1.0},
+            "kd_scale_lower": {"lower": 0.5, "upper": 2.0, "step": 0.01, "default": 1.0},
             "z_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": -0.009},
             "roll_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": 0.022},
             "pitch_offset": {"lower": -0.1, "upper": 0.1, "step": 0.001, "default": -0.03},
@@ -526,12 +572,12 @@ class Controller:
         # Controller
         model = mujoco.MjModel.from_xml_path(self.config.xml_path_ctrl)
         data = mujoco.MjData(model)
-        if self.robot_name == "h1_2" or self.robot_name == "h1_2_simple" or self.robot_name == "h1_mani":   
+        if self.robot_name == "h1_2" or self.robot_name == "h1_2_simple":   
             left_foot_geom_names = ["left_heel_left", "left_heel_right", "left_toe_left", "left_toe_right"]
             right_foot_geom_names = ["right_heel_left", "right_heel_right", "right_toe_left", "right_toe_right"]
             left_foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in left_foot_geom_names]
             right_foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in right_foot_geom_names]
-        elif self.robot_name == "h1":
+        elif self.robot_name == "h1" or self.robot_name == "h1_mani":
             foot_geom_names = ["left_heel_left", "left_toe_left", "right_heel_left", "right_toe_left"]
             foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in foot_geom_names]
             print("======")
@@ -579,9 +625,17 @@ class Controller:
                     self.init_stand_h1()
                 while True:
                     update_gui()
-                    self.global_ctrl_scale = bars["ctrl_scale"].get()
-                    self.global_kp_scale = bars["kp_scale"].get()
-                    self.global_kd_scale = bars["kd_scale"].get()
+                    if self.use_joystick:
+                        pygame.event.pump()
+                        lt_value = self.joystick.get_axis(2)
+                        self.global_ctrl_scale = (lt_value + 1) / 2
+                        bars["ctrl_scale"].set(self.global_ctrl_scale)
+                    else:
+                        self.global_ctrl_scale = bars["ctrl_scale"].get()
+                    self.global_kp_scale_upper = bars["kp_scale_upper"].get()
+                    self.global_kp_scale_lower = bars["kp_scale_lower"].get()
+                    self.global_kd_scale_upper = bars["kd_scale_upper"].get()
+                    self.global_kd_scale_lower = bars["kd_scale_lower"].get()
                     self.global_z_offset = bars["z_offset"].get()
                     self.global_rpy_offset = np.array([bars["roll_offset"].get(), bars["pitch_offset"].get(), bars["yaw_offset"].get()])
                     
@@ -676,8 +730,13 @@ class Controller:
                         else:
                             print(f"Robot {self.robot_name} not supported for calibration")
 
-                    agent.set_state(qpos=q_sim, qvel=qd_sim)
+                    if self.enable_object_mocap:
+                        q_object, _ = unpack_mocap_data(self.object_buffer)
+                        agent.set_state(qpos=q_sim, qvel=qd_sim, mocap_pos=q_object[:3], mocap_quat=q_object[3:])
+                    else:
+                        agent.set_state(qpos=q_sim, qvel=qd_sim)
                     ctrl = agent.get_action()
+                    ctrl[13] = 0.0
                     if self.dump_data:
                         q_data_buffer = np.roll(q_data_buffer, -1, axis=0)
                         q_data_buffer[-1] = q_sim
@@ -710,9 +769,11 @@ class Controller:
             root.destroy()
             if self.dump_data:
                 np.savez(f"{self.robot_name}_real_data.npz", q=q_data_buffer, qd=qd_data_buffer, ctrl=ctrl_data_buffer)
+            if self.use_joystick:
+                pygame.quit()
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="h1_mani")
+    controller = Controller(robot_name="h1_mani", use_joystick=True, enable_object_mocap=True)
     # controller.init_stand_go2() 
     # controller.init_stand_h1_2()
     # controller.init_stand_h1()
