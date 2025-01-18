@@ -2,7 +2,7 @@
   <include file="../../common.xml" />
   <include file="../h1.xml" />
   <size memory="400K" />
-  <option timestep="0.002" impratio="100" />
+  <option timestep="0.002" impratio="100" cone="elliptic" />
   <compiler angle="radian" meshdir=".." autolimits="true" />
   <custom>
     <!-- agent -->

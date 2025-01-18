@@ -16,6 +16,8 @@ from config import (
     H1_2PositionConfig,
     H1_2_simpleConfig,
     H1Config,
+    H1_maniConfig,
+    ObjectConfig,
 )
 from utils import (
     pack_control_data,
@@ -44,6 +46,9 @@ class Controller:
             self.config = H1_2_simpleConfig()
         elif robot_name == "h1":
             self.config = H1Config()
+        elif robot_name =="h1_mani":
+            self.config = H1_maniConfig()
+            self.object_config = ObjectConfig()
         else:
             raise ValueError(f"Robot {robot_name} not supported")
         self.mujoco_mpc_mode = mujoco_mpc_mode
@@ -200,6 +205,16 @@ class Controller:
                                     self.config.nq_real-1,
                                     self.config.nqd_real-1,
                                 )
+                            elif self.robot_name == "h1_mani":
+                                q_sim, qd_sim = state_real2sim(
+                                    q_sim,
+                                    qd_sim,
+                                    self.config.locked_joint_idx,
+                                    self.config.nq_ctrl,
+                                    self.config.nqd_ctrl,
+                                    self.config.nq_real-1,
+                                    self.config.nqd_real-1,
+                                )
                             else:
                                 q_sim, qd_sim = state_real2sim(
                                     q_sim,
@@ -253,6 +268,13 @@ class Controller:
                                     self.config.nu_real - 1,
                                 )
                                 ctrl_delay = ctrl_sim2real(last_ctrl, self.config.locked_joint_idx, self.config.nu_real-1)
+                            elif self.robot_name == "h1_mani":
+                                ctrl_real = ctrl_sim2real(
+                                    ctrl,
+                                    self.config.locked_joint_idx,
+                                    self.config.nu_real-1,
+                                )
+                                ctrl_delay = ctrl_sim2real(last_ctrl, self.config.locked_joint_idx, self.config.nu_real-1)
                             else:
                                 ctrl_real = ctrl_sim2real(
                                     ctrl,
@@ -299,5 +321,5 @@ class Controller:
 
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="h1", mujoco_mpc_mode="gui", dump_data=False)
+    controller = Controller(robot_name="h1_mani", mujoco_mpc_mode="gui", dump_data=False)
     controller.main_loop()

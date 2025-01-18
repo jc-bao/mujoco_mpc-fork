@@ -9,7 +9,17 @@ import matplotlib.pyplot as plt
 import mujoco
 from mujoco_mpc import agent as agent_lib
 from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
-from config import G1PositionConfig, Go2PositionConfig, QuadrupedConfig, G1FixedConfig, H1_2PositionConfig, H1_2_simpleConfig, H1Config
+from config import (
+  G1PositionConfig, 
+  Go2PositionConfig, 
+  QuadrupedConfig, 
+  G1FixedConfig, 
+  H1_2PositionConfig, 
+  H1_2_simpleConfig, 
+  H1Config,
+  H1_maniConfig,
+  ObjectConfig
+)
 from utils import (
     pack_control_data,
     unpack_mocap_data,
@@ -84,6 +94,14 @@ class Controller:
             from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_
             from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
             from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
+        elif robot_name == "h1_mani":
+            self.config = H1_maniConfig()
+            self.object_config = ObjectConfig()
+            from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowCmd_
+            from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowState_
+            from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_
+            from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_
+            from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
         else:
             raise ValueError(f"Robot {robot_name} not supported")
 
@@ -114,7 +132,7 @@ class Controller:
         self.state = None  # Will be initialized in main_loop
         if robot_name == "g1" or robot_name == "g1_fixed":
             self.low_cmd_msg = unitree_hg_msg_dds__LowCmd_()
-        elif robot_name == "go2" or robot_name == "h1":
+        elif robot_name == "go2" or robot_name == "h1" or robot_name == "h1_mani":
             self.low_cmd_msg = unitree_go_msg_dds__LowCmd_()
         elif robot_name == "h1_2" or robot_name == "h1_2_simple":
             self.low_cmd_msg = unitree_hg_msg_dds__LowCmd_()
@@ -133,7 +151,7 @@ class Controller:
                 print("[ERROR] service stop sport_mode error. code:", code)
             else:
                 print("[INFO] service stop sport_mode success. code:", code)
-        if robot_name == "h1":
+        if robot_name == "h1" or robot_name == "h1_mani":
             self.disable_sport_mode()
 
         
@@ -229,8 +247,6 @@ class Controller:
             rate_limiter.sleep()
         print("Stand up complete")
 
-
-
     def init_stand_go2(self):
         while self.config.percent_3<1:
             time.sleep(0.002)
@@ -286,8 +302,6 @@ class Controller:
             if self.config.control_mode == "position" and np.isclose(self.config.percent_1, 1):
                 break
         print("Stand up complete")
-        
-        
 
     def init_stand_h1(self):
         percent = 0
@@ -331,7 +345,6 @@ class Controller:
             time.sleep(0.02)
         print("Stand up complete")
         
-
     def set_action_h1(self, ctrl):
         if self.config.control_mode == "torque":
             tau = ctrl * self.global_ctrl_scale
@@ -513,7 +526,7 @@ class Controller:
         # Controller
         model = mujoco.MjModel.from_xml_path(self.config.xml_path_ctrl)
         data = mujoco.MjData(model)
-        if self.robot_name == "h1_2" or self.robot_name == "h1_2_simple":   
+        if self.robot_name == "h1_2" or self.robot_name == "h1_2_simple" or self.robot_name == "h1_mani":   
             left_foot_geom_names = ["left_heel_left", "left_heel_right", "left_toe_left", "left_toe_right"]
             right_foot_geom_names = ["right_heel_left", "right_heel_right", "right_toe_left", "right_toe_right"]
             left_foot_geom_idx = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name) for name in left_foot_geom_names]
@@ -562,7 +575,7 @@ class Controller:
                 print("first_ctrl", first_ctrl)
                 if self.robot_name == "h1_2" or self.robot_name == "h1_2_simple":
                     self.init_stand_h1_2()
-                elif self.robot_name == "h1":
+                elif self.robot_name == "h1" or self.robot_name == "h1_mani":
                     self.init_stand_h1()
                 while True:
                     update_gui()
@@ -629,7 +642,7 @@ class Controller:
                             bars["roll_offset"].set(self.global_rpy_offset[0])
                             bars["pitch_offset"].set(self.global_rpy_offset[1])
                             bars["yaw_offset"].set(self.global_rpy_offset[2])
-                        elif self.robot_name == "go2" or self.robot_name == "h1":
+                        elif self.robot_name == "go2" or self.robot_name == "h1" or self.robot_name == "h1_mani":
                             q_sim_marker = q_sim.copy()
                             qd_sim_marker = qd_sim.copy()
                             # undo z offset
@@ -683,7 +696,7 @@ class Controller:
                         self.config.locked_joint_idx,
                         self.config.nu_real - 1,
                     )
-                    if self.robot_name == "h1":
+                    if self.robot_name == "h1" or self.robot_name == "h1_mani":
                         self.set_action_h1(ctrl_real)
                     else:
                         self.set_action(ctrl_real) 
@@ -699,7 +712,7 @@ class Controller:
                 np.savez(f"{self.robot_name}_real_data.npz", q=q_data_buffer, qd=qd_data_buffer, ctrl=ctrl_data_buffer)
 
 if __name__ == "__main__":
-    controller = Controller(robot_name="h1")
+    controller = Controller(robot_name="h1_mani")
     # controller.init_stand_go2() 
     # controller.init_stand_h1_2()
     # controller.init_stand_h1()

@@ -950,6 +950,122 @@ class H1Config:
     #     ]
     # )
 
+class H1_maniConfig(H1Config):
+    xml_path_ctrl = str(MUJOCO_MPC_TASK_PATH / "h1_mani/pnp/task.xml")
+    xml_path_sim = str = "./model/h1/h1_mani.xml"
+    task_id = "H1 pnp"
+
+    nq_ctrl: int = 7 + 10 + 1 + 8
+    nqd_ctrl: int = 6 + 10 + 1 + 8
+    nu_ctrl: int = 10 + 1 + 8
+    dt_ctrl: float = 0.02
+
+    # model used in real robot
+    nq_real: int = 7 + 10 + 9 + 1
+    nqd_real: int = 6 + 10 + 9 + 1
+    nu_real: int = 10 + 9 + 1
+    nu_sim: int = 10 + 9
+
+    dt_real: float = 0.005
+
+    duration_1 = 100
+    q_default = np.array(
+        [
+            -0.0115075, -0.0226525, -0.968511, 1.39262, -0.695159, 
+            0.0125311, 0.0219092, -0.964542, 1.39812, -0.70415,
+            0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0
+        ]
+    )
+   
+    _targetPos_1 = np.array(
+        [
+            -0.0115075, -0.0226525, -0.968511, 1.39262, -0.695159, 
+            0.0125311, 0.0219092, -0.964542, 1.39812, -0.70415,
+            0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0
+        ]
+    )
+    locked_joint_idx: np.ndarray = (
+        np.array([])
+    )  # locked joints in real robot
+    kp_real: np.array = np.array(
+        [
+            # left leg
+            200.0,
+            200.0,
+            200.0,
+            300.0,
+            40.0,
+            # right leg
+            200.0,
+            200.0,
+            200.0,
+            300.0,
+            40.0,
+            # torso
+            400.0,
+            # left arm
+            100.0,
+            100.0,
+            100.0,
+            60.0,
+            # right arm
+            100.0,
+            100.0,
+            100.0,
+            60.0,
+        ]
+    )
+    kd_real: np.ndarray = np.array(
+        [
+            # left leg
+            5.0,
+            5.0,
+            5.0,
+            6.0,
+            2.0,
+            # right leg
+            5.0,
+            5.0,
+            5.0,
+            6.0,
+            2.0,
+            # torso
+            3.0,
+            # left arm
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            # right arm
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+        ]
+    )
+    gear_real = np.ones(19)
+    # mocap
+    mocap_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
+    mocap_rpy_offset: np.ndarray = np.array([0.0, 0.0, 0.0])
+    use_mocap_ang_vel: bool = False
+    
+
+    # controller
+    
+    num_opt_steps: int = 1
+   
+    # sim
+    # xml_path_sim: str = "./model/h1/h1.xml"
+    force_in_sim = False
+    motor_order = np.array([7,3,4,5,10,8,0,1,2,11,6,16,17,18,19,12,13,14,15])
+    weak_motor_idx = np.array([4,9,11,12,13,14,15,16,17,18])
+    control_mode = "position"
+
+
 class ObjectConfig:
     dt_real: float = 0.005
     vicon_tracker_ip: str = "128.2.184.3"
