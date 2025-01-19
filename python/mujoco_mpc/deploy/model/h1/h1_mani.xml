@@ -6,60 +6,60 @@
     <joint armature="0.1" />
     <geom type="mesh" friction="1.0" />
     <default class="hip_yaw_motor">
-      <joint damping="5" />
-      <position kp="200" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
+      <joint />
+      <position kp="200" kv="5" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="hip_pitch_motor">
-      <joint damping="5" />
-      <position kp="200" ctrlrange="-3.14 2.5" forcelimited="true" forcerange="-200 200" />
+      <joint />
+      <position kp="200" kv="5" ctrlrange="-3.14 2.5" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="hip_roll_motor">
-      <joint damping="5" />
-      <position kp="200" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
+      <joint />
+      <position kp="200" kv="5" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="knee_motor">
-      <joint damping="6" />
-      <position kp="300" ctrlrange="-0.26 2.05" forcelimited="true" forcerange="-300 300" />
+      <joint />
+      <position kp="300" kv="6" ctrlrange="-0.26 2.05" forcelimited="true" forcerange="-300 300" />
     </default>
     <default class="ankle_pitch_motor">
-      <joint damping="2" armature="0.03" />
-      <position kp="40.0" ctrlrange="-0.87 0.52" forcelimited="true" forcerange="-60 60" />
+      <joint armature="0.03" />
+      <position kp="40.0" kv="2" ctrlrange="-0.87 0.52" forcelimited="true" forcerange="-60 60" />
     </default>
     <default class="ankle_roll_motor">
-      <joint damping="2" armature="0.03" />
-      <position kp="40.0" ctrlrange="-0.261799 0.261799" forcelimited="true" forcerange="-40 40" />
+      <joint armature="0.03" />
+      <position kp="40.0" kv="2" ctrlrange="-0.261799 0.261799" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="torso_motor">
-      <joint damping="3.0" />
-      <position kp="150" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
+      <joint />
+      <position kp="150" kv="3.0" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="shoulder_pitch_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-2.87 2.87" forcelimited="true" forcerange="-40 40" />
+      <joint />
+      <position kp="60" kv="2.0" ctrlrange="-2.87 2.87" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="left_shoulder_roll_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
+      <joint />
+      <position kp="60" kv="2.0" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="right_shoulder_roll_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-3.11 0.34" forcelimited="true" forcerange="-40 40" />
+      <joint />
+      <position kp="60" kv="2.0" ctrlrange="-3.11 0.34" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="left_shoulder_yaw_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-1.3 4.45" forcelimited="true" forcerange="-18 18" />
+      <joint />
+      <position kp="60" kv="2.0" ctrlrange="-1.3 4.45" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="right_shoulder_yaw_motor">
-      <joint damping="2.0" />
-      <position kp="60" ctrlrange="-4.45 1.3" forcelimited="true" forcerange="-18 18" />
+      <joint />
+      <position kp="60" kv="2.0" ctrlrange="-4.45 1.3" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
-      <joint damping="1.0" />
-      <position kp="40" ctrlrange="-1.25 2.61" forcelimited="true" forcerange="-18 18" />
+      <joint />
+      <position kp="40" kv="1.0" ctrlrange="-1.25 2.61" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
-      <joint damping="0.5" />
-      <position kp="20" />
+      <joint />
+      <position kp="20" kv="0.5" />
     </default>
     <default class="visual">
       <geom contype="0" conaffinity="0" group="1" density="0" />
@@ -415,12 +415,12 @@
   </actuator>
 
   <keyframe>
-    <key name="stand" qpos='0.0456866 -0.00328121 0.982305 
-    0.988908 0.00385537 0.145313 -0.0304982 
-    -0.000172523 0.0040112 -0.706946 0.815878 -0.40069 
-    -0.00238181 0.00391676 -0.70997 0.81762 -0.399404
-     0.0625191 
-     -0.0800015 0.5 -0.0341996 0.125914 
-     -0.111715 -0.5 0.0382024 0.124549'/>
+    <key name="stand" qpos='0.0444084 -0.00473534 0.809969 
+    0.998699 -0.00809611 0.0403378 -0.0301376 
+    -0.0173813 0.0351 -0.799138 1.56541 -0.84559 
+    0.0134804 0.0217844 -0.80177 1.56241 -0.840854 
+    0.0
+    -0.0860484 1.0 -0.0334589 0.124996 
+    -0.1177 -1.0 0.0374133 0.123959 '/>
   </keyframe>
 </mujoco>

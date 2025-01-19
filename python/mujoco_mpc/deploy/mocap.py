@@ -81,7 +81,8 @@ class ViconDemo:
         try:
             self.state_shm = shared_memory.SharedMemory(name=self.shared_mem_name, create=True, size=self.shared_mem_size)
             print(f"Attach to shared memory '{self.shared_mem_name}' of size {self.shared_mem_size} bytes.")
-        except FileExistsError:
+        except FileExistsError as e:
+            print(f"Error: {e}")
             print(f"shared memory does not exist")
         self.state_buffer = self.state_shm.buf
 

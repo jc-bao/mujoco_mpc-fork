@@ -1,10 +1,10 @@
 <mujoco model="h1">
   <compiler angle="radian" meshdir="." autolimits="true" />
-
+  <option cone="elliptic" impratio="100.0" />
   <default>
     <motor ctrlrange="-1 1" ctrllimited="true" />
     <joint armature="0.1" />
-    <geom type="mesh" friction="0.5" />
+    <geom type="mesh" friction="1.0" />
     <default class="hip_yaw_motor">
       <joint damping="5" />
       <position kp="200" ctrlrange="-0.43 0.43" forcelimited="true" forcerange="-200 200" />
@@ -34,28 +34,28 @@
       <position kp="150" ctrlrange="-2.35 2.35" forcelimited="true" forcerange="-200 200" />
     </default>
     <default class="shoulder_pitch_motor">
-      <joint damping="1.5" />
-      <position kp="40" ctrlrange="-2.87 2.87" forcelimited="true" forcerange="-40 40" />
+      <joint damping="2.0" />
+      <position kp="60" ctrlrange="-2.87 2.87" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="left_shoulder_roll_motor">
-      <joint damping="1.5" />
-      <position kp="40" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
+      <joint damping="2.0" />
+      <position kp="60" ctrlrange="-0.34 3.11" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="right_shoulder_roll_motor">
-      <joint damping="1.5" />
-      <position kp="40" ctrlrange="-3.11 0.34" forcelimited="true" forcerange="-40 40" />
+      <joint damping="2.0" />
+      <position kp="60" ctrlrange="-3.11 0.34" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="left_shoulder_yaw_motor">
-      <joint damping="0.75" />
-      <position kp="15" ctrlrange="-1.3 4.45" forcelimited="true" forcerange="-18 18" />
+      <joint damping="2.0" />
+      <position kp="60" ctrlrange="-1.3 4.45" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="right_shoulder_yaw_motor">
-      <joint damping="0.75" />
-      <position kp="15" ctrlrange="-4.45 1.3" forcelimited="true" forcerange="-18 18" />
+      <joint damping="2.0" />
+      <position kp="60" ctrlrange="-4.45 1.3" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="elbow_motor">
-      <joint damping="0.75" />
-      <position kp="30" ctrlrange="-1.25 2.61" forcelimited="true" forcerange="-18 18" />
+      <joint damping="1.0" />
+      <position kp="40" ctrlrange="-1.25 2.61" forcelimited="true" forcerange="-18 18" />
     </default>
     <default class="wrist_motor">
       <joint damping="0.5" />
@@ -113,10 +113,14 @@
   </asset>
 
   <worldbody>
+    <camera name="fixed" pos="0 -4 1" zaxis="0 -1 0"/>
     <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1"
       pos="0 0 1.3" specular=".1 .1 .1" />
     <geom conaffinity="1" condim="3" name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1" size="100 100 .2"
       type="plane" material="groundplane" />
+    <body mocap="true" name="mocap" pos="0.08229997 0.10921554 1.871059">    
+    </body>
+
     <body name="pelvis" pos="0 0 1.03">
       <site name="tracking[pelvis]" class="tracking_site" pos="0 0 0.075" size=".05" />
       <inertial pos="-0.0002 4e-05 -0.04522" quat="0.498303 0.499454 -0.500496 0.501741" mass="5.39"
@@ -302,8 +306,8 @@
                 <geom class="visual" mesh="left_elbow_link" />
                 <!-- <geom class="collision" mesh="left_elbow_link" /> -->
 
-                <geom name="left_hand_front" type="sphere" size="0.03" pos="0.25 0 -0.02" rgba="0.7 0.7 0.7 1" contype="0" conaffinity="0" />
-                <geom name="left_hand_back" type="sphere" size="0.03" pos="0.1 0 -0.02" rgba="0.7 0.7 0.7 1" contype="0" conaffinity="0" />
+                <geom name="left_hand_front" type="sphere" size="0.03" pos="0.25 0 -0.02" rgba="0.7 0.7 0.7 1" />
+                <geom name="left_hand_back" type="sphere" size="0.03" pos="0.1 0 -0.02" rgba="0.7 0.7 0.7 1" />
                 <site name="left_palm" pos="0 0 0" group="4" />
                 <site name="tracking[lhand]" class="tracking_site" pos="0.28 -0.00 -0.02" />
               </body>
@@ -346,8 +350,8 @@
                 <geom class="visual" mesh="right_elbow_link" />
                 <!-- <geom class="collision" mesh="right_elbow_link" /> -->
 
-                <geom name="right_hand_front" type="sphere" size="0.03" pos="0.25 0 -0.02" rgba="0.7 0.7 0.7 1" contype="0" conaffinity="0" />
-                <geom name="right_hand_back" type="sphere" size="0.03" pos="0.1 0 -0.02" rgba="0.7 0.7 0.7 1" contype="0" conaffinity="0" />
+                <geom name="right_hand_front" type="sphere" size="0.03" pos="0.25 0 -0.02" rgba="0.7 0.7 0.7 1" />
+                <geom name="right_hand_back" type="sphere" size="0.03" pos="0.1 0 -0.02" rgba="0.7 0.7 0.7 1" />
                 <site name="right_palm" pos="0 0 0" group="4" />
                 <site name="tracking[rhand]" class="tracking_site" pos="0.28 -0.00 -0.02" />
               </body>
@@ -356,5 +360,72 @@
         </body>
       </body>
     </body>
+    <body name="goal" mocap="true" pos="0.0 0 0.7">
+      <geom type="sphere" size="0.12" contype="0" conaffinity="0" rgba="0 1 0 .5" group="2" />
+    </body>
+
+    <body name="target" mocap="true" pos="0.0 0.0 0.8">
+      <geom name="target" type="box" size="0.1 0.1 0.1" contype="0" conaffinity="0"
+        rgba=".5 .5 .5 .3" />
+      <site name="target1" type="box" pos="0  0.08 0.0" size="0.021 0.005 0.021" rgba="1 .1 .1 .3" />
+      <site name="target2" type="box" pos="0 -0.08 0.0" size="0.021 0.005 0.021" rgba=".1 .1 1 .3" />
+    </body>
+    <body name="box" mocap="true" pos="0.4 0.0 0.9">
+      <!-- <freejoint /> -->
+      <geom name="box" type="box" size="0.1 0.30 0.05" condim="3" friction="3.0 .01 .003" density="0"  contype="0" conaffinity="0" />
+      <site name="box1" type="box" pos="0.075  0.30 0.0" size="0.021 0.005 0.021" rgba="1 .1 .1 .1" />
+      <site name="box2" type="box" pos="0.075 -0.30 0.0" size="0.021 0.005 0.021" rgba=".1 .1 1 .1" />
+      <site name="box3" type="box" pos="-0.075  0.30 0.0" size="0.021 0.005 0.021" rgba="1 .1 .1 .1" />
+      <site name="box4" type="box" pos="-0.075 -0.30 0.0" size="0.021 0.005 0.021" rgba=".1 .1 1 .1" />
+    </body>
   </worldbody>
+  <equality>
+        <weld body1="mocap" body2="torso" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>
+  </equality>
+
+  <actuator>
+    <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
+    <position class="hip_roll_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
+    <position class="hip_pitch_motor" name="left_hip_pitch_joint" joint="left_hip_pitch_joint" />
+
+    <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
+    <position class="ankle_pitch_motor" name="left_ankle_joint"
+      joint="left_ankle_joint" />
+
+    <position class="hip_yaw_motor" name="right_hip_yaw_joint" joint="right_hip_yaw_joint" />
+    <position class="hip_roll_motor" name="right_hip_roll_joint" joint="right_hip_roll_joint" />
+    <position class="hip_pitch_motor" name="right_hip_pitch_joint" joint="right_hip_pitch_joint" />
+
+    <position class="knee_motor" name="right_knee_joint" joint="right_knee_joint" />
+    <position class="ankle_pitch_motor" name="right_ankle_joint"
+      joint="right_ankle_joint" />
+
+    <position class="torso_motor" name="torso_joint" joint="torso_joint" />
+
+    <position class="shoulder_pitch_motor" name="left_shoulder_pitch_joint"
+      joint="left_shoulder_pitch_joint" />
+    <position class="left_shoulder_roll_motor" name="left_shoulder_roll_joint"
+      joint="left_shoulder_roll_joint" />
+    <position class="left_shoulder_yaw_motor" name="left_shoulder_yaw_joint"
+      joint="left_shoulder_yaw_joint" />
+    <position class="elbow_motor" name="left_elbow_joint" joint="left_elbow_joint" />
+    <position class="shoulder_pitch_motor" name="right_shoulder_pitch_joint"
+      joint="right_shoulder_pitch_joint" />
+    <position class="right_shoulder_roll_motor" name="right_shoulder_roll_joint"
+      joint="right_shoulder_roll_joint" />
+    <position class="right_shoulder_yaw_motor" name="right_shoulder_yaw_joint"
+      joint="right_shoulder_yaw_joint" />
+    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" />
+
+  </actuator>
+
+  <keyframe>
+    <key name="stand" qpos='0.0456866 -0.00328121 0.982305 
+    0.988908 0.00385537 0.145313 -0.0304982 
+    -0.000172523 0.0040112 -0.706946 0.815878 -0.40069 
+    -0.00238181 0.00391676 -0.70997 0.81762 -0.399404
+     0.0625191 
+     -0.0800015 0.5 -0.0341996 0.125914 
+     -0.111715 -0.5 0.0382024 0.124549'/>
+  </keyframe>
 </mujoco>

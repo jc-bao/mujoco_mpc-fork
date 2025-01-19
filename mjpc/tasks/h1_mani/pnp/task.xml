@@ -5,7 +5,7 @@
   <option timestep="0.002" impratio="100" cone="elliptic" />
   <compiler angle="radian" meshdir=".." autolimits="true" />
   <custom>
-    <text name="task_transition" data="Auto|Target1|Target2|Target3" />
+    <text name="task_transition" data="Auto|Target1|Target2|Target3|Target4" />
     <!-- agent -->
     <numeric name="agent_planner" data="2" />
     <numeric name="agent_horizon" data="0.5" />
@@ -142,29 +142,32 @@
   </sensor>
 
   <worldbody>
-    <body name="target1" pos="0.5 0.0 1.1">
-      <!-- <geom name="box" type="box" size="0.1 0.30 0.1" conaffinity="0" contype="0" rgba="1 .1 .1 .1"/> -->
-      <site name="box1-1" type="box" pos="0.075  0.25 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
-      <site name="box1-2" type="box" pos="0.075 -0.25 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
-      <site name="box1-3" type="box" pos="-0.075  0.25 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
-      <site name="box1-4" type="box" pos="-0.075 -0.25 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
+    <body name="target1" mocap="true" pos="0.5 0.0 1.1">
+      <geom name="box1" type="box" size="0.1 0.30 0.1" conaffinity="0" contype="0" rgba="1 .1 .1 .1"/>
+      <site name="box1-1" type="box" pos="0.075  0.20 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
+      <site name="box1-2" type="box" pos="0.075 -0.20 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
+      <site name="box1-3" type="box" pos="-0.075  0.20 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
+      <site name="box1-4" type="box" pos="-0.075 -0.20 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
     </body>
 
-    <body name="target2" pos="0.3 0.3 1.3" euler="0 0 0.785">
-      <site name="box2-1" type="box" pos="0.075  0.25 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
-      <site name="box2-2" type="box" pos="0.075 -0.25 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
-      <site name="box2-3" type="box" pos="-0.075  0.25 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
-      <site name="box2-4" type="box" pos="-0.075 -0.25 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
+    <body name="target2" mocap="true" pos="0.3 0.3 1.3" euler="0 0 0.785">
+      <geom name="box2" type="box" size="0.1 0.30 0.1" conaffinity="0" contype="0" rgba="1 .1 .1 .1"/>
+      <site name="box2-1" type="box" pos="0.075  0.20 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
+      <site name="box2-2" type="box" pos="0.075 -0.20 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
+      <site name="box2-3" type="box" pos="-0.075  0.20 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
+      <site name="box2-4" type="box" pos="-0.075 -0.20 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
     </body>
 
-    <body name="target3" pos="0.0 0.4 1.1" euler="0 0 1.57">
-      <site name="box3-1" type="box" pos="0.075  0.25 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
-      <site name="box3-2" type="box" pos="0.075 -0.25 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
-      <site name="box3-3" type="box" pos="-0.075  0.25 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
-      <site name="box3-4" type="box" pos="-0.075 -0.25 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
+    <body name="target3" mocap="true" pos="0.2 0.3 1.1" euler="0 0 1.57">
+      <geom name="box3" type="box" size="0.1 0.30 0.1" conaffinity="0" contype="0" rgba="1 .1 .1 .1"/>
+      <site name="box3-1" type="box" pos="0.075  0.20 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
+      <site name="box3-2" type="box" pos="0.075 -0.20 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
+      <site name="box3-3" type="box" pos="-0.075  0.20 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
+      <site name="box3-4" type="box" pos="-0.075 -0.20 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
     </body>
 
-    <body name="target4" pos="0.0 0.4 1.2" euler="0 0 1.57">
+    <body name="target4" mocap="true" pos="0.2 0.3 1.2" euler="0 0 1.57">
+      <geom name="box4" type="box" size="0.1 0.35 0.02" conaffinity="0" contype="0" rgba="1 .1 .1 .1"/>
       <site name="box4-1" type="box" pos="0.075  0.35 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
       <site name="box4-2" type="box" pos="0.075 -0.35 -0.14" size="0.021 0.021 0.005" rgba=".1 .1 1 .1" />
       <site name="box4-3" type="box" pos="-0.075  0.35 -0.14" size="0.021 0.021 0.005" rgba="1 .1 .1 .1" />
@@ -192,19 +195,19 @@
     </body> -->
 
     <body name="left_box_front" mocap="true" pos="0.075  0.25 -0.14">
-      <geom name="left_box_front" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" />
+      <geom name="left_box_front" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" contype="0" conaffinity="0"/>
     </body>
 
     <body name="left_box_back" mocap="true" pos="-0.075  0.25 -0.14">
-      <geom name="left_box_back" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" />
+      <geom name="left_box_back" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" contype="0" conaffinity="0"/>
     </body>
 
     <body name="right_box_front" mocap="true" pos="0.075  0.25 -0.14">  
-      <geom name="right_box_front" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" />
+      <geom name="right_box_front" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" contype="0" conaffinity="0"/>
     </body>
 
     <body name="right_box_back" mocap="true" pos="-0.075  0.25 -0.14">
-      <geom name="right_box_back" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" />
+      <geom name="right_box_back" type="box" size="0.021 0.021 0.005" rgba="1 .1 .1 1.0" contype="0" conaffinity="0"/>
     </body>
   </worldbody>
 
