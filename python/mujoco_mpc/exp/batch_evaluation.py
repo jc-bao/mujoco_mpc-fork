@@ -48,7 +48,7 @@ def main():
 
     # List of controllers to test
     controllers = [
-        "Sampling",
+        # "Sampling",
         "Feedback Sampling",
         "iLQG"
     ]

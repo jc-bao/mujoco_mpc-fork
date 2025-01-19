@@ -156,12 +156,12 @@
 
     <position class="shoulder_pitch_motor" name="left_shoulder_pitch_joint"
       joint="left_shoulder_pitch_joint" />
-    <position class="shoulder_roll_motor" name="left_shoulder_roll_joint"
+    <position class="left_shoulder_roll_motor" name="left_shoulder_roll_joint"
       joint="left_shoulder_roll_joint" />
     <position class="elbow_motor" name="left_elbow_joint" joint="left_elbow_joint" />
     <position class="shoulder_pitch_motor" name="right_shoulder_pitch_joint"
       joint="right_shoulder_pitch_joint" />
-    <position class="shoulder_roll_motor" name="right_shoulder_roll_joint"
+    <position class="right_shoulder_roll_motor" name="right_shoulder_roll_joint"
       joint="right_shoulder_roll_joint" />
     <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" />
 

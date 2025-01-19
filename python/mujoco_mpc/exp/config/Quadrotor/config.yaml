@@ -3,9 +3,9 @@
 
 # Configuration for the environment
 environment:
-    total_time: 25.0
+    total_time: 30.0
 
 # Configuration for the feedback sampling
 feedback_sampling:
-    sampling_trajectories: 24
+    sampling_improvement_value_gamma: 0.8
 

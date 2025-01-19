@@ -1,0 +1,10 @@
+Task,Controller,RunIndex,Cost
+Quadrotor,Sampling,1,24.52915016819001
+Quadrotor,Sampling,2,24.30381156093426
+Quadrotor,Sampling,3,25.124463579587097
+Quadrotor,Feedback Sampling,1,17.287434290428628
+Quadrotor,Feedback Sampling,2,23.801956281329666
+Quadrotor,Feedback Sampling,3,24.791383611796878
+Quadrotor,iLQG,1,24.95523431896302
+Quadrotor,iLQG,2,23.82020994012464
+Quadrotor,iLQG,3,23.130547409857

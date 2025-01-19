@@ -71,6 +71,7 @@
     <user name="Ang. Vel." dim="3" user="0 1.25 0.0 5.0"/>
     <user name="Control" dim="4" user="0 1.0e-3 0.0 1.0"/>
     <user name="Orientation" dim="2" user="0 0.0 0.0 50.0"/>
+    <!-- <user name="Position Error" dim="1" user="0 500.0 0.0 1000.0"/> -->
     <framepos name="trace0" objtype="body" objname="x2"/>
     <framepos name="position" objtype="body" objname="x2"/>
     <framequat name="orientation" objtype="body" objname="x2"/>

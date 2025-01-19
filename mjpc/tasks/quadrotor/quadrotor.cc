@@ -54,6 +54,7 @@ void Quadrotor::ResidualFn::Residual(const mjModel* model, const mjData* data,
   for (int i = 0; i < model->nu; i++) {
     residuals[9 + i] = data->ctrl[i] - thrust;
   }
+
 }
 
 // ----- Transition for quadrotor task -----
@@ -77,7 +78,7 @@ void Quadrotor::TransitionLocked(mjModel* model, mjData* data) {
       // update task state
       current_mode_ += 1;
       if (current_mode_ == model->nkey) {
-        current_mode_ = 0;
+        current_mode_ = model->nkey - 1;
       }
     }
   }
