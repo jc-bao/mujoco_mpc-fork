@@ -42,7 +42,8 @@ def main():
         # "allegro",
         # "swimmer",
         # "walker",
-        "Go2W Hill",
+        # "Go2W Hill",
+        "Quadrotor"
     }
 
     # List of controllers to test

@@ -107,8 +107,8 @@ namespace mjpc::h1_mani
       residual[counter++] = 0.0;
       residual[counter++] = 0.0;
     } else {
-      residual[counter++] = torso_heading[0] - target_heading[0];
-      residual[counter++] = torso_heading[1] - target_heading[1];
+      residual[counter++] = 0.03 * (torso_heading[0] - target_heading[0]);
+      residual[counter++] = 0.03 * (torso_heading[1] - target_heading[1]);
     }
     int pelvis_body_id = mj_name2id(model, mjOBJ_BODY, "pelvis");
     double *pelvis_xmat = data->xmat + 9 * pelvis_body_id;

@@ -1,0 +1,11 @@
+# config.yaml
+# Configuration file for the Acrobot environment
+
+# Configuration for the environment
+environment:
+    total_time: 25.0
+
+# Configuration for the feedback sampling
+feedback_sampling:
+    sampling_trajectories: 24
+
