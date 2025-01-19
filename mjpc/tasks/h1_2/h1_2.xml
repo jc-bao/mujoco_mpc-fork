@@ -63,12 +63,12 @@
     <default class="left_shoulder_roll_motor">
       <joint damping="2.0"  />
       <!-- <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" /> -->
-      <position kp="60" kv="0.0" ctrlrange="0.0 1.0" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" kv="0.0" ctrlrange="-0.4 3.0" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="right_shoulder_roll_motor">
       <joint damping="2.0"  />
       <!-- <position kp="120" kv="0.0" ctrlrange="-0.38 3.4" forcelimited="true" forcerange="-40 40" /> -->
-      <position kp="60" kv="0.0" ctrlrange="-1.0 0.0" forcelimited="true" forcerange="-40 40" />
+      <position kp="60" kv="0.0" ctrlrange="-3.0 0.4" forcelimited="true" forcerange="-40 40" />
     </default>
     <default class="shoulder_yaw_motor">
       <joint damping="2.0"/>
