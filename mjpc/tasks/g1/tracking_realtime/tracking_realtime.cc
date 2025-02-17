@@ -271,7 +271,7 @@ namespace mjpc::g1
 
 
         // indices
-        double current_index = (d->time - residual_.reference_time_) * kFps + start;
+        double current_index = (d->time - d->userdata[0]) * kFps + start;
         int last_key_index = start + length - 1;
         current_index = std::clamp(current_index, 0.0, (double)last_key_index);
         // Positions:
