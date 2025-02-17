@@ -81,7 +81,7 @@ namespace mjpc::g1
     //         for {root, head, toe, heel, knee, hand, elbow, shoulder, hip}.
     //     Residual (11-20): TrackingRealtime velocity: minimise tracking_realtime velocity error
     //         for {root, head, toe, heel, knee, hand, elbow, shoulder, hip}.
-    //   Number of parameters: 0
+    //   Number of parameters: 0    
     // ----------------------------------------------------------------
     void TrackingRealtime::ResidualFn::Residual(const mjModel *model, const mjData *data,
                                                 double *residual) const
@@ -121,29 +121,29 @@ namespace mjpc::g1
         auto get_body_mpos = [&](const std::string &body_name, double result[3])
         {
             // this frame
-            std::string mocap_body_name = "mocap[" + body_name + "]" + std::to_string(current_index);
+            std::string mocap_body_name = "mocap[" + body_name + "]";
             int mocap_body_id = mj_name2id(model, mjOBJ_BODY, mocap_body_name.c_str());
             assert(0 <= mocap_body_id);
             int body_mocapid = model->body_mocapid[mocap_body_id];
             assert(0 <= body_mocapid);
 
             // next frame
-            std::string mocap_body_name_next = "mocap[" + body_name + "]" + std::to_string(current_index + 1);
-            int mocap_body_id_next = mj_name2id(model, mjOBJ_BODY, mocap_body_name_next.c_str());
-            assert(0 <= mocap_body_id_next);
-            int body_mocapid_next = model->body_mocapid[mocap_body_id_next];
-            assert(0 <= body_mocapid_next);
+            // std::string mocap_body_name_next = "mocap[" + body_name + "]";
+            // int mocap_body_id_next = mj_name2id(model, mjOBJ_BODY, mocap_body_name_next.c_str());
+            // assert(0 <= mocap_body_id_next);
+            // int body_mocapid_next = model->body_mocapid[mocap_body_id_next];
+            // assert(0 <= body_mocapid_next);
 
             // current frame
             mju_scl3(
                 result,
-                data->mocap_pos + model->nmocap * 3 * body_mocapid,
+                data->userdata + model->nmocap * 3 * key_index_0 + 3 * body_mocapid + 1, // +1 because of time
                 weight_0);
 
             // next frame
             mju_addToScl3(
                 result,
-                data->mocap_pos + model->nmocap * 3 * body_mocapid_next,
+                data->userdata + model->nmocap * 3 * key_index_1 + 3 * body_mocapid + 1, // +1 because of time
                 weight_1);
         };
 
@@ -203,11 +203,11 @@ namespace mjpc::g1
             int body_mocapid = model->body_mocapid[mocap_body_id];
             assert(0 <= body_mocapid);
 
-            std::string mocap_body_name_next = "mocap[" + body_name + "]" + std::to_string(current_index + 1);
-            int mocap_body_id_next = mj_name2id(model, mjOBJ_BODY, mocap_body_name_next.c_str());
-            assert(0 <= mocap_body_id_next);
-            int body_mocapid_next = model->body_mocapid[mocap_body_id_next];
-            assert(0 <= body_mocapid_next);
+            // std::string mocap_body_name_next = "mocap[" + body_name + "]" + std::to_string(current_index + 1);
+            // int mocap_body_id_next = mj_name2id(model, mjOBJ_BODY, mocap_body_name_next.c_str());
+            // assert(0 <= mocap_body_id_next);
+            // int body_mocapid_next = model->body_mocapid[mocap_body_id_next];
+            // assert(0 <= body_mocapid_next);
 
             // compute finite-difference velocity
             // mju_copy3(
@@ -218,10 +218,10 @@ namespace mjpc::g1
             //     model->key_mpos + model->nmocap * 3 * key_index_0 + 3 * body_mocapid);
             mju_copy3(
                 &residual[counter],
-                data->mocap_pos + model->nmocap * 3 * body_mocapid_next);
+                data->userdata + model->nmocap * 3 * key_index_1 + 3 * body_mocapid + 1);
             mju_subFrom3(
                 &residual[counter],
-                data->mocap_pos + model->nmocap * 3 * body_mocapid);
+                data->userdata + model->nmocap * 3 * key_index_0 + 3 * body_mocapid + 1);
             mju_scl3(&residual[counter], &residual[counter], kFps);
 
             // subtract current velocity
@@ -243,9 +243,9 @@ namespace mjpc::g1
     void TrackingRealtime::TransitionLocked(mjModel *model, mjData *d)
     {
         // get motion start index
-        // int start = MotionStartIndex(mode);
+        int start = MotionStartIndex(mode);
         // get motion trajectory length
-        // int length = MotionLength(mode);
+        int length = MotionLength(mode);
 
         // check for motion switch
         if (residual_.current_mode_ != mode || d->time == 0.0)
@@ -257,34 +257,35 @@ namespace mjpc::g1
             mju_copy(d->qpos, model->key_qpos + model->nq * 0, model->nq);
             mju_copy(d->qvel, model->key_qvel + model->nv * 0, model->nv);
 
-            // if mode is 0, set mocap pos to key frame pos
+            // if mode is 0, set userdata to default mocap pos
             if (mode == 0)
             {
                 // mju_copy(d->mocap_pos, model->key_mpos, model->nmocap * 3);
-                for (int i = 0; i < model->nmocap * 3; i++)
+                for (int i = 0; i < model->nmocap * 3 * 50; i++)
                 {
-                    d->mocap_pos[i] = default_mocap_pos[i % (3 * 16)];
+                    d->userdata[i + 1] = default_mocap_pos[i % (3 * 16)];
                 }
+                d->userdata[0] = d->time;
             }
         }
 
 
         // indices
-        // double current_index = (d->time - residual_.reference_time_) * kFps + start;
-        // int last_key_index = start + length - 1;
-        // current_index = std::clamp(current_index, 0.0, (double)last_key_index);
+        double current_index = (d->time - residual_.reference_time_) * kFps + start;
+        int last_key_index = start + length - 1;
+        current_index = std::clamp(current_index, 0.0, (double)last_key_index);
         // Positions:
         // We interpolate linearly between two consecutive key frames in order to
         // provide smoother signal for tracking.
-        // int key_index_0, key_index_1;
-        // double weight_0, weight_1;
-        // std::tie(key_index_0, key_index_1, weight_0, weight_1) =
-        //     ComputeInterpolationValues(current_index, last_key_index);
+        int key_index_0, key_index_1;
+        double weight_0, weight_1;
+        std::tie(key_index_0, key_index_1, weight_0, weight_1) =
+            ComputeInterpolationValues(current_index, last_key_index);
 
-        // mj_markStack(d);
+        mj_markStack(d);
 
-        // mjtNum *mocap_pos_0 = mj_stackAllocNum(d, 3 * model->nmocap);
-        // mjtNum *mocap_pos_1 = mj_stackAllocNum(d, 3 * model->nmocap);
+        mjtNum *mocap_pos_0 = mj_stackAllocNum(d, 3 * model->nmocap);
+        mjtNum *mocap_pos_1 = mj_stackAllocNum(d, 3 * model->nmocap);
 
         // Compute interpolated frame.
         // mju_scl(mocap_pos_0, model->key_mpos + model->nmocap * 3 * key_index_0,
@@ -292,11 +293,16 @@ namespace mjpc::g1
 
         // mju_scl(mocap_pos_1, model->key_mpos + model->nmocap * 3 * key_index_1,
         //         weight_1, model->nmocap * 3);
+        mju_scl(mocap_pos_0, d->userdata + model->nmocap * 3 * key_index_0 + 1,
+                weight_0, model->nmocap * 3);
 
-        // mju_copy(d->mocap_pos, mocap_pos_0, model->nmocap * 3);
-        // mju_addTo(d->mocap_pos, mocap_pos_1, model->nmocap * 3);
+        mju_scl(mocap_pos_1, d->userdata + model->nmocap * 3 * key_index_1 + 1,
+                weight_1, model->nmocap * 3);
 
-        // mj_freeStack(d);
+        mju_copy(d->mocap_pos, mocap_pos_0, model->nmocap * 3);
+        mju_addTo(d->mocap_pos, mocap_pos_1, model->nmocap * 3);
+
+        mj_freeStack(d);
     }
 
 } // namespace mjpc::g1
