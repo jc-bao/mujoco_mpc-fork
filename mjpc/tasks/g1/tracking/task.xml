@@ -76,6 +76,7 @@
     <body name="mocap[rhip]" mocap="true">
       <site name="mocap[rhip]" class="mocap_site" />
     </body>
+
   </worldbody>
 
   <sensor>
