@@ -42,6 +42,7 @@
 #include "mjpc/tasks/walker/walker.h"
 // humanoid
 #include "mjpc/tasks/g1/tracking/tracking.h"
+#include "mjpc/tasks/g1/tracking_realtime/tracking_realtime.h"
 #include "mjpc/tasks/g1/walk/walk.h"
 
 namespace mjpc {
@@ -75,6 +76,7 @@ std::vector<std::shared_ptr<Task>> GetTasks() {
       // humanoid
       std::make_shared<g1::Tracking>(),
       std::make_shared<g1::Walk>(),
+      std::make_shared<g1::TrackingRealtime>(),
   };
 }
 }  // namespace mjpc

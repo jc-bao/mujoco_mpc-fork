@@ -1,0 +1,2583 @@
+<mujoco model="G1 Tracking Realtime">
+    <include file="../../common.xml" />
+    <include file="../g1.xml" />
+    <size memory="3M" nuserdata="1" />
+
+    <custom>
+        <text name="task_transition"
+            data="Stop|Track" />
+        <numeric name="sampling_representation" data="2" />
+        <numeric name="agent_planner" data="2" />
+        <numeric name="agent_horizon" data="0.5" />
+        <numeric name="agent_timestep" data="0.01" />
+        <numeric name="sampling_spline_points" data="16" />
+        <numeric name="sampling_exploration" data="0.15" />
+        <numeric name="sampling_trajectories" data="32" />
+        <numeric name="gradient_spline_points" data="5" />
+        <numeric name="ilqg_num_rollouts" data="16" />
+        <numeric name="ilqg_regularization_type" data="1" />
+        <numeric name="ilqg_representation" data="2" />
+    </custom>
+
+    <default>
+        <default class="mocap_site">
+            <site type="sphere" size="0.027" rgba="0 0 1 1" group="0" material="target" />
+        </default>
+    </default>
+
+    <option timestep="0.005" />
+
+    <worldbody>
+        <body name="mocap[pelvis]0" mocap="true">
+            <site name="mocap[pelvis]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[head]0" mocap="true">
+            <site name="mocap[head]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[ltoe]0" mocap="true">
+            <site name="mocap[ltoe]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[rtoe]0" mocap="true">
+            <site name="mocap[rtoe]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[lheel]0" mocap="true">
+            <site name="mocap[lheel]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[rheel]0" mocap="true">
+            <site name="mocap[rheel]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[lknee]0" mocap="true">
+            <site name="mocap[lknee]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[rknee]0" mocap="true">
+            <site name="mocap[rknee]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[lhand]0" mocap="true">
+            <site name="mocap[lhand]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[rhand]0" mocap="true">
+            <site name="mocap[rhand]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[lelbow]0" mocap="true">
+            <site name="mocap[lelbow]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[relbow]0" mocap="true">
+            <site name="mocap[relbow]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[lshoulder]0" mocap="true">
+            <site name="mocap[lshoulder]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[rshoulder]0" mocap="true">
+            <site name="mocap[rshoulder]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[lhip]0" mocap="true">
+            <site name="mocap[lhip]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[rhip]0" mocap="true">
+            <site name="mocap[rhip]0" class="mocap_site" rgba="0.230 0.299 0.754 1" />
+        </body>
+        <body name="mocap[pelvis]1" mocap="true">
+            <site name="mocap[pelvis]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[head]1" mocap="true">
+            <site name="mocap[head]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[ltoe]1" mocap="true">
+            <site name="mocap[ltoe]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[rtoe]1" mocap="true">
+            <site name="mocap[rtoe]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[lheel]1" mocap="true">
+            <site name="mocap[lheel]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[rheel]1" mocap="true">
+            <site name="mocap[rheel]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[lknee]1" mocap="true">
+            <site name="mocap[lknee]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[rknee]1" mocap="true">
+            <site name="mocap[rknee]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[lhand]1" mocap="true">
+            <site name="mocap[lhand]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[rhand]1" mocap="true">
+            <site name="mocap[rhand]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[lelbow]1" mocap="true">
+            <site name="mocap[lelbow]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[relbow]1" mocap="true">
+            <site name="mocap[relbow]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[lshoulder]1" mocap="true">
+            <site name="mocap[lshoulder]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[rshoulder]1" mocap="true">
+            <site name="mocap[rshoulder]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[lhip]1" mocap="true">
+            <site name="mocap[lhip]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[rhip]1" mocap="true">
+            <site name="mocap[rhip]1" class="mocap_site" rgba="0.253 0.333 0.784 1" />
+        </body>
+        <body name="mocap[pelvis]2" mocap="true">
+            <site name="mocap[pelvis]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[head]2" mocap="true">
+            <site name="mocap[head]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[ltoe]2" mocap="true">
+            <site name="mocap[ltoe]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[rtoe]2" mocap="true">
+            <site name="mocap[rtoe]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[lheel]2" mocap="true">
+            <site name="mocap[lheel]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[rheel]2" mocap="true">
+            <site name="mocap[rheel]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[lknee]2" mocap="true">
+            <site name="mocap[lknee]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[rknee]2" mocap="true">
+            <site name="mocap[rknee]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[lhand]2" mocap="true">
+            <site name="mocap[lhand]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[rhand]2" mocap="true">
+            <site name="mocap[rhand]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[lelbow]2" mocap="true">
+            <site name="mocap[lelbow]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[relbow]2" mocap="true">
+            <site name="mocap[relbow]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[lshoulder]2" mocap="true">
+            <site name="mocap[lshoulder]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[rshoulder]2" mocap="true">
+            <site name="mocap[rshoulder]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[lhip]2" mocap="true">
+            <site name="mocap[lhip]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[rhip]2" mocap="true">
+            <site name="mocap[rhip]2" class="mocap_site" rgba="0.276 0.367 0.813 1" />
+        </body>
+        <body name="mocap[pelvis]3" mocap="true">
+            <site name="mocap[pelvis]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[head]3" mocap="true">
+            <site name="mocap[head]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[ltoe]3" mocap="true">
+            <site name="mocap[ltoe]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[rtoe]3" mocap="true">
+            <site name="mocap[rtoe]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[lheel]3" mocap="true">
+            <site name="mocap[lheel]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[rheel]3" mocap="true">
+            <site name="mocap[rheel]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[lknee]3" mocap="true">
+            <site name="mocap[lknee]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[rknee]3" mocap="true">
+            <site name="mocap[rknee]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[lhand]3" mocap="true">
+            <site name="mocap[lhand]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[rhand]3" mocap="true">
+            <site name="mocap[rhand]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[lelbow]3" mocap="true">
+            <site name="mocap[lelbow]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[relbow]3" mocap="true">
+            <site name="mocap[relbow]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[lshoulder]3" mocap="true">
+            <site name="mocap[lshoulder]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[rshoulder]3" mocap="true">
+            <site name="mocap[rshoulder]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[lhip]3" mocap="true">
+            <site name="mocap[lhip]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[rhip]3" mocap="true">
+            <site name="mocap[rhip]3" class="mocap_site" rgba="0.299 0.400 0.840 1" />
+        </body>
+        <body name="mocap[pelvis]4" mocap="true">
+            <site name="mocap[pelvis]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[head]4" mocap="true">
+            <site name="mocap[head]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[ltoe]4" mocap="true">
+            <site name="mocap[ltoe]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[rtoe]4" mocap="true">
+            <site name="mocap[rtoe]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[lheel]4" mocap="true">
+            <site name="mocap[lheel]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[rheel]4" mocap="true">
+            <site name="mocap[rheel]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[lknee]4" mocap="true">
+            <site name="mocap[lknee]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[rknee]4" mocap="true">
+            <site name="mocap[rknee]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[lhand]4" mocap="true">
+            <site name="mocap[lhand]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[rhand]4" mocap="true">
+            <site name="mocap[rhand]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[lelbow]4" mocap="true">
+            <site name="mocap[lelbow]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[relbow]4" mocap="true">
+            <site name="mocap[relbow]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[lshoulder]4" mocap="true">
+            <site name="mocap[lshoulder]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[rshoulder]4" mocap="true">
+            <site name="mocap[rshoulder]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[lhip]4" mocap="true">
+            <site name="mocap[lhip]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[rhip]4" mocap="true">
+            <site name="mocap[rhip]4" class="mocap_site" rgba="0.324 0.433 0.865 1" />
+        </body>
+        <body name="mocap[pelvis]5" mocap="true">
+            <site name="mocap[pelvis]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[head]5" mocap="true">
+            <site name="mocap[head]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[ltoe]5" mocap="true">
+            <site name="mocap[ltoe]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[rtoe]5" mocap="true">
+            <site name="mocap[rtoe]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[lheel]5" mocap="true">
+            <site name="mocap[lheel]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[rheel]5" mocap="true">
+            <site name="mocap[rheel]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[lknee]5" mocap="true">
+            <site name="mocap[lknee]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[rknee]5" mocap="true">
+            <site name="mocap[rknee]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[lhand]5" mocap="true">
+            <site name="mocap[lhand]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[rhand]5" mocap="true">
+            <site name="mocap[rhand]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[lelbow]5" mocap="true">
+            <site name="mocap[lelbow]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[relbow]5" mocap="true">
+            <site name="mocap[relbow]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[lshoulder]5" mocap="true">
+            <site name="mocap[lshoulder]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[rshoulder]5" mocap="true">
+            <site name="mocap[rshoulder]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[lhip]5" mocap="true">
+            <site name="mocap[lhip]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[rhip]5" mocap="true">
+            <site name="mocap[rhip]5" class="mocap_site" rgba="0.353 0.472 0.893 1" />
+        </body>
+        <body name="mocap[pelvis]6" mocap="true">
+            <site name="mocap[pelvis]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[head]6" mocap="true">
+            <site name="mocap[head]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[ltoe]6" mocap="true">
+            <site name="mocap[ltoe]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[rtoe]6" mocap="true">
+            <site name="mocap[rtoe]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[lheel]6" mocap="true">
+            <site name="mocap[lheel]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[rheel]6" mocap="true">
+            <site name="mocap[rheel]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[lknee]6" mocap="true">
+            <site name="mocap[lknee]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[rknee]6" mocap="true">
+            <site name="mocap[rknee]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[lhand]6" mocap="true">
+            <site name="mocap[lhand]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[rhand]6" mocap="true">
+            <site name="mocap[rhand]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[lelbow]6" mocap="true">
+            <site name="mocap[lelbow]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[relbow]6" mocap="true">
+            <site name="mocap[relbow]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[lshoulder]6" mocap="true">
+            <site name="mocap[lshoulder]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[rshoulder]6" mocap="true">
+            <site name="mocap[rshoulder]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[lhip]6" mocap="true">
+            <site name="mocap[lhip]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[rhip]6" mocap="true">
+            <site name="mocap[rhip]6" class="mocap_site" rgba="0.379 0.504 0.914 1" />
+        </body>
+        <body name="mocap[pelvis]7" mocap="true">
+            <site name="mocap[pelvis]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[head]7" mocap="true">
+            <site name="mocap[head]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[ltoe]7" mocap="true">
+            <site name="mocap[ltoe]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[rtoe]7" mocap="true">
+            <site name="mocap[rtoe]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[lheel]7" mocap="true">
+            <site name="mocap[lheel]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[rheel]7" mocap="true">
+            <site name="mocap[rheel]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[lknee]7" mocap="true">
+            <site name="mocap[lknee]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[rknee]7" mocap="true">
+            <site name="mocap[rknee]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[lhand]7" mocap="true">
+            <site name="mocap[lhand]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[rhand]7" mocap="true">
+            <site name="mocap[rhand]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[lelbow]7" mocap="true">
+            <site name="mocap[lelbow]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[relbow]7" mocap="true">
+            <site name="mocap[relbow]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[lshoulder]7" mocap="true">
+            <site name="mocap[lshoulder]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[rshoulder]7" mocap="true">
+            <site name="mocap[rshoulder]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[lhip]7" mocap="true">
+            <site name="mocap[lhip]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[rhip]7" mocap="true">
+            <site name="mocap[rhip]7" class="mocap_site" rgba="0.404 0.535 0.932 1" />
+        </body>
+        <body name="mocap[pelvis]8" mocap="true">
+            <site name="mocap[pelvis]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[head]8" mocap="true">
+            <site name="mocap[head]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[ltoe]8" mocap="true">
+            <site name="mocap[ltoe]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[rtoe]8" mocap="true">
+            <site name="mocap[rtoe]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[lheel]8" mocap="true">
+            <site name="mocap[lheel]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[rheel]8" mocap="true">
+            <site name="mocap[rheel]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[lknee]8" mocap="true">
+            <site name="mocap[lknee]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[rknee]8" mocap="true">
+            <site name="mocap[rknee]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[lhand]8" mocap="true">
+            <site name="mocap[lhand]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[rhand]8" mocap="true">
+            <site name="mocap[rhand]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[lelbow]8" mocap="true">
+            <site name="mocap[lelbow]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[relbow]8" mocap="true">
+            <site name="mocap[relbow]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[lshoulder]8" mocap="true">
+            <site name="mocap[lshoulder]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[rshoulder]8" mocap="true">
+            <site name="mocap[rshoulder]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[lhip]8" mocap="true">
+            <site name="mocap[lhip]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[rhip]8" mocap="true">
+            <site name="mocap[rhip]8" class="mocap_site" rgba="0.431 0.565 0.949 1" />
+        </body>
+        <body name="mocap[pelvis]9" mocap="true">
+            <site name="mocap[pelvis]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[head]9" mocap="true">
+            <site name="mocap[head]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[ltoe]9" mocap="true">
+            <site name="mocap[ltoe]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[rtoe]9" mocap="true">
+            <site name="mocap[rtoe]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[lheel]9" mocap="true">
+            <site name="mocap[lheel]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[rheel]9" mocap="true">
+            <site name="mocap[rheel]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[lknee]9" mocap="true">
+            <site name="mocap[lknee]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[rknee]9" mocap="true">
+            <site name="mocap[rknee]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[lhand]9" mocap="true">
+            <site name="mocap[lhand]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[rhand]9" mocap="true">
+            <site name="mocap[rhand]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[lelbow]9" mocap="true">
+            <site name="mocap[lelbow]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[relbow]9" mocap="true">
+            <site name="mocap[relbow]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[lshoulder]9" mocap="true">
+            <site name="mocap[lshoulder]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[rshoulder]9" mocap="true">
+            <site name="mocap[rshoulder]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[lhip]9" mocap="true">
+            <site name="mocap[lhip]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[rhip]9" mocap="true">
+            <site name="mocap[rhip]9" class="mocap_site" rgba="0.462 0.600 0.966 1" />
+        </body>
+        <body name="mocap[pelvis]10" mocap="true">
+            <site name="mocap[pelvis]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[head]10" mocap="true">
+            <site name="mocap[head]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[ltoe]10" mocap="true">
+            <site name="mocap[ltoe]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[rtoe]10" mocap="true">
+            <site name="mocap[rtoe]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[lheel]10" mocap="true">
+            <site name="mocap[lheel]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[rheel]10" mocap="true">
+            <site name="mocap[rheel]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[lknee]10" mocap="true">
+            <site name="mocap[lknee]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[rknee]10" mocap="true">
+            <site name="mocap[rknee]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[lhand]10" mocap="true">
+            <site name="mocap[lhand]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[rhand]10" mocap="true">
+            <site name="mocap[rhand]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[lelbow]10" mocap="true">
+            <site name="mocap[lelbow]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[relbow]10" mocap="true">
+            <site name="mocap[relbow]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[lshoulder]10" mocap="true">
+            <site name="mocap[lshoulder]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[rshoulder]10" mocap="true">
+            <site name="mocap[rshoulder]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[lhip]10" mocap="true">
+            <site name="mocap[lhip]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[rhip]10" mocap="true">
+            <site name="mocap[rhip]10" class="mocap_site" rgba="0.489 0.628 0.977 1" />
+        </body>
+        <body name="mocap[pelvis]11" mocap="true">
+            <site name="mocap[pelvis]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[head]11" mocap="true">
+            <site name="mocap[head]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[ltoe]11" mocap="true">
+            <site name="mocap[ltoe]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[rtoe]11" mocap="true">
+            <site name="mocap[rtoe]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[lheel]11" mocap="true">
+            <site name="mocap[lheel]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[rheel]11" mocap="true">
+            <site name="mocap[rheel]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[lknee]11" mocap="true">
+            <site name="mocap[lknee]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[rknee]11" mocap="true">
+            <site name="mocap[rknee]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[lhand]11" mocap="true">
+            <site name="mocap[lhand]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[rhand]11" mocap="true">
+            <site name="mocap[rhand]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[lelbow]11" mocap="true">
+            <site name="mocap[lelbow]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[relbow]11" mocap="true">
+            <site name="mocap[relbow]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[lshoulder]11" mocap="true">
+            <site name="mocap[lshoulder]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[rshoulder]11" mocap="true">
+            <site name="mocap[rshoulder]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[lhip]11" mocap="true">
+            <site name="mocap[lhip]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[rhip]11" mocap="true">
+            <site name="mocap[rhip]11" class="mocap_site" rgba="0.516 0.654 0.986 1" />
+        </body>
+        <body name="mocap[pelvis]12" mocap="true">
+            <site name="mocap[pelvis]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[head]12" mocap="true">
+            <site name="mocap[head]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[ltoe]12" mocap="true">
+            <site name="mocap[ltoe]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[rtoe]12" mocap="true">
+            <site name="mocap[rtoe]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[lheel]12" mocap="true">
+            <site name="mocap[lheel]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[rheel]12" mocap="true">
+            <site name="mocap[rheel]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[lknee]12" mocap="true">
+            <site name="mocap[lknee]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[rknee]12" mocap="true">
+            <site name="mocap[rknee]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[lhand]12" mocap="true">
+            <site name="mocap[lhand]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[rhand]12" mocap="true">
+            <site name="mocap[rhand]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[lelbow]12" mocap="true">
+            <site name="mocap[lelbow]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[relbow]12" mocap="true">
+            <site name="mocap[relbow]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[lshoulder]12" mocap="true">
+            <site name="mocap[lshoulder]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[rshoulder]12" mocap="true">
+            <site name="mocap[rshoulder]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[lhip]12" mocap="true">
+            <site name="mocap[lhip]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[rhip]12" mocap="true">
+            <site name="mocap[rhip]12" class="mocap_site" rgba="0.543 0.680 0.993 1" />
+        </body>
+        <body name="mocap[pelvis]13" mocap="true">
+            <site name="mocap[pelvis]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[head]13" mocap="true">
+            <site name="mocap[head]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[ltoe]13" mocap="true">
+            <site name="mocap[ltoe]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[rtoe]13" mocap="true">
+            <site name="mocap[rtoe]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[lheel]13" mocap="true">
+            <site name="mocap[lheel]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[rheel]13" mocap="true">
+            <site name="mocap[rheel]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[lknee]13" mocap="true">
+            <site name="mocap[lknee]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[rknee]13" mocap="true">
+            <site name="mocap[rknee]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[lhand]13" mocap="true">
+            <site name="mocap[lhand]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[rhand]13" mocap="true">
+            <site name="mocap[rhand]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[lelbow]13" mocap="true">
+            <site name="mocap[lelbow]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[relbow]13" mocap="true">
+            <site name="mocap[relbow]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[lshoulder]13" mocap="true">
+            <site name="mocap[lshoulder]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[rshoulder]13" mocap="true">
+            <site name="mocap[rshoulder]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[lhip]13" mocap="true">
+            <site name="mocap[lhip]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[rhip]13" mocap="true">
+            <site name="mocap[rhip]13" class="mocap_site" rgba="0.571 0.704 0.997 1" />
+        </body>
+        <body name="mocap[pelvis]14" mocap="true">
+            <site name="mocap[pelvis]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[head]14" mocap="true">
+            <site name="mocap[head]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[ltoe]14" mocap="true">
+            <site name="mocap[ltoe]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[rtoe]14" mocap="true">
+            <site name="mocap[rtoe]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[lheel]14" mocap="true">
+            <site name="mocap[lheel]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[rheel]14" mocap="true">
+            <site name="mocap[rheel]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[lknee]14" mocap="true">
+            <site name="mocap[lknee]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[rknee]14" mocap="true">
+            <site name="mocap[rknee]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[lhand]14" mocap="true">
+            <site name="mocap[lhand]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[rhand]14" mocap="true">
+            <site name="mocap[rhand]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[lelbow]14" mocap="true">
+            <site name="mocap[lelbow]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[relbow]14" mocap="true">
+            <site name="mocap[relbow]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[lshoulder]14" mocap="true">
+            <site name="mocap[lshoulder]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[rshoulder]14" mocap="true">
+            <site name="mocap[rshoulder]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[lhip]14" mocap="true">
+            <site name="mocap[lhip]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[rhip]14" mocap="true">
+            <site name="mocap[rhip]14" class="mocap_site" rgba="0.603 0.732 1.000 1" />
+        </body>
+        <body name="mocap[pelvis]15" mocap="true">
+            <site name="mocap[pelvis]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[head]15" mocap="true">
+            <site name="mocap[head]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[ltoe]15" mocap="true">
+            <site name="mocap[ltoe]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[rtoe]15" mocap="true">
+            <site name="mocap[rtoe]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[lheel]15" mocap="true">
+            <site name="mocap[lheel]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[rheel]15" mocap="true">
+            <site name="mocap[rheel]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[lknee]15" mocap="true">
+            <site name="mocap[lknee]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[rknee]15" mocap="true">
+            <site name="mocap[rknee]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[lhand]15" mocap="true">
+            <site name="mocap[lhand]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[rhand]15" mocap="true">
+            <site name="mocap[rhand]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[lelbow]15" mocap="true">
+            <site name="mocap[lelbow]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[relbow]15" mocap="true">
+            <site name="mocap[relbow]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[lshoulder]15" mocap="true">
+            <site name="mocap[lshoulder]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[rshoulder]15" mocap="true">
+            <site name="mocap[rshoulder]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[lhip]15" mocap="true">
+            <site name="mocap[lhip]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[rhip]15" mocap="true">
+            <site name="mocap[rhip]15" class="mocap_site" rgba="0.630 0.753 0.999 1" />
+        </body>
+        <body name="mocap[pelvis]16" mocap="true">
+            <site name="mocap[pelvis]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[head]16" mocap="true">
+            <site name="mocap[head]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[ltoe]16" mocap="true">
+            <site name="mocap[ltoe]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[rtoe]16" mocap="true">
+            <site name="mocap[rtoe]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[lheel]16" mocap="true">
+            <site name="mocap[lheel]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[rheel]16" mocap="true">
+            <site name="mocap[rheel]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[lknee]16" mocap="true">
+            <site name="mocap[lknee]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[rknee]16" mocap="true">
+            <site name="mocap[rknee]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[lhand]16" mocap="true">
+            <site name="mocap[lhand]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[rhand]16" mocap="true">
+            <site name="mocap[rhand]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[lelbow]16" mocap="true">
+            <site name="mocap[lelbow]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[relbow]16" mocap="true">
+            <site name="mocap[relbow]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[lshoulder]16" mocap="true">
+            <site name="mocap[lshoulder]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[rshoulder]16" mocap="true">
+            <site name="mocap[rshoulder]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[lhip]16" mocap="true">
+            <site name="mocap[lhip]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[rhip]16" mocap="true">
+            <site name="mocap[rhip]16" class="mocap_site" rgba="0.657 0.772 0.995 1" />
+        </body>
+        <body name="mocap[pelvis]17" mocap="true">
+            <site name="mocap[pelvis]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[head]17" mocap="true">
+            <site name="mocap[head]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[ltoe]17" mocap="true">
+            <site name="mocap[ltoe]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[rtoe]17" mocap="true">
+            <site name="mocap[rtoe]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[lheel]17" mocap="true">
+            <site name="mocap[lheel]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[rheel]17" mocap="true">
+            <site name="mocap[rheel]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[lknee]17" mocap="true">
+            <site name="mocap[lknee]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[rknee]17" mocap="true">
+            <site name="mocap[rknee]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[lhand]17" mocap="true">
+            <site name="mocap[lhand]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[rhand]17" mocap="true">
+            <site name="mocap[rhand]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[lelbow]17" mocap="true">
+            <site name="mocap[lelbow]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[relbow]17" mocap="true">
+            <site name="mocap[relbow]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[lshoulder]17" mocap="true">
+            <site name="mocap[lshoulder]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[rshoulder]17" mocap="true">
+            <site name="mocap[rshoulder]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[lhip]17" mocap="true">
+            <site name="mocap[lhip]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[rhip]17" mocap="true">
+            <site name="mocap[rhip]17" class="mocap_site" rgba="0.683 0.790 0.990 1" />
+        </body>
+        <body name="mocap[pelvis]18" mocap="true">
+            <site name="mocap[pelvis]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[head]18" mocap="true">
+            <site name="mocap[head]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[ltoe]18" mocap="true">
+            <site name="mocap[ltoe]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[rtoe]18" mocap="true">
+            <site name="mocap[rtoe]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[lheel]18" mocap="true">
+            <site name="mocap[lheel]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[rheel]18" mocap="true">
+            <site name="mocap[rheel]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[lknee]18" mocap="true">
+            <site name="mocap[lknee]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[rknee]18" mocap="true">
+            <site name="mocap[rknee]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[lhand]18" mocap="true">
+            <site name="mocap[lhand]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[rhand]18" mocap="true">
+            <site name="mocap[rhand]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[lelbow]18" mocap="true">
+            <site name="mocap[lelbow]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[relbow]18" mocap="true">
+            <site name="mocap[relbow]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[lshoulder]18" mocap="true">
+            <site name="mocap[lshoulder]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[rshoulder]18" mocap="true">
+            <site name="mocap[rshoulder]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[lhip]18" mocap="true">
+            <site name="mocap[lhip]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[rhip]18" mocap="true">
+            <site name="mocap[rhip]18" class="mocap_site" rgba="0.714 0.809 0.979 1" />
+        </body>
+        <body name="mocap[pelvis]19" mocap="true">
+            <site name="mocap[pelvis]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[head]19" mocap="true">
+            <site name="mocap[head]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[ltoe]19" mocap="true">
+            <site name="mocap[ltoe]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[rtoe]19" mocap="true">
+            <site name="mocap[rtoe]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[lheel]19" mocap="true">
+            <site name="mocap[lheel]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[rheel]19" mocap="true">
+            <site name="mocap[rheel]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[lknee]19" mocap="true">
+            <site name="mocap[lknee]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[rknee]19" mocap="true">
+            <site name="mocap[rknee]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[lhand]19" mocap="true">
+            <site name="mocap[lhand]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[rhand]19" mocap="true">
+            <site name="mocap[rhand]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[lelbow]19" mocap="true">
+            <site name="mocap[lelbow]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[relbow]19" mocap="true">
+            <site name="mocap[relbow]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[lshoulder]19" mocap="true">
+            <site name="mocap[lshoulder]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[rshoulder]19" mocap="true">
+            <site name="mocap[rshoulder]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[lhip]19" mocap="true">
+            <site name="mocap[lhip]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[rhip]19" mocap="true">
+            <site name="mocap[rhip]19" class="mocap_site" rgba="0.739 0.823 0.968 1" />
+        </body>
+        <body name="mocap[pelvis]20" mocap="true">
+            <site name="mocap[pelvis]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[head]20" mocap="true">
+            <site name="mocap[head]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[ltoe]20" mocap="true">
+            <site name="mocap[ltoe]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[rtoe]20" mocap="true">
+            <site name="mocap[rtoe]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[lheel]20" mocap="true">
+            <site name="mocap[lheel]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[rheel]20" mocap="true">
+            <site name="mocap[rheel]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[lknee]20" mocap="true">
+            <site name="mocap[lknee]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[rknee]20" mocap="true">
+            <site name="mocap[rknee]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[lhand]20" mocap="true">
+            <site name="mocap[lhand]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[rhand]20" mocap="true">
+            <site name="mocap[rhand]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[lelbow]20" mocap="true">
+            <site name="mocap[lelbow]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[relbow]20" mocap="true">
+            <site name="mocap[relbow]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[lshoulder]20" mocap="true">
+            <site name="mocap[lshoulder]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[rshoulder]20" mocap="true">
+            <site name="mocap[rshoulder]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[lhip]20" mocap="true">
+            <site name="mocap[lhip]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[rhip]20" mocap="true">
+            <site name="mocap[rhip]20" class="mocap_site" rgba="0.763 0.835 0.956 1" />
+        </body>
+        <body name="mocap[pelvis]21" mocap="true">
+            <site name="mocap[pelvis]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[head]21" mocap="true">
+            <site name="mocap[head]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[ltoe]21" mocap="true">
+            <site name="mocap[ltoe]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[rtoe]21" mocap="true">
+            <site name="mocap[rtoe]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[lheel]21" mocap="true">
+            <site name="mocap[lheel]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[rheel]21" mocap="true">
+            <site name="mocap[rheel]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[lknee]21" mocap="true">
+            <site name="mocap[lknee]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[rknee]21" mocap="true">
+            <site name="mocap[rknee]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[lhand]21" mocap="true">
+            <site name="mocap[lhand]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[rhand]21" mocap="true">
+            <site name="mocap[rhand]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[lelbow]21" mocap="true">
+            <site name="mocap[lelbow]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[relbow]21" mocap="true">
+            <site name="mocap[relbow]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[lshoulder]21" mocap="true">
+            <site name="mocap[lshoulder]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[rshoulder]21" mocap="true">
+            <site name="mocap[rshoulder]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[lhip]21" mocap="true">
+            <site name="mocap[lhip]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[rhip]21" mocap="true">
+            <site name="mocap[rhip]21" class="mocap_site" rgba="0.787 0.845 0.940 1" />
+        </body>
+        <body name="mocap[pelvis]22" mocap="true">
+            <site name="mocap[pelvis]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[head]22" mocap="true">
+            <site name="mocap[head]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[ltoe]22" mocap="true">
+            <site name="mocap[ltoe]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[rtoe]22" mocap="true">
+            <site name="mocap[rtoe]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[lheel]22" mocap="true">
+            <site name="mocap[lheel]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[rheel]22" mocap="true">
+            <site name="mocap[rheel]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[lknee]22" mocap="true">
+            <site name="mocap[lknee]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[rknee]22" mocap="true">
+            <site name="mocap[rknee]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[lhand]22" mocap="true">
+            <site name="mocap[lhand]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[rhand]22" mocap="true">
+            <site name="mocap[rhand]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[lelbow]22" mocap="true">
+            <site name="mocap[lelbow]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[relbow]22" mocap="true">
+            <site name="mocap[relbow]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[lshoulder]22" mocap="true">
+            <site name="mocap[lshoulder]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[rshoulder]22" mocap="true">
+            <site name="mocap[rshoulder]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[lhip]22" mocap="true">
+            <site name="mocap[lhip]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[rhip]22" mocap="true">
+            <site name="mocap[rhip]22" class="mocap_site" rgba="0.809 0.853 0.922 1" />
+        </body>
+        <body name="mocap[pelvis]23" mocap="true">
+            <site name="mocap[pelvis]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[head]23" mocap="true">
+            <site name="mocap[head]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[ltoe]23" mocap="true">
+            <site name="mocap[ltoe]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[rtoe]23" mocap="true">
+            <site name="mocap[rtoe]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[lheel]23" mocap="true">
+            <site name="mocap[lheel]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[rheel]23" mocap="true">
+            <site name="mocap[rheel]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[lknee]23" mocap="true">
+            <site name="mocap[lknee]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[rknee]23" mocap="true">
+            <site name="mocap[rknee]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[lhand]23" mocap="true">
+            <site name="mocap[lhand]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[rhand]23" mocap="true">
+            <site name="mocap[rhand]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[lelbow]23" mocap="true">
+            <site name="mocap[lelbow]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[relbow]23" mocap="true">
+            <site name="mocap[relbow]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[lshoulder]23" mocap="true">
+            <site name="mocap[lshoulder]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[rshoulder]23" mocap="true">
+            <site name="mocap[rshoulder]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[lhip]23" mocap="true">
+            <site name="mocap[lhip]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[rhip]23" mocap="true">
+            <site name="mocap[rhip]23" class="mocap_site" rgba="0.835 0.861 0.899 1" />
+        </body>
+        <body name="mocap[pelvis]24" mocap="true">
+            <site name="mocap[pelvis]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[head]24" mocap="true">
+            <site name="mocap[head]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[ltoe]24" mocap="true">
+            <site name="mocap[ltoe]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[rtoe]24" mocap="true">
+            <site name="mocap[rtoe]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[lheel]24" mocap="true">
+            <site name="mocap[lheel]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[rheel]24" mocap="true">
+            <site name="mocap[rheel]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[lknee]24" mocap="true">
+            <site name="mocap[lknee]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[rknee]24" mocap="true">
+            <site name="mocap[rknee]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[lhand]24" mocap="true">
+            <site name="mocap[lhand]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[rhand]24" mocap="true">
+            <site name="mocap[rhand]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[lelbow]24" mocap="true">
+            <site name="mocap[lelbow]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[relbow]24" mocap="true">
+            <site name="mocap[relbow]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[lshoulder]24" mocap="true">
+            <site name="mocap[lshoulder]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[rshoulder]24" mocap="true">
+            <site name="mocap[rshoulder]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[lhip]24" mocap="true">
+            <site name="mocap[lhip]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[rhip]24" mocap="true">
+            <site name="mocap[rhip]24" class="mocap_site" rgba="0.855 0.864 0.877 1" />
+        </body>
+        <body name="mocap[pelvis]25" mocap="true">
+            <site name="mocap[pelvis]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[head]25" mocap="true">
+            <site name="mocap[head]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[ltoe]25" mocap="true">
+            <site name="mocap[ltoe]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[rtoe]25" mocap="true">
+            <site name="mocap[rtoe]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[lheel]25" mocap="true">
+            <site name="mocap[lheel]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[rheel]25" mocap="true">
+            <site name="mocap[rheel]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[lknee]25" mocap="true">
+            <site name="mocap[lknee]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[rknee]25" mocap="true">
+            <site name="mocap[rknee]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[lhand]25" mocap="true">
+            <site name="mocap[lhand]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[rhand]25" mocap="true">
+            <site name="mocap[rhand]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[lelbow]25" mocap="true">
+            <site name="mocap[lelbow]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[relbow]25" mocap="true">
+            <site name="mocap[relbow]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[lshoulder]25" mocap="true">
+            <site name="mocap[lshoulder]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[rshoulder]25" mocap="true">
+            <site name="mocap[rshoulder]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[lhip]25" mocap="true">
+            <site name="mocap[lhip]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[rhip]25" mocap="true">
+            <site name="mocap[rhip]25" class="mocap_site" rgba="0.876 0.860 0.851 1" />
+        </body>
+        <body name="mocap[pelvis]26" mocap="true">
+            <site name="mocap[pelvis]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[head]26" mocap="true">
+            <site name="mocap[head]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[ltoe]26" mocap="true">
+            <site name="mocap[ltoe]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[rtoe]26" mocap="true">
+            <site name="mocap[rtoe]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[lheel]26" mocap="true">
+            <site name="mocap[lheel]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[rheel]26" mocap="true">
+            <site name="mocap[rheel]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[lknee]26" mocap="true">
+            <site name="mocap[lknee]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[rknee]26" mocap="true">
+            <site name="mocap[rknee]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[lhand]26" mocap="true">
+            <site name="mocap[lhand]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[rhand]26" mocap="true">
+            <site name="mocap[rhand]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[lelbow]26" mocap="true">
+            <site name="mocap[lelbow]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[relbow]26" mocap="true">
+            <site name="mocap[relbow]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[lshoulder]26" mocap="true">
+            <site name="mocap[lshoulder]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[rshoulder]26" mocap="true">
+            <site name="mocap[rshoulder]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[lhip]26" mocap="true">
+            <site name="mocap[lhip]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[rhip]26" mocap="true">
+            <site name="mocap[rhip]26" class="mocap_site" rgba="0.896 0.850 0.823 1" />
+        </body>
+        <body name="mocap[pelvis]27" mocap="true">
+            <site name="mocap[pelvis]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[head]27" mocap="true">
+            <site name="mocap[head]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[ltoe]27" mocap="true">
+            <site name="mocap[ltoe]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[rtoe]27" mocap="true">
+            <site name="mocap[rtoe]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[lheel]27" mocap="true">
+            <site name="mocap[lheel]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[rheel]27" mocap="true">
+            <site name="mocap[rheel]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[lknee]27" mocap="true">
+            <site name="mocap[lknee]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[rknee]27" mocap="true">
+            <site name="mocap[rknee]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[lhand]27" mocap="true">
+            <site name="mocap[lhand]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[rhand]27" mocap="true">
+            <site name="mocap[rhand]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[lelbow]27" mocap="true">
+            <site name="mocap[lelbow]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[relbow]27" mocap="true">
+            <site name="mocap[relbow]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[lshoulder]27" mocap="true">
+            <site name="mocap[lshoulder]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[rshoulder]27" mocap="true">
+            <site name="mocap[rshoulder]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[lhip]27" mocap="true">
+            <site name="mocap[lhip]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[rhip]27" mocap="true">
+            <site name="mocap[rhip]27" class="mocap_site" rgba="0.916 0.834 0.789 1" />
+        </body>
+        <body name="mocap[pelvis]28" mocap="true">
+            <site name="mocap[pelvis]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[head]28" mocap="true">
+            <site name="mocap[head]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[ltoe]28" mocap="true">
+            <site name="mocap[ltoe]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[rtoe]28" mocap="true">
+            <site name="mocap[rtoe]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[lheel]28" mocap="true">
+            <site name="mocap[lheel]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[rheel]28" mocap="true">
+            <site name="mocap[rheel]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[lknee]28" mocap="true">
+            <site name="mocap[lknee]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[rknee]28" mocap="true">
+            <site name="mocap[rknee]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[lhand]28" mocap="true">
+            <site name="mocap[lhand]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[rhand]28" mocap="true">
+            <site name="mocap[rhand]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[lelbow]28" mocap="true">
+            <site name="mocap[lelbow]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[relbow]28" mocap="true">
+            <site name="mocap[relbow]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[lshoulder]28" mocap="true">
+            <site name="mocap[lshoulder]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[rshoulder]28" mocap="true">
+            <site name="mocap[rshoulder]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[lhip]28" mocap="true">
+            <site name="mocap[lhip]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[rhip]28" mocap="true">
+            <site name="mocap[rhip]28" class="mocap_site" rgba="0.931 0.819 0.759 1" />
+        </body>
+        <body name="mocap[pelvis]29" mocap="true">
+            <site name="mocap[pelvis]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[head]29" mocap="true">
+            <site name="mocap[head]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[ltoe]29" mocap="true">
+            <site name="mocap[ltoe]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[rtoe]29" mocap="true">
+            <site name="mocap[rtoe]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[lheel]29" mocap="true">
+            <site name="mocap[lheel]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[rheel]29" mocap="true">
+            <site name="mocap[rheel]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[lknee]29" mocap="true">
+            <site name="mocap[lknee]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[rknee]29" mocap="true">
+            <site name="mocap[rknee]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[lhand]29" mocap="true">
+            <site name="mocap[lhand]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[rhand]29" mocap="true">
+            <site name="mocap[rhand]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[lelbow]29" mocap="true">
+            <site name="mocap[lelbow]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[relbow]29" mocap="true">
+            <site name="mocap[relbow]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[lshoulder]29" mocap="true">
+            <site name="mocap[lshoulder]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[rshoulder]29" mocap="true">
+            <site name="mocap[rshoulder]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[lhip]29" mocap="true">
+            <site name="mocap[lhip]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[rhip]29" mocap="true">
+            <site name="mocap[rhip]29" class="mocap_site" rgba="0.943 0.802 0.729 1" />
+        </body>
+        <body name="mocap[pelvis]30" mocap="true">
+            <site name="mocap[pelvis]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[head]30" mocap="true">
+            <site name="mocap[head]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[ltoe]30" mocap="true">
+            <site name="mocap[ltoe]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[rtoe]30" mocap="true">
+            <site name="mocap[rtoe]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[lheel]30" mocap="true">
+            <site name="mocap[lheel]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[rheel]30" mocap="true">
+            <site name="mocap[rheel]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[lknee]30" mocap="true">
+            <site name="mocap[lknee]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[rknee]30" mocap="true">
+            <site name="mocap[rknee]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[lhand]30" mocap="true">
+            <site name="mocap[lhand]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[rhand]30" mocap="true">
+            <site name="mocap[rhand]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[lelbow]30" mocap="true">
+            <site name="mocap[lelbow]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[relbow]30" mocap="true">
+            <site name="mocap[relbow]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[lshoulder]30" mocap="true">
+            <site name="mocap[lshoulder]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[rshoulder]30" mocap="true">
+            <site name="mocap[rshoulder]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[lhip]30" mocap="true">
+            <site name="mocap[lhip]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[rhip]30" mocap="true">
+            <site name="mocap[rhip]30" class="mocap_site" rgba="0.953 0.783 0.699 1" />
+        </body>
+        <body name="mocap[pelvis]31" mocap="true">
+            <site name="mocap[pelvis]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[head]31" mocap="true">
+            <site name="mocap[head]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[ltoe]31" mocap="true">
+            <site name="mocap[ltoe]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[rtoe]31" mocap="true">
+            <site name="mocap[rtoe]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[lheel]31" mocap="true">
+            <site name="mocap[lheel]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[rheel]31" mocap="true">
+            <site name="mocap[rheel]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[lknee]31" mocap="true">
+            <site name="mocap[lknee]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[rknee]31" mocap="true">
+            <site name="mocap[rknee]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[lhand]31" mocap="true">
+            <site name="mocap[lhand]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[rhand]31" mocap="true">
+            <site name="mocap[rhand]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[lelbow]31" mocap="true">
+            <site name="mocap[lelbow]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[relbow]31" mocap="true">
+            <site name="mocap[relbow]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[lshoulder]31" mocap="true">
+            <site name="mocap[lshoulder]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[rshoulder]31" mocap="true">
+            <site name="mocap[rshoulder]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[lhip]31" mocap="true">
+            <site name="mocap[lhip]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[rhip]31" mocap="true">
+            <site name="mocap[rhip]31" class="mocap_site" rgba="0.961 0.763 0.668 1" />
+        </body>
+        <body name="mocap[pelvis]32" mocap="true">
+            <site name="mocap[pelvis]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[head]32" mocap="true">
+            <site name="mocap[head]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[ltoe]32" mocap="true">
+            <site name="mocap[ltoe]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[rtoe]32" mocap="true">
+            <site name="mocap[rtoe]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[lheel]32" mocap="true">
+            <site name="mocap[lheel]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[rheel]32" mocap="true">
+            <site name="mocap[rheel]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[lknee]32" mocap="true">
+            <site name="mocap[lknee]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[rknee]32" mocap="true">
+            <site name="mocap[rknee]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[lhand]32" mocap="true">
+            <site name="mocap[lhand]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[rhand]32" mocap="true">
+            <site name="mocap[rhand]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[lelbow]32" mocap="true">
+            <site name="mocap[lelbow]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[relbow]32" mocap="true">
+            <site name="mocap[relbow]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[lshoulder]32" mocap="true">
+            <site name="mocap[lshoulder]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[rshoulder]32" mocap="true">
+            <site name="mocap[rshoulder]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[lhip]32" mocap="true">
+            <site name="mocap[lhip]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[rhip]32" mocap="true">
+            <site name="mocap[rhip]32" class="mocap_site" rgba="0.967 0.736 0.631 1" />
+        </body>
+        <body name="mocap[pelvis]33" mocap="true">
+            <site name="mocap[pelvis]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[head]33" mocap="true">
+            <site name="mocap[head]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[ltoe]33" mocap="true">
+            <site name="mocap[ltoe]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[rtoe]33" mocap="true">
+            <site name="mocap[rtoe]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[lheel]33" mocap="true">
+            <site name="mocap[lheel]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[rheel]33" mocap="true">
+            <site name="mocap[rheel]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[lknee]33" mocap="true">
+            <site name="mocap[lknee]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[rknee]33" mocap="true">
+            <site name="mocap[rknee]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[lhand]33" mocap="true">
+            <site name="mocap[lhand]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[rhand]33" mocap="true">
+            <site name="mocap[rhand]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[lelbow]33" mocap="true">
+            <site name="mocap[lelbow]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[relbow]33" mocap="true">
+            <site name="mocap[relbow]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[lshoulder]33" mocap="true">
+            <site name="mocap[lshoulder]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[rshoulder]33" mocap="true">
+            <site name="mocap[rshoulder]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[lhip]33" mocap="true">
+            <site name="mocap[lhip]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[rhip]33" mocap="true">
+            <site name="mocap[rhip]33" class="mocap_site" rgba="0.969 0.711 0.600 1" />
+        </body>
+        <body name="mocap[pelvis]34" mocap="true">
+            <site name="mocap[pelvis]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[head]34" mocap="true">
+            <site name="mocap[head]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[ltoe]34" mocap="true">
+            <site name="mocap[ltoe]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[rtoe]34" mocap="true">
+            <site name="mocap[rtoe]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[lheel]34" mocap="true">
+            <site name="mocap[lheel]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[rheel]34" mocap="true">
+            <site name="mocap[rheel]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[lknee]34" mocap="true">
+            <site name="mocap[lknee]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[rknee]34" mocap="true">
+            <site name="mocap[rknee]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[lhand]34" mocap="true">
+            <site name="mocap[lhand]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[rhand]34" mocap="true">
+            <site name="mocap[rhand]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[lelbow]34" mocap="true">
+            <site name="mocap[lelbow]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[relbow]34" mocap="true">
+            <site name="mocap[relbow]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[lshoulder]34" mocap="true">
+            <site name="mocap[lshoulder]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[rshoulder]34" mocap="true">
+            <site name="mocap[rshoulder]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[lhip]34" mocap="true">
+            <site name="mocap[lhip]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[rhip]34" mocap="true">
+            <site name="mocap[rhip]34" class="mocap_site" rgba="0.969 0.685 0.569 1" />
+        </body>
+        <body name="mocap[pelvis]35" mocap="true">
+            <site name="mocap[pelvis]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[head]35" mocap="true">
+            <site name="mocap[head]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[ltoe]35" mocap="true">
+            <site name="mocap[ltoe]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[rtoe]35" mocap="true">
+            <site name="mocap[rtoe]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[lheel]35" mocap="true">
+            <site name="mocap[lheel]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[rheel]35" mocap="true">
+            <site name="mocap[rheel]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[lknee]35" mocap="true">
+            <site name="mocap[lknee]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[rknee]35" mocap="true">
+            <site name="mocap[rknee]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[lhand]35" mocap="true">
+            <site name="mocap[lhand]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[rhand]35" mocap="true">
+            <site name="mocap[rhand]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[lelbow]35" mocap="true">
+            <site name="mocap[lelbow]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[relbow]35" mocap="true">
+            <site name="mocap[relbow]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[lshoulder]35" mocap="true">
+            <site name="mocap[lshoulder]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[rshoulder]35" mocap="true">
+            <site name="mocap[rshoulder]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[lhip]35" mocap="true">
+            <site name="mocap[lhip]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[rhip]35" mocap="true">
+            <site name="mocap[rhip]35" class="mocap_site" rgba="0.967 0.657 0.538 1" />
+        </body>
+        <body name="mocap[pelvis]36" mocap="true">
+            <site name="mocap[pelvis]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[head]36" mocap="true">
+            <site name="mocap[head]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[ltoe]36" mocap="true">
+            <site name="mocap[ltoe]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[rtoe]36" mocap="true">
+            <site name="mocap[rtoe]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[lheel]36" mocap="true">
+            <site name="mocap[lheel]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[rheel]36" mocap="true">
+            <site name="mocap[rheel]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[lknee]36" mocap="true">
+            <site name="mocap[lknee]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[rknee]36" mocap="true">
+            <site name="mocap[rknee]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[lhand]36" mocap="true">
+            <site name="mocap[lhand]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[rhand]36" mocap="true">
+            <site name="mocap[rhand]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[lelbow]36" mocap="true">
+            <site name="mocap[lelbow]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[relbow]36" mocap="true">
+            <site name="mocap[relbow]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[lshoulder]36" mocap="true">
+            <site name="mocap[lshoulder]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[rshoulder]36" mocap="true">
+            <site name="mocap[rshoulder]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[lhip]36" mocap="true">
+            <site name="mocap[lhip]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[rhip]36" mocap="true">
+            <site name="mocap[rhip]36" class="mocap_site" rgba="0.962 0.622 0.502 1" />
+        </body>
+        <body name="mocap[pelvis]37" mocap="true">
+            <site name="mocap[pelvis]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[head]37" mocap="true">
+            <site name="mocap[head]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[ltoe]37" mocap="true">
+            <site name="mocap[ltoe]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[rtoe]37" mocap="true">
+            <site name="mocap[rtoe]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[lheel]37" mocap="true">
+            <site name="mocap[lheel]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[rheel]37" mocap="true">
+            <site name="mocap[rheel]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[lknee]37" mocap="true">
+            <site name="mocap[lknee]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[rknee]37" mocap="true">
+            <site name="mocap[rknee]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[lhand]37" mocap="true">
+            <site name="mocap[lhand]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[rhand]37" mocap="true">
+            <site name="mocap[rhand]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[lelbow]37" mocap="true">
+            <site name="mocap[lelbow]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[relbow]37" mocap="true">
+            <site name="mocap[relbow]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[lshoulder]37" mocap="true">
+            <site name="mocap[lshoulder]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[rshoulder]37" mocap="true">
+            <site name="mocap[rshoulder]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[lhip]37" mocap="true">
+            <site name="mocap[lhip]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[rhip]37" mocap="true">
+            <site name="mocap[rhip]37" class="mocap_site" rgba="0.955 0.592 0.471 1" />
+        </body>
+        <body name="mocap[pelvis]38" mocap="true">
+            <site name="mocap[pelvis]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[head]38" mocap="true">
+            <site name="mocap[head]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[ltoe]38" mocap="true">
+            <site name="mocap[ltoe]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[rtoe]38" mocap="true">
+            <site name="mocap[rtoe]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[lheel]38" mocap="true">
+            <site name="mocap[lheel]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[rheel]38" mocap="true">
+            <site name="mocap[rheel]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[lknee]38" mocap="true">
+            <site name="mocap[lknee]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[rknee]38" mocap="true">
+            <site name="mocap[rknee]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[lhand]38" mocap="true">
+            <site name="mocap[lhand]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[rhand]38" mocap="true">
+            <site name="mocap[rhand]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[lelbow]38" mocap="true">
+            <site name="mocap[lelbow]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[relbow]38" mocap="true">
+            <site name="mocap[relbow]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[lshoulder]38" mocap="true">
+            <site name="mocap[lshoulder]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[rshoulder]38" mocap="true">
+            <site name="mocap[rshoulder]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[lhip]38" mocap="true">
+            <site name="mocap[lhip]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[rhip]38" mocap="true">
+            <site name="mocap[rhip]38" class="mocap_site" rgba="0.946 0.560 0.442 1" />
+        </body>
+        <body name="mocap[pelvis]39" mocap="true">
+            <site name="mocap[pelvis]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[head]39" mocap="true">
+            <site name="mocap[head]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[ltoe]39" mocap="true">
+            <site name="mocap[ltoe]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[rtoe]39" mocap="true">
+            <site name="mocap[rtoe]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[lheel]39" mocap="true">
+            <site name="mocap[lheel]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[rheel]39" mocap="true">
+            <site name="mocap[rheel]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[lknee]39" mocap="true">
+            <site name="mocap[lknee]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[rknee]39" mocap="true">
+            <site name="mocap[rknee]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[lhand]39" mocap="true">
+            <site name="mocap[lhand]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[rhand]39" mocap="true">
+            <site name="mocap[rhand]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[lelbow]39" mocap="true">
+            <site name="mocap[lelbow]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[relbow]39" mocap="true">
+            <site name="mocap[relbow]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[lshoulder]39" mocap="true">
+            <site name="mocap[lshoulder]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[rshoulder]39" mocap="true">
+            <site name="mocap[rshoulder]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[lhip]39" mocap="true">
+            <site name="mocap[lhip]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[rhip]39" mocap="true">
+            <site name="mocap[rhip]39" class="mocap_site" rgba="0.934 0.526 0.412 1" />
+        </body>
+        <body name="mocap[pelvis]40" mocap="true">
+            <site name="mocap[pelvis]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[head]40" mocap="true">
+            <site name="mocap[head]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[ltoe]40" mocap="true">
+            <site name="mocap[ltoe]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[rtoe]40" mocap="true">
+            <site name="mocap[rtoe]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[lheel]40" mocap="true">
+            <site name="mocap[lheel]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[rheel]40" mocap="true">
+            <site name="mocap[rheel]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[lknee]40" mocap="true">
+            <site name="mocap[lknee]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[rknee]40" mocap="true">
+            <site name="mocap[rknee]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[lhand]40" mocap="true">
+            <site name="mocap[lhand]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[rhand]40" mocap="true">
+            <site name="mocap[rhand]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[lelbow]40" mocap="true">
+            <site name="mocap[lelbow]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[relbow]40" mocap="true">
+            <site name="mocap[relbow]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[lshoulder]40" mocap="true">
+            <site name="mocap[lshoulder]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[rshoulder]40" mocap="true">
+            <site name="mocap[rshoulder]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[lhip]40" mocap="true">
+            <site name="mocap[lhip]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[rhip]40" mocap="true">
+            <site name="mocap[rhip]40" class="mocap_site" rgba="0.921 0.491 0.383 1" />
+        </body>
+        <body name="mocap[pelvis]41" mocap="true">
+            <site name="mocap[pelvis]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[head]41" mocap="true">
+            <site name="mocap[head]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[ltoe]41" mocap="true">
+            <site name="mocap[ltoe]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[rtoe]41" mocap="true">
+            <site name="mocap[rtoe]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[lheel]41" mocap="true">
+            <site name="mocap[lheel]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[rheel]41" mocap="true">
+            <site name="mocap[rheel]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[lknee]41" mocap="true">
+            <site name="mocap[lknee]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[rknee]41" mocap="true">
+            <site name="mocap[rknee]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[lhand]41" mocap="true">
+            <site name="mocap[lhand]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[rhand]41" mocap="true">
+            <site name="mocap[rhand]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[lelbow]41" mocap="true">
+            <site name="mocap[lelbow]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[relbow]41" mocap="true">
+            <site name="mocap[relbow]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[lshoulder]41" mocap="true">
+            <site name="mocap[lshoulder]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[rshoulder]41" mocap="true">
+            <site name="mocap[rshoulder]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[lhip]41" mocap="true">
+            <site name="mocap[lhip]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[rhip]41" mocap="true">
+            <site name="mocap[rhip]41" class="mocap_site" rgba="0.903 0.448 0.350 1" />
+        </body>
+        <body name="mocap[pelvis]42" mocap="true">
+            <site name="mocap[pelvis]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[head]42" mocap="true">
+            <site name="mocap[head]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[ltoe]42" mocap="true">
+            <site name="mocap[ltoe]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[rtoe]42" mocap="true">
+            <site name="mocap[rtoe]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[lheel]42" mocap="true">
+            <site name="mocap[lheel]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[rheel]42" mocap="true">
+            <site name="mocap[rheel]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[lknee]42" mocap="true">
+            <site name="mocap[lknee]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[rknee]42" mocap="true">
+            <site name="mocap[rknee]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[lhand]42" mocap="true">
+            <site name="mocap[lhand]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[rhand]42" mocap="true">
+            <site name="mocap[rhand]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[lelbow]42" mocap="true">
+            <site name="mocap[lelbow]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[relbow]42" mocap="true">
+            <site name="mocap[relbow]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[lshoulder]42" mocap="true">
+            <site name="mocap[lshoulder]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[rshoulder]42" mocap="true">
+            <site name="mocap[rshoulder]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[lhip]42" mocap="true">
+            <site name="mocap[lhip]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[rhip]42" mocap="true">
+            <site name="mocap[rhip]42" class="mocap_site" rgba="0.885 0.410 0.323 1" />
+        </body>
+        <body name="mocap[pelvis]43" mocap="true">
+            <site name="mocap[pelvis]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[head]43" mocap="true">
+            <site name="mocap[head]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[ltoe]43" mocap="true">
+            <site name="mocap[ltoe]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[rtoe]43" mocap="true">
+            <site name="mocap[rtoe]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[lheel]43" mocap="true">
+            <site name="mocap[lheel]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[rheel]43" mocap="true">
+            <site name="mocap[rheel]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[lknee]43" mocap="true">
+            <site name="mocap[lknee]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[rknee]43" mocap="true">
+            <site name="mocap[rknee]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[lhand]43" mocap="true">
+            <site name="mocap[lhand]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[rhand]43" mocap="true">
+            <site name="mocap[rhand]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[lelbow]43" mocap="true">
+            <site name="mocap[lelbow]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[relbow]43" mocap="true">
+            <site name="mocap[relbow]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[lshoulder]43" mocap="true">
+            <site name="mocap[lshoulder]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[rshoulder]43" mocap="true">
+            <site name="mocap[rshoulder]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[lhip]43" mocap="true">
+            <site name="mocap[lhip]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[rhip]43" mocap="true">
+            <site name="mocap[rhip]43" class="mocap_site" rgba="0.865 0.371 0.296 1" />
+        </body>
+        <body name="mocap[pelvis]44" mocap="true">
+            <site name="mocap[pelvis]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[head]44" mocap="true">
+            <site name="mocap[head]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[ltoe]44" mocap="true">
+            <site name="mocap[ltoe]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[rtoe]44" mocap="true">
+            <site name="mocap[rtoe]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[lheel]44" mocap="true">
+            <site name="mocap[lheel]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[rheel]44" mocap="true">
+            <site name="mocap[rheel]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[lknee]44" mocap="true">
+            <site name="mocap[lknee]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[rknee]44" mocap="true">
+            <site name="mocap[rknee]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[lhand]44" mocap="true">
+            <site name="mocap[lhand]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[rhand]44" mocap="true">
+            <site name="mocap[rhand]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[lelbow]44" mocap="true">
+            <site name="mocap[lelbow]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[relbow]44" mocap="true">
+            <site name="mocap[relbow]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[lshoulder]44" mocap="true">
+            <site name="mocap[lshoulder]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[rshoulder]44" mocap="true">
+            <site name="mocap[rshoulder]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[lhip]44" mocap="true">
+            <site name="mocap[lhip]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[rhip]44" mocap="true">
+            <site name="mocap[rhip]44" class="mocap_site" rgba="0.844 0.330 0.270 1" />
+        </body>
+        <body name="mocap[pelvis]45" mocap="true">
+            <site name="mocap[pelvis]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[head]45" mocap="true">
+            <site name="mocap[head]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[ltoe]45" mocap="true">
+            <site name="mocap[ltoe]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[rtoe]45" mocap="true">
+            <site name="mocap[rtoe]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[lheel]45" mocap="true">
+            <site name="mocap[lheel]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[rheel]45" mocap="true">
+            <site name="mocap[rheel]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[lknee]45" mocap="true">
+            <site name="mocap[lknee]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[rknee]45" mocap="true">
+            <site name="mocap[rknee]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[lhand]45" mocap="true">
+            <site name="mocap[lhand]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[rhand]45" mocap="true">
+            <site name="mocap[rhand]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[lelbow]45" mocap="true">
+            <site name="mocap[lelbow]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[relbow]45" mocap="true">
+            <site name="mocap[relbow]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[lshoulder]45" mocap="true">
+            <site name="mocap[lshoulder]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[rshoulder]45" mocap="true">
+            <site name="mocap[rshoulder]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[lhip]45" mocap="true">
+            <site name="mocap[lhip]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[rhip]45" mocap="true">
+            <site name="mocap[rhip]45" class="mocap_site" rgba="0.816 0.278 0.240 1" />
+        </body>
+        <body name="mocap[pelvis]46" mocap="true">
+            <site name="mocap[pelvis]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[head]46" mocap="true">
+            <site name="mocap[head]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[ltoe]46" mocap="true">
+            <site name="mocap[ltoe]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[rtoe]46" mocap="true">
+            <site name="mocap[rtoe]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[lheel]46" mocap="true">
+            <site name="mocap[lheel]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[rheel]46" mocap="true">
+            <site name="mocap[rheel]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[lknee]46" mocap="true">
+            <site name="mocap[lknee]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[rknee]46" mocap="true">
+            <site name="mocap[rknee]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[lhand]46" mocap="true">
+            <site name="mocap[lhand]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[rhand]46" mocap="true">
+            <site name="mocap[rhand]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[lelbow]46" mocap="true">
+            <site name="mocap[lelbow]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[relbow]46" mocap="true">
+            <site name="mocap[relbow]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[lshoulder]46" mocap="true">
+            <site name="mocap[lshoulder]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[rshoulder]46" mocap="true">
+            <site name="mocap[rshoulder]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[lhip]46" mocap="true">
+            <site name="mocap[lhip]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[rhip]46" mocap="true">
+            <site name="mocap[rhip]46" class="mocap_site" rgba="0.791 0.231 0.216 1" />
+        </body>
+        <body name="mocap[pelvis]47" mocap="true">
+            <site name="mocap[pelvis]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[head]47" mocap="true">
+            <site name="mocap[head]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[ltoe]47" mocap="true">
+            <site name="mocap[ltoe]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[rtoe]47" mocap="true">
+            <site name="mocap[rtoe]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[lheel]47" mocap="true">
+            <site name="mocap[lheel]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[rheel]47" mocap="true">
+            <site name="mocap[rheel]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[lknee]47" mocap="true">
+            <site name="mocap[lknee]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[rknee]47" mocap="true">
+            <site name="mocap[rknee]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[lhand]47" mocap="true">
+            <site name="mocap[lhand]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[rhand]47" mocap="true">
+            <site name="mocap[rhand]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[lelbow]47" mocap="true">
+            <site name="mocap[lelbow]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[relbow]47" mocap="true">
+            <site name="mocap[relbow]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[lshoulder]47" mocap="true">
+            <site name="mocap[lshoulder]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[rshoulder]47" mocap="true">
+            <site name="mocap[rshoulder]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[lhip]47" mocap="true">
+            <site name="mocap[lhip]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[rhip]47" mocap="true">
+            <site name="mocap[rhip]47" class="mocap_site" rgba="0.764 0.179 0.193 1" />
+        </body>
+        <body name="mocap[pelvis]48" mocap="true">
+            <site name="mocap[pelvis]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[head]48" mocap="true">
+            <site name="mocap[head]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[ltoe]48" mocap="true">
+            <site name="mocap[ltoe]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[rtoe]48" mocap="true">
+            <site name="mocap[rtoe]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[lheel]48" mocap="true">
+            <site name="mocap[lheel]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[rheel]48" mocap="true">
+            <site name="mocap[rheel]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[lknee]48" mocap="true">
+            <site name="mocap[lknee]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[rknee]48" mocap="true">
+            <site name="mocap[rknee]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[lhand]48" mocap="true">
+            <site name="mocap[lhand]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[rhand]48" mocap="true">
+            <site name="mocap[rhand]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[lelbow]48" mocap="true">
+            <site name="mocap[lelbow]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[relbow]48" mocap="true">
+            <site name="mocap[relbow]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[lshoulder]48" mocap="true">
+            <site name="mocap[lshoulder]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[rshoulder]48" mocap="true">
+            <site name="mocap[rshoulder]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[lhip]48" mocap="true">
+            <site name="mocap[lhip]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[rhip]48" mocap="true">
+            <site name="mocap[rhip]48" class="mocap_site" rgba="0.735 0.104 0.171 1" />
+        </body>
+        <body name="mocap[pelvis]49" mocap="true">
+            <site name="mocap[pelvis]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[head]49" mocap="true">
+            <site name="mocap[head]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[ltoe]49" mocap="true">
+            <site name="mocap[ltoe]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[rtoe]49" mocap="true">
+            <site name="mocap[rtoe]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[lheel]49" mocap="true">
+            <site name="mocap[lheel]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[rheel]49" mocap="true">
+            <site name="mocap[rheel]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[lknee]49" mocap="true">
+            <site name="mocap[lknee]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[rknee]49" mocap="true">
+            <site name="mocap[rknee]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[lhand]49" mocap="true">
+            <site name="mocap[lhand]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[rhand]49" mocap="true">
+            <site name="mocap[rhand]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[lelbow]49" mocap="true">
+            <site name="mocap[lelbow]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[relbow]49" mocap="true">
+            <site name="mocap[relbow]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[lshoulder]49" mocap="true">
+            <site name="mocap[lshoulder]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[rshoulder]49" mocap="true">
+            <site name="mocap[rshoulder]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[lhip]49" mocap="true">
+            <site name="mocap[lhip]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+        <body name="mocap[rhip]49" mocap="true">
+            <site name="mocap[rhip]49" class="mocap_site" rgba="0.706 0.016 0.150 1" />
+        </body>
+
+
+    </worldbody>
+
+    <sensor>
+        <user name="Joint Vel." dim="21" user="0 0.001 0.0 0.01" />
+        <user name="Control" dim="21" user="3 0.1 0 1.0 0.3" />
+
+        <user name="Pos[avg]" dim="3" user="6 100.0 0.0 100.0 0.1" />
+        <user name="Pos[pelvis]" dim="3" user="6 30.0 0.0 100.0 0.1" />
+        <user name="Pos[head]" dim="3" user="6 0.0 0.0 100.0 0.1" />
+        <user name="Pos[toe]" dim="6" user="7 30.0 0.0 100.0 0.2 4" />
+        <user name="Pos[heel]" dim="6" user="7 30.0 0.0 100.0 0.2 4" />
+        <user name="Pos[knee]" dim="6" user="6 30.0 0.0 100.0 0.1" />
+        <user name="Pos[hand]" dim="6" user="6 30.0 0.0 100.0 0.1" />
+        <user name="Pos[elbow]" dim="6" user="7 30.0 0.0 100.0 0.2 4" />
+        <user name="Pos[shoulder]" dim="6" user="6 30.0 0.0 100.0 0.1" />
+        <user name="Pos[hip]" dim="6" user="6 30.0 0.0 100.0 0.1" />
+
+        <user name="Vel[root]" dim="3" user="6 0.1 0 1.0 0.3" />
+        <user name="Vel[head]" dim="3" user="6 0.0 0 1.0 0.3" />
+        <user name="Vel[toe]" dim="6" user="6 0.1 0 1.0 0.3" />
+        <user name="Vel[heel]" dim="6" user="6 0.1 0 1.0 0.3" />
+        <user name="Vel[knee]" dim="6" user="6 0.1 0 1.0 0.3" />
+        <user name="Vel[hand]" dim="6" user="6 0.1 0 1.0 0.3" />
+        <user name="Vel[elbow]" dim="6" user="6 0.1 0 1.0 0.3" />
+        <user name="Vel[shoulder]" dim="6" user="6 0.1 0 1.0 0.3" />
+        <user name="Vel[hip]" dim="6" user="6 0.1 0 1.0 0.3" />
+
+        <framepos name="trace0" objtype="body" objname="torso" />
+
+        <framepos name="tracking_pos[pelvis]" objtype="site" objname="tracking[pelvis]" />
+        <framepos name="tracking_pos[head]" objtype="site" objname="tracking[head]" />
+        <framepos name="tracking_pos[ltoe]" objtype="site" objname="tracking[ltoe]" />
+        <framepos name="tracking_pos[rtoe]" objtype="site" objname="tracking[rtoe]" />
+        <framepos name="tracking_pos[lheel]" objtype="site" objname="tracking[lheel]" />
+        <framepos name="tracking_pos[rheel]" objtype="site" objname="tracking[rheel]" />
+        <framepos name="tracking_pos[lknee]" objtype="site" objname="tracking[lknee]" />
+        <framepos name="tracking_pos[rknee]" objtype="site" objname="tracking[rknee]" />
+        <framepos name="tracking_pos[lhand]" objtype="site" objname="tracking[lhand]" />
+        <framepos name="tracking_pos[rhand]" objtype="site" objname="tracking[rhand]" />
+        <framepos name="tracking_pos[lelbow]" objtype="site" objname="tracking[lelbow]" />
+        <framepos name="tracking_pos[relbow]" objtype="site" objname="tracking[relbow]" />
+        <framepos name="tracking_pos[lshoulder]" objtype="site" objname="tracking[lshoulder]" />
+        <framepos name="tracking_pos[rshoulder]" objtype="site" objname="tracking[rshoulder]" />
+        <framepos name="tracking_pos[lhip]" objtype="site" objname="tracking[lhip]" />
+        <framepos name="tracking_pos[rhip]" objtype="site" objname="tracking[rhip]" />
+
+        <framelinvel name="tracking_linvel[pelvis]" objtype="site" objname="tracking[pelvis]" />
+        <framelinvel name="tracking_linvel[head]" objtype="site" objname="tracking[head]" />
+        <framelinvel name="tracking_linvel[ltoe]" objtype="site" objname="tracking[ltoe]" />
+        <framelinvel name="tracking_linvel[rtoe]" objtype="site" objname="tracking[rtoe]" />
+        <framelinvel name="tracking_linvel[lheel]" objtype="site" objname="tracking[lheel]" />
+        <framelinvel name="tracking_linvel[rheel]" objtype="site" objname="tracking[rheel]" />
+        <framelinvel name="tracking_linvel[lknee]" objtype="site" objname="tracking[lknee]" />
+        <framelinvel name="tracking_linvel[rknee]" objtype="site" objname="tracking[rknee]" />
+        <framelinvel name="tracking_linvel[lhand]" objtype="site" objname="tracking[lhand]" />
+        <framelinvel name="tracking_linvel[rhand]" objtype="site" objname="tracking[rhand]" />
+        <framelinvel name="tracking_linvel[lelbow]" objtype="site" objname="tracking[lelbow]" />
+        <framelinvel name="tracking_linvel[relbow]" objtype="site" objname="tracking[relbow]" />
+        <framelinvel name="tracking_linvel[lshoulder]" objtype="site" objname="tracking[lshoulder]" />
+        <framelinvel name="tracking_linvel[rshoulder]" objtype="site" objname="tracking[rshoulder]" />
+        <framelinvel name="tracking_linvel[lhip]" objtype="site" objname="tracking[lhip]" />
+        <framelinvel name="tracking_linvel[rhip]" objtype="site" objname="tracking[rhip]" />
+    </sensor>
+
+    <actuator>
+        <motor name="left_hip_pitch_joint" joint="left_hip_pitch_joint" gear="80" />
+        <motor name="left_hip_roll_joint" joint="left_hip_roll_joint" gear="80" />
+        <motor name="left_hip_yaw_joint" joint="left_hip_yaw_joint" gear="80" />
+        <motor name="left_knee_joint" joint="left_knee_joint" gear="100" />
+        <motor name="left_ankle_pitch_joint" joint="left_ankle_pitch_joint" gear="50" />
+        <motor name="left_ankle_roll_joint" joint="left_ankle_roll_joint" gear="50" />
+
+        <motor name="right_hip_pitch_joint" joint="right_hip_pitch_joint" gear="80" />
+        <motor name="right_hip_roll_joint" joint="right_hip_roll_joint" gear="80" />
+        <motor name="right_hip_yaw_joint" joint="right_hip_yaw_joint" gear="80" />
+        <motor name="right_knee_joint" joint="right_knee_joint" gear="100" />
+        <motor name="right_ankle_pitch_joint" joint="right_ankle_pitch_joint" gear="50" />
+        <motor name="right_ankle_roll_joint" joint="right_ankle_roll_joint" gear="50" />
+
+        <motor name="waist_yaw_joint" joint="waist_yaw_joint" gear="80" />
+        <motor name="waist_roll_joint" joint="waist_roll_joint" gear="50" />
+        <motor name="waist_pitch_joint" joint="waist_pitch_joint" gear="50" />
+
+        <motor name="left_shoulder_pitch_joint" joint="left_shoulder_pitch_joint" gear="20" />
+        <motor name="left_shoulder_roll_joint" joint="left_shoulder_roll_joint" gear="20" />
+        <motor name="left_elbow_joint" joint="left_elbow_joint" gear="20" />
+        <motor name="right_shoulder_pitch_joint" joint="right_shoulder_pitch_joint" gear="20" />
+        <motor name="right_shoulder_roll_joint" joint="right_shoulder_roll_joint" gear="20" />
+        <motor name="right_elbow_joint" joint="right_elbow_joint" gear="20" />
+
+        <!-- <position class="hip_pitch_motor" name="left_hip_pitch_joint"
+        joint="left_hip_pitch_joint" />
+    <position class="hip_roll_motor" name="left_hip_roll_joint" joint="left_hip_roll_joint" />
+    <position class="hip_yaw_motor" name="left_hip_yaw_joint" joint="left_hip_yaw_joint" />
+    <position class="knee_motor" name="left_knee_joint" joint="left_knee_joint" />
+    <position class="ankle_pitch_motor" name="left_ankle_pitch_joint" joint="left_ankle_pitch_joint" />
+    <position class="ankle_roll_motor" name="left_ankle_roll_joint" joint="left_ankle_roll_joint" />
+
+    <position class="hip_pitch_motor" name="right_hip_pitch_joint" joint="right_hip_pitch_joint" />
+    <position class="hip_roll_motor" name="right_hip_roll_joint" joint="right_hip_roll_joint" />
+    <position class="hip_yaw_motor" name="right_hip_yaw_joint" joint="right_hip_yaw_joint" />
+    <position class="knee_motor" name="right_knee_joint" joint="right_knee_joint" />
+    <position class="ankle_pitch_motor" name="right_ankle_pitch_joint"
+      joint="right_ankle_pitch_joint" />
+    <position class="ankle_roll_motor" name="right_ankle_roll_joint" joint="right_ankle_roll_joint" />
+
+    <position class="waist_yaw_motor" name="waist_yaw_joint" joint="waist_yaw_joint" />
+    <position class="waist_roll_motor" name="waist_roll_joint" joint="waist_roll_joint" />
+    <position class="waist_pitch_motor" name="waist_pitch_joint" joint="waist_pitch_joint" />
+
+    <position class="shoulder_pitch_motor" name="left_shoulder_pitch_joint"
+      joint="left_shoulder_pitch_joint" />
+    <position class="shoulder_roll_motor" name="left_shoulder_roll_joint"
+      joint="left_shoulder_roll_joint" />
+    <position class="elbow_motor" name="left_elbow_joint" joint="left_elbow_joint" />
+    <position class="shoulder_pitch_motor" name="right_shoulder_pitch_joint"
+      joint="right_shoulder_pitch_joint" />
+    <position class="shoulder_roll_motor" name="right_shoulder_roll_joint"
+      joint="right_shoulder_roll_joint" />
+    <position class="elbow_motor" name="right_elbow_joint" joint="right_elbow_joint" /> -->
+
+
+        <!-- <motor name="left_shoulder_yaw_joint" joint="left_shoulder_yaw_joint" /> -->
+        <!-- <motor name="left_wrist_roll_joint" joint="left_wrist_roll_joint" />
+        <motor name="left_wrist_pitch_joint" joint="left_wrist_pitch_joint" />
+        <motor name="left_wrist_yaw_joint" joint="left_wrist_yaw_joint" /> -->
+        <!-- <motor name="right_shoulder_yaw_joint" joint="right_shoulder_yaw_joint" /> -->
+        <!-- <motor name="right_wrist_roll_joint" joint="right_wrist_roll_joint" />
+        <motor name="right_wrist_pitch_joint" joint="right_wrist_pitch_joint" />
+        <motor name="right_wrist_yaw_joint" joint="right_wrist_yaw_joint" /> -->
+    </actuator>
+
+
+    <keyframe>
+        <!-- <key name="stand"
+            mpos="-0.08679 0.19292 0.86056 -0.04738 0.30140 1.36626 -0.17402 0.34120 -0.00107 0.00010 0.29688
+        0.00416 -0.16921 0.17126 -0.00093 -0.03162 0.12988 0.00260 -0.18658 0.21238 0.39614 0.01303
+        0.19736 0.39839 -0.29056 0.32638 0.73196 0.12556 0.30252 0.71085 -0.25784 0.25329 0.89793
+        0.10067 0.22799 0.87754 -0.16856 0.24912 1.07646 0.03103 0.23479 1.06491 -0.17502 0.20443
+        0.70755 -0.04873 0.17857 0.70803"
+            qpos="-0.08689 0.19078 0.78559 0.77115 -0.01059 0.00954 0.63649 -0.04434 0.00224 0.22253 -0.01302
+        0.02494 0.04387 -0.10253 0.08758 -0.01835 0.14527 -0.08080 -0.08549 0.12073 0.05846 0.18716
+        -0.10856 0.18182 1.01925 -0.11035 -0.19154 0.98863"
+            qvel="0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+        0.0 0.0 0.0 0.0" /> -->
+        <key name="stand"
+            qpos="-0.08689 0.19078 0.78559 0.77115 -0.01059 0.00954 0.63649 -0.04434 0.00224 0.22253 -0.01302 0.02494 0.04387 -0.10253 0.08758 -0.01835 0.14527 -0.08080 -0.08549 0.12073 0.05846 0.18716 -0.10856 0.18182 1.01925 -0.11035 -0.19154 0.98863"
+            qvel="0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0" />
+    </keyframe>
+
+</mujoco>

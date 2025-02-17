@@ -84,6 +84,8 @@ add_library(
   tasks/walker/walker.h
   tasks/g1/tracking/tracking.cc
   tasks/g1/tracking/tracking.h
+  tasks/g1/tracking_realtime/tracking_realtime.cc
+  tasks/g1/tracking_realtime/tracking_realtime.h
   tasks/g1/walk/walk.cc
   tasks/g1/walk/walk.h
   planners/planner.cc
