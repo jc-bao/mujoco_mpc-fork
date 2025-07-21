@@ -1,0 +1,25 @@
+<mujoco model="G1">
+  <include file="scene_23dof.xml" />
+  <size memory="400K" />
+
+  <custom>
+    <numeric name="sampling_representation" data="2" />
+    <numeric name="agent_planner" data="2" />
+    <numeric name="agent_horizon" data="0.5" />
+    <numeric name="agent_timestep" data="0.005" />
+    <numeric name="sampling_spline_points" data="16" />
+    <numeric name="sampling_exploration" data="0.15" />
+    <numeric name="sampling_trajectories" data="32" />
+    <numeric name="gradient_spline_points" data="5" />
+    <numeric name="ilqg_num_rollouts" data="16" />
+    <numeric name="ilqg_regularization_type" data="1" />
+    <numeric name="ilqg_representation" data="2" />
+  </custom>
+
+  <option timestep="0.005" />
+
+  <sensor>
+    <user name="qpos" dim="29" user="0 0.1 0.0 1.0" />
+    <user name="qvel" dim="29" user="0 0.01 0.0 1.0" />
+  </sensor>
+</mujoco>

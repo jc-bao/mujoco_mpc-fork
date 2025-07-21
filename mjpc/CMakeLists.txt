@@ -42,6 +42,8 @@ add_library(
   tasks/allegro/allegro.h
   tasks/metahand/metahand.cc
   tasks/metahand/metahand.h
+  tasks/g1/g1.cc
+  tasks/g1/g1.h
   tasks/bimanual/insert/insert.cc
   tasks/bimanual/insert/insert.h
   tasks/bimanual/handover/handover.cc

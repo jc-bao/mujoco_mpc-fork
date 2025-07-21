@@ -42,11 +42,13 @@
 #include "mjpc/tasks/walker/walker.h"
 // Chaoyi
 #include "mjpc/tasks/metahand/metahand.h"
+#include "mjpc/tasks/g1/g1.h"
 
 namespace mjpc {
 
 std::vector<std::shared_ptr<Task>> GetTasks() {
   return {
+      std::make_shared<G1>(),
       std::make_shared<Acrobot>(),
       std::make_shared<Allegro>(),
       std::make_shared<Metahand>(),
