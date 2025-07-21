@@ -40,6 +40,8 @@
 #include "mjpc/tasks/shadow_reorient/hand.h"
 #include "mjpc/tasks/swimmer/swimmer.h"
 #include "mjpc/tasks/walker/walker.h"
+// Chaoyi
+#include "mjpc/tasks/metahand/metahand.h"
 
 namespace mjpc {
 
@@ -47,6 +49,7 @@ std::vector<std::shared_ptr<Task>> GetTasks() {
   return {
       std::make_shared<Acrobot>(),
       std::make_shared<Allegro>(),
+      std::make_shared<Metahand>(),
       std::make_shared<aloha::Handover>(),
       std::make_shared<aloha::Insert>(),
       std::make_shared<aloha::Reorient>(),

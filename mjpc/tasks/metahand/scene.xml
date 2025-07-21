@@ -1,0 +1,87 @@
+<mujoco model="Metahand Hand Cube Rotation">
+  <include file="metahand.xml"/>
+
+  <size memory="1M"/>
+
+  <option integrator="implicitfast" iterations="100" ls_iterations="50"/>
+
+  <custom>
+    <!-- agent -->
+    <numeric name="agent_planner" data="0" />
+    <numeric name="agent_horizon" data="0.5" />
+    <numeric name="agent_timestep" data="0.01" />
+    <numeric name="agent_policy_width" data="0.0035" />
+    <numeric name="sampling_spline_points" data="6" />
+    <numeric name="sampling_exploration" data="0.1" />
+    <numeric name="sampling_trajectories" data="10" />
+    <numeric name="sampling_representation" data="2" />
+    <numeric name="robust_xfrc" data="0.004" />
+    <numeric name="gradient_spline_points" data="6" />
+
+    <!-- cem -->
+    <numeric name="n_elite" data="10" />
+    <numeric name="std_min" data="0.2" />
+  </custom>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+
+  <!-- Set the camera viewpoint -->
+  <statistic extent="0.4" center="0.3 0.1 0"/>
+  <visual>
+    <quality shadowsize="8192"/>
+    <global azimuth="180" elevation="-30"/>
+  </visual>
+
+  <!-- Set default friction coefficient -->
+  <default>
+    <geom friction=".3"/>
+  </default>
+
+  <!-- Create the scene, including floor. -->
+  <worldbody>
+    <light pos="0 -0.1 0.5" dir="0 0.2 -1" diffuse="0.7 0.7 0.7" specular="0.3 0.3 0.3"
+        directional="true" castshadow="true"/>
+    <geom name="floor" pos="0 0 -0.2" size="0 0 0.05" type="plane" material="groundplane"/>
+    <!-- add a cylinder -->
+    <body name="object" pos="0 0 0.2">
+      <freejoint/>
+      <inertial pos="0 0 0" mass="0.05" diaginertia="0.0001 0.0001 0.0001"/>
+      <geom type="cylinder" size="0.034 0.01" rgba="0.5 0.7 0.5 1" condim="3" priority="1" friction="0.8 0.002 0.002" material="groundplane" density="186"/>
+    </body>
+    <!-- mocap body for hand -->
+    <body name="rf_tip_target" pos="0.5 0 .5" quat="0 1 0 0" mocap="true">
+      <geom type="sphere" size=".02" contype="0" conaffinity="0" rgba=".6 .3 .3 .2"/>
+    </body>
+    <body name="mf_tip_target" pos="0.5 0 .5" quat="0 1 0 0" mocap="true">
+      <geom type="sphere" size=".02" contype="0" conaffinity="0" rgba=".6 .3 .3 .2"/>
+    </body>
+    <body name="ff_tip_target" pos="0.5 0 .5" quat="0 1 0 0" mocap="true">
+      <geom type="sphere" size=".02" contype="0" conaffinity="0" rgba=".6 .3 .3 .2"/>
+    </body>
+    <body name="th_tip_target" pos="0.5 0 .5" quat="0 1 0 0" mocap="true">
+      <geom type="sphere" size=".02" contype="0" conaffinity="0" rgba=".6 .3 .3 .2"/>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <!-- Residuals -->
+    <user name="Object Position" dim="3" user="1 75 0 100 0.02 2"/>
+    <user name="Object Orientation" dim="3" user="0 7.5 0 10" />
+    <user name="Object Velocity" dim="3" user="0 10 0 20" />
+    <user name="Actuation" dim="16" user="0 1 0.0 10" />
+    <user name="Grasp" dim="16" user="0 0.1 0.0 10" />
+    <user name="Joint Vel" dim="16" user="0 1.0e-3 0.0 0.1" />
+
+    <framepos name="trace0" objtype="body" objname="object"/>
+  </sensor>
+
+
+  <keyframe>
+    <key name="home" qpos='0.0143862 1.42557 0.145901 0.172863 1.182 1.08728 0.793195 0.00212516 -0.00140372 1.1927 0.0642763 0.183578 0.0750524 1.44143 0.339084 0.235215 -0.00842207 -0.0125362 0.14 1 0 0 0'/>
+  </keyframe>
+</mujoco>
